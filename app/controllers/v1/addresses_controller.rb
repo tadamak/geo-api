@@ -8,9 +8,12 @@ class V1::AddressesController < ApplicationController
   def search
     search_level = get_search_level # 一階層下の住所レベルを取得
     @addresses = Address.where(level: search_level)
+    @addresses = @addresses.where('code LIKE ?', "#{@address.code}%") unless @address.nil?
+
     @offset = get_offset
     @limit = get_limit
     @total = @addresses.unscope(:select).count
+
     @addresses = @addresses.offset(@offset).limit(@limit)
   end
 
