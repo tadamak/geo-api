@@ -1,4 +1,4 @@
-class V1::GeoAddressesController < ApplicationController
+class V1::Addresses::ShapesController < ApplicationController
   before_action :validate_code, only: [:show]
 
   def show
