@@ -1,4 +1,6 @@
 class V1::AddressesController < ApplicationController
+  include Swagger::AddressesApi
+
   before_action :validate_show_params, only: [:show]
   before_action :validate_search_params, only: [:search]
 

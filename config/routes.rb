@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   namespace :v1, format: 'json' do
+    resources :apidocs, only: [:index]
+
     # Address API
     resources :addresses, param: :code, only: [:show] do
       get :search, on: :collection
