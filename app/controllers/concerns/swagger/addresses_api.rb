@@ -3,6 +3,35 @@ module Swagger::AddressesApi
   include Swagger::Blocks
 
   included do
+    swagger_path '/addresses/search' do
+      operation :get do
+        key :description, '住所検索'
+        key :tags, ['address']
+        parameter name: :code do
+          key :in, :query
+          key :description, '住所コード'
+          key :required, false
+          key :type, :string
+        end
+        parameter name: :limit do
+          key :in, :query
+          key :description, '取得件数'
+          key :required, false
+          key :type, :integer
+        end
+        parameter name: :offset do
+          key :in, :query
+          key :description, '取得開始位置'
+          key :required, false
+          key :type, :integer
+        end
+
+        response 200 do
+          key :description, 'TODO レスポンス'
+        end
+      end
+    end
+
     swagger_path '/addresses/{code}' do
       operation :get do
         key :description, '住所コードから住所情報を取得する'
@@ -40,6 +69,23 @@ module Swagger::AddressesApi
               end
             end
           end
+        end
+      end
+    end
+
+    swagger_path '/addresses/shapes/{code}' do
+      operation :get do
+        key :description, '住所コードから住所ポリゴンを取得する'
+        key :tags, ['address']
+        parameter name: :code do
+          key :in, :path
+          key :description, '住所コード'
+          key :required, true
+          key :type, :string
+        end
+
+        response 200 do
+          key :description, 'TODO レスポンス'
         end
       end
     end

@@ -12,6 +12,10 @@ class V1::ApidocsController < ApplicationController
       key :name, 'address'
       key :description, '住所API'
     end
+    tag do
+      key :name, 'analytics'
+      key :description, '解析API'
+    end
     key :schemes, ['https', 'http']
     key :host, 'geo.api.qazsato.com'
     key :basePath, '/v1'
@@ -20,7 +24,9 @@ class V1::ApidocsController < ApplicationController
   end
 
   SWAGGERED_CLASSES = [
-    AddressesController,
+    V1::AddressesController,
+    V1::Addresses::ShapesController,
+    V1::Analytics::AddressesController,
     self
   ].freeze
 

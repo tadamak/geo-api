@@ -1,4 +1,6 @@
 class V1::Addresses::ShapesController < ApplicationController
+  include Swagger::AddressesApi
+
   before_action :validate_code, only: [:show]
 
   def show
