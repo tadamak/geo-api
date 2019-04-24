@@ -30,12 +30,26 @@ module Swagger::AnalyticsApi
       operation :post do
         key :description, '住所検索'
         key :tags, ['analytics']
-        parameter name: :coordinates do
+        parameter name: :datas do
           key :in, :body
           key :description, '緯度経度の配列と住所レベル'
           key :required, true
           schema do
             key :type, :object
+            property :coordinates do
+              key :type, :array
+              items do
+                key :type, :array
+                items do
+                  key :type, :number
+                  key :format, :float
+                end
+              end
+            end
+            property :level do
+              key :type, :integer
+              key :format, :int32
+            end
           end
         end
 
