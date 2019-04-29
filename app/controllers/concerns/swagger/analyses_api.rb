@@ -4,31 +4,8 @@ module Swagger::AnalysesApi
 
   included do
     swagger_path '/analyses/addresses/contains' do
-      operation :get do
-        key :description, '住所検索'
-        key :tags, ['Analysis']
-        parameter name: :coordinates do
-          key :in, :query
-          key :description, '緯度経度の配列'
-          key :required, true
-          key :type, :string
-        end
-        parameter name: :level do
-          key :in, :query
-          key :description, '住所レベル'
-          key :required, true
-          key :type, :integer
-        end
-
-        response 200 do
-          key :description, 'TODO レスポンス'
-        end
-      end
-    end
-
-    swagger_path '/analyses/addresses/contains' do
       operation :post do
-        key :description, '住所検索'
+        key :description, '指定した緯度経度を包含している住所コード毎の件数を取得します。'
         key :tags, ['Analysis']
         parameter name: :datas do
           key :in, :body
@@ -54,7 +31,22 @@ module Swagger::AnalysesApi
         end
 
         response 200 do
-          key :description, 'TODO レスポンス'
+          key :description, '住所コード毎の件数'
+          schema do
+            key :type, :array
+            items do
+              key :required, [:address_code, :count]
+              property :address_code do
+                key :type, :string
+                key :example, '13'
+              end
+              property :count do
+                key :type, :integer
+                key :format, :int32
+                key :example, 5
+              end
+            end
+          end
         end
       end
     end
