@@ -1,5 +1,5 @@
-class V1::Analytics::AddressesController < ApplicationController
-  include Swagger::AnalyticsApi
+class V1::Analyses::AddressesController < ApplicationController
+  include Swagger::AnalysesApi
 
   before_action :validate_contains_params, only: [:contains]
 

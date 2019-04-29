@@ -1,12 +1,12 @@
-module Swagger::AnalyticsApi
+module Swagger::AnalysesApi
   extend ActiveSupport::Concern
   include Swagger::Blocks
 
   included do
-    swagger_path '/analytics/addresses/contains' do
+    swagger_path '/analyses/addresses/contains' do
       operation :get do
         key :description, '住所検索'
-        key :tags, ['analytics']
+        key :tags, ['Analyses']
         parameter name: :coordinates do
           key :in, :query
           key :description, '緯度経度の配列'
@@ -26,10 +26,10 @@ module Swagger::AnalyticsApi
       end
     end
 
-    swagger_path '/analytics/addresses/contains' do
+    swagger_path '/analyses/addresses/contains' do
       operation :post do
         key :description, '住所検索'
-        key :tags, ['analytics']
+        key :tags, ['Analyses']
         parameter name: :datas do
           key :in, :body
           key :description, '緯度経度の配列と住所レベル'

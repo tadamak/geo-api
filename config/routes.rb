@@ -11,8 +11,8 @@ Rails.application.routes.draw do
       resources :shapes, param: :code, only: [:show]
     end
 
-    # Analytics API
-    namespace :analytics do
+    # Analyses API
+    namespace :analyses do
       resource :addresses, only: [] do
         get :contains, on: :collection
         post :contains, on: :collection

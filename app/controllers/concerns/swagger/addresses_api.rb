@@ -6,7 +6,7 @@ module Swagger::AddressesApi
     swagger_path '/addresses/search' do
       operation :get do
         key :description, '住所検索'
-        key :tags, ['address']
+        key :tags, ['Address']
         parameter name: :code do
           key :in, :query
           key :description, '住所コード'
@@ -35,7 +35,7 @@ module Swagger::AddressesApi
     swagger_path '/addresses/{code}' do
       operation :get do
         key :description, '住所コードから住所情報を取得する'
-        key :tags, ['address']
+        key :tags, ['Address']
         parameter name: :code do
           key :in, :path
           key :description, '住所コード'
@@ -76,7 +76,7 @@ module Swagger::AddressesApi
     swagger_path '/addresses/shapes/{code}' do
       operation :get do
         key :description, '住所コードから住所ポリゴンを取得する'
-        key :tags, ['address']
+        key :tags, ['Address']
         parameter name: :code do
           key :in, :path
           key :description, '住所コード'
