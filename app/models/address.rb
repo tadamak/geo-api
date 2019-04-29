@@ -1,4 +1,6 @@
 class Address < ApplicationRecord
+  include Swagger::AddressSchema
+
   attr_accessor :lat, :lng
 
   LEVEL = {

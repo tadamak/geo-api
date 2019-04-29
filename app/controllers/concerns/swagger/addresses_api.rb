@@ -3,9 +3,29 @@ module Swagger::AddressesApi
   include Swagger::Blocks
 
   included do
+    swagger_path '/addresses/{code}' do
+      operation :get do
+        key :description, '指定した住所コードの住所情報を取得します。'
+        key :tags, ['Address']
+        parameter name: :code do
+          key :in, :path
+          key :description, '住所コード'
+          key :required, true
+          key :type, :string
+        end
+
+        response 200 do
+          key :description, '住所情報'
+          schema do
+            key :'$ref', :Address
+          end
+        end
+      end
+    end
+
     swagger_path '/addresses/search' do
       operation :get do
-        key :description, '住所検索'
+        key :description, '指定した条件に合致する住所情報をリストで取得します。'
         key :tags, ['Address']
         parameter name: :code do
           key :in, :query
@@ -27,46 +47,11 @@ module Swagger::AddressesApi
         end
 
         response 200 do
-          key :description, 'TODO レスポンス'
-        end
-      end
-    end
-
-    swagger_path '/addresses/{code}' do
-      operation :get do
-        key :description, '住所コードから住所情報を取得する'
-        key :tags, ['Address']
-        parameter name: :code do
-          key :in, :path
-          key :description, '住所コード'
-          key :required, true
-          key :type, :string
-        end
-
-        response 200 do
           key :description, '住所情報'
           schema do
-            key :required, [:code, :name, :level, :coordinates]
-            property :code do
-              key :type, :string
-            end
-            property :name do
-              key :type, :string
-            end
-            property :level do
-              key :type, :integer
-              key :format, :int32
-            end
-            property :coordinates do
-              key :type, :object
-              property :latitude do
-                key :type, :number
-                key :format, :float
-              end
-              property :longitude do
-                key :type, :number
-                key :format, :float
-              end
+            key :type, :array
+            items do
+              key :'$ref', :Address
             end
           end
         end
@@ -75,7 +60,7 @@ module Swagger::AddressesApi
 
     swagger_path '/addresses/shapes/{code}' do
       operation :get do
-        key :description, '住所コードから住所ポリゴンを取得する'
+        key :description, '指定した住所コードのポリゴンを取得します。'
         key :tags, ['Address']
         parameter name: :code do
           key :in, :path
@@ -85,7 +70,10 @@ module Swagger::AddressesApi
         end
 
         response 200 do
-          key :description, 'TODO レスポンス'
+          key :description, '住所ポリゴン'
+          schema do
+            key :'$ref', :GeoJson
+          end
         end
       end
     end

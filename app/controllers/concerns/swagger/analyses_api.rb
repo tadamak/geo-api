@@ -6,7 +6,7 @@ module Swagger::AnalysesApi
     swagger_path '/analyses/addresses/contains' do
       operation :get do
         key :description, '住所検索'
-        key :tags, ['Analyses']
+        key :tags, ['Analysis']
         parameter name: :coordinates do
           key :in, :query
           key :description, '緯度経度の配列'
@@ -29,7 +29,7 @@ module Swagger::AnalysesApi
     swagger_path '/analyses/addresses/contains' do
       operation :post do
         key :description, '住所検索'
-        key :tags, ['Analyses']
+        key :tags, ['Analysis']
         parameter name: :datas do
           key :in, :body
           key :description, '緯度経度の配列と住所レベル'

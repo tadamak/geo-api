@@ -4,16 +4,16 @@ class V1::ApidocsController < ApplicationController
   swagger_root do
     key :swagger, '2.0'
     info do
-      key :version, '1.0.0'
+      key :version, '0.1.0'
       key :title, 'Geo API'
-      key :description, '位置情報を利用した空間検索用API'
+      key :description, '空間情報検索API'
     end
     tag do
       key :name, 'Address'
       key :description, '住所API'
     end
     tag do
-      key :name, 'Analyses'
+      key :name, 'Analysis'
       key :description, '解析API'
     end
     key :schemes, ['https', 'http']
@@ -24,6 +24,8 @@ class V1::ApidocsController < ApplicationController
   end
 
   SWAGGERED_CLASSES = [
+    Address,
+    GeoJson,
     V1::AddressesController,
     V1::Addresses::ShapesController,
     V1::Analyses::AddressesController,
