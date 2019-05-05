@@ -29,21 +29,24 @@ module Swagger::AddressesApi
         key :tags, ['Address']
         parameter name: :code do
           key :in, :query
-          key :description, '住所コード<br>指定したコードの１階層下の住所情報を取得します。'
+          key :description, '住所コード。指定したコードの１階層下の住所情報を取得します。'
           key :required, false
           key :type, :string
         end
         parameter name: :limit do
           key :in, :query
-          key :description, '取得件数<br>Default:10'
+          key :description, '取得件数'
           key :required, false
           key :type, :integer
+          key :default, 10
+          key :maximum, 100
         end
         parameter name: :offset do
           key :in, :query
-          key :description, '取得開始位置<br>Default:0'
+          key :description, '取得開始位置'
           key :required, false
           key :type, :integer
+          key :default, 0
         end
 
         response 200 do

@@ -17,7 +17,7 @@ class V1::ApidocsController < ApplicationController
       key :description, '解析API'
     end
     key :schemes, ['https', 'http']
-    key :host, 'geo.api.qazsato.com'
+    key :host, 'api.geo.qazsato.com'
     key :basePath, '/v1'
     key :consumes, ['application/json']
     key :produces, ['application/json']
