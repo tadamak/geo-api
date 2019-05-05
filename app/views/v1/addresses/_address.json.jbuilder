@@ -1,7 +1,7 @@
 json.code address.code
 json.name address.name
 json.level address.level
-json.set! :coordinate do
-  json.latitude address.lat
-  json.longitude address.lng
+json.set! :location do
+  json.lat address.lat
+  json.lng address.lng
 end

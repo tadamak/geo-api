@@ -4,7 +4,7 @@ module Swagger::AddressSchema
 
   included do
     swagger_schema :Address do
-      key :required, [:code, :name, :level, :coordinates]
+      key :required, [:code, :name, :level, :location]
       property :code do
         key :type, :string
         key :example, '13'
@@ -18,15 +18,15 @@ module Swagger::AddressSchema
         key :format, :int32
         key :example, 1
       end
-      property :coordinate do
+      property :location do
         key :type, :object
-        key :required, [:latitude, :longitude]
-        property :latitude do
+        key :required, [:lat, :lng]
+        property :lat do
           key :type, :number
           key :format, :float
           key :example, 35.689568
         end
-        property :longitude do
+        property :lng do
           key :type, :number
           key :format, :float
           key :example, 139.691717

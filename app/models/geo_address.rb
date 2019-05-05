@@ -18,11 +18,13 @@ class GeoAddress < ApplicationRecord
     }
   end
 
-  def self.count_by_address_code(coordinates, level)
+  def self.count_by_address_code(locations, level)
     sql = ''
-    coordinates.each do |c|
+    locations.each do |l|
+      lat = l.split(',')[0]
+      lng = l.split(',')[1]
       sql += "UNION ALL\n" unless sql.empty?
-      sql += "SELECT GeomFromText('POINT(#{c[0]} #{c[1]})', 4326) point\n"
+      sql += "SELECT GeomFromText('POINT(#{lng} #{lat})', 4326) point\n"
     end
 
     geo_addresses = self.find_by_sql("

@@ -4,7 +4,7 @@ class V1::ApidocsController < ApplicationController
   swagger_root do
     key :swagger, '2.0'
     info do
-      key :version, '0.1.0'
+      key :version, '1.0.0'
       key :title, 'Geo API'
       key :description, '空間情報検索API'
     end

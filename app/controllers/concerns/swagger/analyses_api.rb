@@ -9,23 +9,21 @@ module Swagger::AnalysesApi
         key :tags, ['Analysis']
         parameter name: :datas do
           key :in, :body
-          key :description, '緯度経度の配列と住所レベル'
+          key :description, '緯度経度(カンマ区切り)の配列と住所レベル'
           key :required, true
           schema do
             key :type, :object
-            property :coordinates do
+            property :locations do
               key :type, :array
               items do
-                key :type, :array
-                items do
-                  key :type, :number
-                  key :format, :float
-                end
+                key :type, :string
+                key :example, '35.689568,139.691717'
               end
             end
             property :level do
               key :type, :integer
               key :format, :int32
+              key :example, 1
             end
           end
         end
