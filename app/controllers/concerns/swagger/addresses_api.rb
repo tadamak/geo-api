@@ -57,6 +57,11 @@ module Swagger::AddressesApi
               key :'$ref', :Address
             end
           end
+          header 'X-Total-Count' do
+            key :description, 'リクエストに対する総件数'
+            key :type, :integer
+            key :format, :int64
+          end
         end
       end
     end

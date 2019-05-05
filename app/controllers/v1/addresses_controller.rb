@@ -12,11 +12,12 @@ class V1::AddressesController < ApplicationController
     @addresses = Address.where(level: search_level)
     @addresses = @addresses.where('code LIKE ?', "#{@address.code}%") unless @address.nil?
 
-    @offset = get_offset
-    @limit = get_limit
-    @total = @addresses.unscope(:select).count
+    offset = get_offset
+    limit = get_limit
+    total = @addresses.unscope(:select).count
+    @addresses = @addresses.offset(offset).limit(limit)
 
-    @addresses = @addresses.offset(@offset).limit(@limit)
+    response.headers['X-Total-Count'] = total
   end
 
   def validate_show_params
