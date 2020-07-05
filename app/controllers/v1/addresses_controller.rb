@@ -8,9 +8,13 @@ class V1::AddressesController < ApplicationController
   end
 
   def search
-    search_level = get_search_level # 一階層下の住所レベルを取得
-    @addresses = Address.where(level: search_level)
-    @addresses = @addresses.where('code LIKE ?', "#{@address.code}%") unless @address.nil?
+    if params[:word].present?
+      @addresses = Address.where('name LIKE ?', "%#{params[:word]}%")
+    elsif params[:code].present?
+      search_level = get_search_level # 一階層下の住所レベルを取得
+      @addresses = Address.where(level: search_level)
+      @addresses = @addresses.where('code LIKE ?', "#{@address.code}%")
+    end
 
     offset = get_offset
     limit = get_limit
@@ -27,8 +31,15 @@ class V1::AddressesController < ApplicationController
   end
 
   def validate_search_params
+    word = params[:word]
     code = params[:code]
-    unless code.blank?
+
+    if word.blank? && code.blank?
+      render status: :bad_request, json: { status: 400, message: 'Parameter(word or code) is required.' }
+      return
+    end
+
+    if code.present?
       @address = Address.find_by(code: code)
       render status: :bad_request, json: { status: 400, message: 'Invalid address code.' } if @address.nil?
     end

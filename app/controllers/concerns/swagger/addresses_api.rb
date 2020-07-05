@@ -27,15 +27,21 @@ module Swagger::AddressesApi
       operation :get do
         key :description, '指定した条件に合致する住所情報をリストで取得します。'
         key :tags, ['Address']
+        parameter name: :word do
+          key :in, :query
+          key :description, '住所名称。指定したワードが含まれる住所情報を取得します。codeとの併用は不可（どちらか片方を必ず指定）。'
+          key :required, true
+          key :type, :string
+        end
         parameter name: :code do
           key :in, :query
-          key :description, '住所コード。指定したコードの１階層下の住所情報を取得します。'
-          key :required, false
+          key :description, '住所コード。指定したコードの１階層下の住所情報を取得します。wordとの併用は不可（どちらか片方を必ず指定）。'
+          key :required, true
           key :type, :string
         end
         parameter name: :limit do
           key :in, :query
-          key :description, '取得件数'
+          key :description, '取得件数。最大値は100。'
           key :required, false
           key :type, :integer
           key :default, 10
@@ -43,7 +49,7 @@ module Swagger::AddressesApi
         end
         parameter name: :offset do
           key :in, :query
-          key :description, '取得開始位置'
+          key :description, '取得開始位置。'
           key :required, false
           key :type, :integer
           key :default, 0
