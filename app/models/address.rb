@@ -19,7 +19,7 @@ class Address < ApplicationRecord
     BLOCK: 20
   }
 
-  default_scope { select('*, X(coordinate) as lng, Y(coordinate) as lat') }
+  default_scope { select('*, X(point) as lng, Y(point) as lat') }
 
   def lat
     self.attributes['lat']
