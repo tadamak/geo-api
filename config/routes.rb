@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     resources :apidocs, only: [:index]
 
     # Address API
-    resources :addresses, param: :code, only: [:show] do
+    resources :addresses, param: :code, only: [:index, :show] do
       get :search, on: :collection
     end
 

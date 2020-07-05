@@ -5,7 +5,7 @@ class V1::ApidocsController < ApplicationController
     key :swagger, '2.0'
     info do
       key :version, '1.0.0'
-      key :title, 'Geo API'
+      key :title, 'Geo API 🌏'
       key :description, '空間情報検索API'
     end
     tag do

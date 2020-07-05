@@ -1,8 +1,13 @@
 class V1::AddressesController < ApplicationController
   include Swagger::AddressesApi
 
+  before_action :validate_index_params, only: [:index ]
   before_action :validate_show_params, only: [:show]
   before_action :validate_search_params, only: [:search]
+
+  def index
+    @addresses = Address.where(code: params[:codes].split(','))
+  end
 
   def show
   end
@@ -10,10 +15,10 @@ class V1::AddressesController < ApplicationController
   def search
     if params[:word].present?
       @addresses = Address.where('name LIKE ?', "%#{params[:word]}%")
-    elsif params[:code].present?
+    else
       search_level = get_search_level # 一階層下の住所レベルを取得
       @addresses = Address.where(level: search_level)
-      @addresses = @addresses.where('code LIKE ?', "#{@address.code}%")
+      @addresses = @addresses.where('code LIKE ?', "#{@address.code}%") if @address.present?
     end
 
     offset = get_offset
@@ -24,6 +29,11 @@ class V1::AddressesController < ApplicationController
     response.headers['X-Total-Count'] = total
   end
 
+  def validate_index_params
+    codes = params[:codes]
+    render status: :bad_request, json: { status: 400, message: 'Parameter(codes) is required.' } if codes.blank?
+  end
+
   def validate_show_params
     code = params[:code]
     @address = Address.find_by(code: code)
@@ -31,13 +41,7 @@ class V1::AddressesController < ApplicationController
   end
 
   def validate_search_params
-    word = params[:word]
     code = params[:code]
-
-    if word.blank? && code.blank?
-      render status: :bad_request, json: { status: 400, message: 'Parameter(word or code) is required.' }
-      return
-    end
 
     if code.present?
       @address = Address.find_by(code: code)

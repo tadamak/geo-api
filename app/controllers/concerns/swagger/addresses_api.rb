@@ -23,20 +23,40 @@ module Swagger::AddressesApi
       end
     end
 
+    swagger_path '/addresses' do
+      operation :get do
+        key :description, '指定した住所コードの住所情報を取得します。'
+        key :tags, ['Address']
+        parameter name: :codes do
+          key :in, :query
+          key :description, '住所コード。カンマ区切りで複数指定可能。(ex. codes=13,13101)'
+          key :required, true
+          key :type, :string
+        end
+
+        response 200 do
+          key :description, '住所情報'
+          schema do
+            key :'$ref', :Address
+          end
+        end
+      end
+    end
+
     swagger_path '/addresses/search' do
       operation :get do
         key :description, '指定した条件に合致する住所情報をリストで取得します。'
         key :tags, ['Address']
         parameter name: :word do
           key :in, :query
-          key :description, '住所名称。指定したワードが含まれる住所情報を取得します。codeとの併用は不可（どちらか片方を必ず指定）。'
-          key :required, true
+          key :description, '住所名称。指定したワードが含まれる住所情報を取得します。codeとの併用は不可。'
+          key :required, false
           key :type, :string
         end
         parameter name: :code do
           key :in, :query
-          key :description, '住所コード。指定したコードの１階層下の住所情報を取得します。wordとの併用は不可（どちらか片方を必ず指定）。'
-          key :required, true
+          key :description, '住所コード。指定したコードの１階層下の住所情報を取得します。wordとの併用は不可。'
+          key :required, false
           key :type, :string
         end
         parameter name: :limit do
