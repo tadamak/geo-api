@@ -2,15 +2,11 @@ class V1::AddressesController < ApplicationController
   include Swagger::AddressesApi
 
   before_action :validate_index_params, only: [:index]
-  before_action :validate_show_params, only: [:show]
   before_action :validate_search_params, only: [:search]
   before_action :validate_shapes_params, only: [:shapes]
 
   def index
     @addresses = Address.where(code: params[:codes].split(','))
-  end
-
-  def show
   end
 
   def search
@@ -45,15 +41,8 @@ class V1::AddressesController < ApplicationController
     render status: :bad_request, json: { status: 400, message: 'Parameter(codes) is required.' } if codes.blank?
   end
 
-  def validate_show_params
-    code = params[:code]
-    @address = Address.find_by(code: code)
-    render status: :bad_request, json: { status: 400, message: 'Invalid address code.' } if @address.nil?
-  end
-
   def validate_search_params
     code = params[:code]
-
     if code.present?
       @address = Address.find_by(code: code)
       render status: :bad_request, json: { status: 400, message: 'Invalid address code.' } if @address.nil?

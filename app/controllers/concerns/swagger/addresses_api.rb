@@ -3,26 +3,6 @@ module Swagger::AddressesApi
   include Swagger::Blocks
 
   included do
-    swagger_path '/addresses/{code}' do
-      operation :get do
-        key :description, '指定した住所コードの住所情報を取得します。'
-        key :tags, ['Address']
-        parameter name: :code do
-          key :in, :path
-          key :description, '住所コード'
-          key :required, true
-          key :type, :string
-        end
-
-        response 200 do
-          key :description, '住所情報'
-          schema do
-            key :'$ref', :Address
-          end
-        end
-      end
-    end
-
     swagger_path '/addresses' do
       operation :get do
         key :description, '指定した住所コードの住所情報を取得します。'
@@ -90,26 +70,6 @@ module Swagger::AddressesApi
             key :description, 'リクエストに対する総件数'
             key :type, :integer
             key :format, :int64
-          end
-        end
-      end
-    end
-
-    swagger_path '/addresses/shapes/{code}' do
-      operation :get do
-        key :description, '指定した住所コードのポリゴンを取得します。'
-        key :tags, ['Address']
-        parameter name: :code do
-          key :in, :path
-          key :description, '住所コード'
-          key :required, true
-          key :type, :string
-        end
-
-        response 200 do
-          key :description, '住所ポリゴン'
-          schema do
-            key :'$ref', :GeoJson
           end
         end
       end

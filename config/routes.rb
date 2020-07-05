@@ -3,13 +3,9 @@ Rails.application.routes.draw do
     resources :apidocs, only: [:index]
 
     # Address API
-    resources :addresses, param: :code, only: [:index, :show] do
+    resources :addresses, param: :code, only: [:index] do
       get :search, on: :collection
       get :shapes, on: :collection
-    end
-
-    namespace :addresses do
-      resources :shapes, param: :code, only: [:show]
     end
 
     # Analyses API

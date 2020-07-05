@@ -17,7 +17,7 @@ class V1::ApidocsController < ApplicationController
       key :description, '解析API'
     end
     key :schemes, ['https', 'http']
-    key :host, 'api.geo.qazsato.com'
+    key :host, 'localhost:4000'
     key :basePath, '/v1'
     key :consumes, ['application/json']
     key :produces, ['application/json']
@@ -27,7 +27,6 @@ class V1::ApidocsController < ApplicationController
     Address,
     GeoJson,
     V1::AddressesController,
-    V1::Addresses::ShapesController,
     V1::Analyses::AddressesController,
     self
   ].freeze
