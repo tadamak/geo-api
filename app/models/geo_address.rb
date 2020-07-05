@@ -1,4 +1,9 @@
 class GeoAddress < ApplicationRecord
+
+  def self.reverse_geocoding(lat, lng)
+    self.where("ST_Contains(polygon, GeomFromText('POINT(#{lng} #{lat})', 4326))").order(level: :desc).limit(1).first
+  end
+
   def self.geojson(address_codes)
     results = self.select('address_code, ST_AsGeoJSON(polygon) as geojson').where(address_code: address_codes)
     features = []

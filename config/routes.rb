@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     # Address API
     resources :addresses, param: :code, only: [:index] do
       get :search, on: :collection
+      get :geocoding, on: :collection
       get :shapes, on: :collection
     end
 

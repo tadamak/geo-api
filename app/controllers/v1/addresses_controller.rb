@@ -3,6 +3,7 @@ class V1::AddressesController < ApplicationController
 
   before_action :validate_index_params, only: [:index]
   before_action :validate_search_params, only: [:search]
+  before_action :validate_geocoding_params, only: [:geocoding]
   before_action :validate_shapes_params, only: [:shapes]
 
   def index
@@ -26,6 +27,18 @@ class V1::AddressesController < ApplicationController
     response.headers['X-Total-Count'] = total
   end
 
+  def geocoding
+    locations = params[:locations].split(':')
+    codes = []
+    locations.each do |location|
+      lat = location.split(',')[0]
+      lng = location.split(',')[1]
+      geo_address = GeoAddress.reverse_geocoding(lat, lng)
+      codes << geo_address.address_code if geo_address.present?
+    end
+    @addresses = Address.where(code: codes)
+  end
+
   def shapes
     @geojsons = []
     codes = params[:codes].split(',')
@@ -47,6 +60,11 @@ class V1::AddressesController < ApplicationController
       @address = Address.find_by(code: code)
       render status: :bad_request, json: { status: 400, message: 'Invalid address code.' } if @address.nil?
     end
+  end
+
+  def validate_geocoding_params
+    locations = params[:locations]
+    render status: :bad_request, json: { status: 400, message: 'Parameter(locations) is required.' } if locations.blank?
   end
 
   def validate_shapes_params
