@@ -1,9 +1,10 @@
 class V1::AddressesController < ApplicationController
   include Swagger::AddressesApi
 
-  before_action :validate_index_params, only: [:index ]
+  before_action :validate_index_params, only: [:index]
   before_action :validate_show_params, only: [:show]
   before_action :validate_search_params, only: [:search]
+  before_action :validate_shapes_params, only: [:shapes]
 
   def index
     @addresses = Address.where(code: params[:codes].split(','))
@@ -29,6 +30,16 @@ class V1::AddressesController < ApplicationController
     response.headers['X-Total-Count'] = total
   end
 
+  def shapes
+    @geojsons = []
+    codes = params[:codes].split(',')
+    codes.each do |code|
+      @geojsons << GeoAddress.geojson(code)
+    end
+  end
+
+  private
+
   def validate_index_params
     codes = params[:codes]
     render status: :bad_request, json: { status: 400, message: 'Parameter(codes) is required.' } if codes.blank?
@@ -49,7 +60,10 @@ class V1::AddressesController < ApplicationController
     end
   end
 
-  private
+  def validate_shapes_params
+    codes = params[:codes]
+    render status: :bad_request, json: { status: 400, message: 'Parameter(codes) is required.' } if codes.blank?
+  end
 
   def get_search_level
     if @address.nil?
