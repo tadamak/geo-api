@@ -38,18 +38,19 @@ class Address < ApplicationRecord
     codes
   end
 
-  def addresses
+  def details
     addresses = Address.where(code: self.codes).order(level: :asc)
-    converted_addresses = []
+    details = []
     addresses.each_with_index do |address, i|
       name = address.name
       # フルの住所名称から直前のレベルの住所名を除く (ex. "東京都墨田区"を"墨田区"に置換)
       name = name.sub(/^#{addresses[i - 1].name}/, '') unless i.zero?
-      converted_addresses << {
+      details << {
         code: address.code,
-        name: name
+        name: name,
+        level: address.level
       }
     end
-    converted_addresses
+    details
   end
 end

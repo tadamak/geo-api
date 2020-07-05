@@ -5,6 +5,6 @@ json.set! :location do
   json.lat address.lat
   json.lng address.lng
 end
-json.set! :addresses do
-  json.array! address.addresses, :code, :name
+json.set! :details do
+  json.array! address.details, :code, :name, :level
 end

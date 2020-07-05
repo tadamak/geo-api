@@ -32,7 +32,7 @@ module Swagger::AddressSchema
           key :example, 139.691717
         end
       end
-      property :addresses do
+      property :details do
         key :type, :array
         items do
           property :code do
@@ -42,6 +42,11 @@ module Swagger::AddressSchema
           property :name do
             key :type, :string
             key :example, '東京都'
+          end
+          property :level do
+            key :type, :integer
+            key :format, :int32
+            key :example, 1
           end
         end
       end
