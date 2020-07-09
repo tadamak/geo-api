@@ -1,12 +1,12 @@
-module Swagger::AnalysesApi
+module Swagger::AnalyticsApi
   extend ActiveSupport::Concern
   include Swagger::Blocks
 
   included do
-    swagger_path '/analyses/addresses/contains' do
+    swagger_path '/analytics/addresses/contains' do
       operation :post do
         key :description, '指定した緯度経度を包含している住所コード毎の件数を取得します。'
-        key :tags, ['Analysis']
+        key :tags, ['Analytics']
         parameter name: :datas do
           key :in, :body
           key :description, '緯度経度(カンマ区切り)の配列と住所レベル'

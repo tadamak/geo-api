@@ -9,11 +9,18 @@ Rails.application.routes.draw do
       get :shapes, on: :collection
     end
 
-    # Analyses API
-    namespace :analyses do
+    # Analytics API
+    namespace :analytics do
       resource :addresses, only: [] do
         get :contains, on: :collection
         post :contains, on: :collection
+      end
+    end
+
+    # Statistics API
+    namespace :statistics do
+      resource :addresses, only: [] do
+        get :population, on: :collection
       end
     end
   end
