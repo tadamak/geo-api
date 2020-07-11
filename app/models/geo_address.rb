@@ -1,7 +1,7 @@
 class GeoAddress < ApplicationRecord
 
   def self.reverse_geocoding(lat, lng)
-    self.where("ST_Contains(polygon, GeomFromText('POINT(#{lng} #{lat})', 4326))").order(level: :desc).limit(1).first
+    self.where("ST_Contains(polygon, ST_GeomFromText('POINT(#{lng} #{lat})', 4326))").order(level: :desc).limit(1).first
   end
 
   def self.geojson(address_codes)
@@ -29,7 +29,7 @@ class GeoAddress < ApplicationRecord
       lat = l.split(',')[0]
       lng = l.split(',')[1]
       sql += "UNION ALL\n" unless sql.empty?
-      sql += "SELECT GeomFromText('POINT(#{lng} #{lat})', 4326) point\n"
+      sql += "SELECT ST_GeomFromText('POINT(#{lng} #{lat})', 4326) point\n"
     end
 
     geo_addresses = self.find_by_sql("
