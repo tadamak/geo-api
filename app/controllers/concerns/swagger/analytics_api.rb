@@ -29,14 +29,13 @@ module Swagger::AnalyticsApi
         end
 
         response 200 do
-          key :description, '住所コード毎の件数'
+          key :description, '住所毎の件数'
           schema do
             key :type, :array
             items do
               key :required, [:address_code, :count]
-              property :address_code do
-                key :type, :string
-                key :example, '13'
+              property :address do
+                key :'$ref', :Address
               end
               property :count do
                 key :type, :integer
