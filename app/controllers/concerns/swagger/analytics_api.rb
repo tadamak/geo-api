@@ -5,9 +5,9 @@ module Swagger::AnalyticsApi
   included do
     swagger_path '/analytics/addresses/contains' do
       operation :post do
-        key :description, '指定した緯度経度を包含している住所コード毎の件数を取得します。'
+        key :description, '指定した緯度経度がポリゴン内に含まれている住所毎の件数を取得します。'
         key :tags, ['Analytics']
-        parameter name: :datas do
+        parameter name: :body do
           key :in, :body
           key :description, '緯度経度(カンマ区切り)の配列と住所レベル'
           key :required, true

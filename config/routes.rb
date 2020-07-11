@@ -12,7 +12,6 @@ Rails.application.routes.draw do
     # Analytics API
     namespace :analytics do
       resource :addresses, only: [] do
-        get :contains, on: :collection
         post :contains, on: :collection
       end
     end

@@ -4,11 +4,10 @@ class V1::Analytics::AddressesController < ApplicationController
   before_action :validate_contains_params, only: [:contains]
 
   def contains
-    # TODO: validation
     locations = params[:locations]
     locations = JSON.parse(locations) if locations.kind_of?(String)
     level = params[:level]
-    @count = GeoAddress.count_by_address_code(locations, level)
+    @counts_by_address_code = GeoAddress.counts_by_address_code(locations, level)
   end
 
   private
