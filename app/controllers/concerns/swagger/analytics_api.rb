@@ -5,7 +5,7 @@ module Swagger::AnalyticsApi
   included do
     swagger_path '/analytics/addresses/contains' do
       operation :post do
-        key :description, '指定した緯度経度がポリゴン内に含まれている住所毎の件数を取得します。'
+        key :description, '指定した緯度経度がどのポリゴン内に含まれているかを解析し、住所毎の件数を取得します。'
         key :tags, ['Analytics']
         parameter name: :body do
           key :in, :body

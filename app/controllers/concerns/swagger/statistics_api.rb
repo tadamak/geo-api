@@ -3,7 +3,7 @@ module Swagger::StatisticsApi
   include Swagger::Blocks
 
   included do
-    swagger_path '/statistics/addresses/population' do
+    swagger_path '[WIP]/statistics/addresses/populations' do
       operation :get do
         key :description, '指定した住所コードの人口・世帯数情報を取得します。'
         key :tags, ['Statistics']
@@ -19,14 +19,13 @@ module Swagger::StatisticsApi
             key :type, :array
             items do
               key :required, [:address_code, :count]
-              property :address_code do
-                key :type, :string
-                key :example, '13101'
+              property :address do
+                key :'$ref', :Address
               end
               property :count do
                 key :type, :object
-                key :required, [:population, :households]
-                property :population do
+                key :required, [:populations, :households]
+                property :populations do
                   key :type, :integer
                   key :description, '人口'
                   key :format, :int32
