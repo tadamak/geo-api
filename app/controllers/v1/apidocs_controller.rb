@@ -13,6 +13,10 @@ class V1::ApidocsController < ApplicationController
       key :description, '住所API'
     end
     tag do
+      key :name, 'Mesh'
+      key :description, '地域メッシュAPI'
+    end
+    tag do
       key :name, 'Analytics'
       key :description, '解析API'
     end
@@ -29,8 +33,10 @@ class V1::ApidocsController < ApplicationController
 
   SWAGGERED_CLASSES = [
     Address,
+    Mesh,
     GeoJson,
     V1::AddressesController,
+    V1::MeshesController,
     V1::Analytics::AddressesController,
     V1::Statistics::AddressesController,
     self

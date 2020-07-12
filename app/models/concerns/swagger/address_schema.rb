@@ -4,7 +4,7 @@ module Swagger::AddressSchema
 
   included do
     swagger_schema :Address do
-      key :required, [:code, :name, :level, :location, :addresses]
+      key :required, [:code, :name, :level, :location, :details]
       property :code do
         key :type, :string
         key :example, '13'
