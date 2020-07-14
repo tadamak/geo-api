@@ -10,7 +10,7 @@ Rails.application.routes.draw do
     end
 
     # Mesh API
-    resources :meshes, param: :code do
+    resources :meshes, param: :code, only: [:index] do
       get :search, on: :collection
       get :shapes, on: :collection
     end

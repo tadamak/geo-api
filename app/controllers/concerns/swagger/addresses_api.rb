@@ -5,7 +5,7 @@ module Swagger::AddressesApi
   included do
     swagger_path '/addresses' do
       operation :get do
-        key :description, '指定した住所コードの住所情報を取得します。'
+        key :description, '指定したコードの住所情報を取得します。'
         key :tags, ['Address']
         parameter name: :codes do
           key :in, :query

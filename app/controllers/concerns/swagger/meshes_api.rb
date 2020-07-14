@@ -3,7 +3,30 @@ module Swagger::MeshesApi
   include Swagger::Blocks
 
   included do
-    swagger_path '[WIP]/meshes/search' do
+    swagger_path '/meshes' do
+      operation :get do
+        key :description, '指定したコードの地域メッシュ情報を取得します。'
+        key :tags, ['Mesh']
+        parameter name: :codes do
+          key :in, :query
+          key :description, '地域メッシュコード。カンマ区切りで複数指定可能。(ex. codes=30365090,30365091)'
+          key :required, true
+          key :type, :string
+        end
+
+        response 200 do
+          key :description, '地域メッシュ情報'
+          schema do
+            key :type, :array
+            items do
+              key :'$ref', :Mesh
+            end
+          end
+        end
+      end
+    end
+
+    swagger_path '/meshes/search' do
       operation :get do
         key :description, '指定した条件に合致する地域メッシュ情報をリストで取得します。'
         key :tags, ['Mesh']
@@ -46,7 +69,7 @@ module Swagger::MeshesApi
       end
     end
 
-    swagger_path '[WIP]/meshes/shapes' do
+    swagger_path '/meshes/shapes' do
       operation :get do
         key :description, '指定した地域メッシュコードのポリゴンを取得します。'
         key :tags, ['Mesh']
