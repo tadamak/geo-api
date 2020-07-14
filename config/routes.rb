@@ -20,6 +20,9 @@ Rails.application.routes.draw do
       resource :addresses, only: [] do
         post :contains, on: :collection
       end
+      resource :meshes, only: [] do
+        post :contains, on: :collection
+      end
     end
 
     # Statistics API
