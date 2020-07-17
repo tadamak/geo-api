@@ -3,6 +3,8 @@ class Mesh < ApplicationRecord
 
   # 地域メッシュ階層
   LEVEL = {
+    FIRST:  1,
+    SECOND: 2,
     THIRD:  3,
     FOURTH: 4,
     FIFTH:  5

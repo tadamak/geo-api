@@ -52,7 +52,7 @@ class V1::MeshesController < ApplicationController
 
   def get_search_level
     if @mesh.nil?
-      Mesh::LEVEL[:THIRD]
+      Mesh::LEVEL[:FIRST]
     else
       @mesh.level + 1
     end
