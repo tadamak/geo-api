@@ -40,11 +40,8 @@ class V1::AddressesController < ApplicationController
   end
 
   def shapes
-    @geojsons = []
     codes = params[:codes].split(',')
-    codes.each do |code|
-      @geojsons << GeoAddress.geojson(code)
-    end
+    @geojsons = GeoAddress.geojsons(codes)
   end
 
   private

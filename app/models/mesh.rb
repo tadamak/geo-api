@@ -15,13 +15,12 @@ class Mesh < ApplicationRecord
     results = self.select('code, ST_AsGeoJSON(polygon) as geojson').where(code: codes)
     features = []
     results.each do |result|
-      geojson = result.attributes['geojson']
       features << {
         type: 'Feature',
         properties: {
           code: result.code
         },
-        geometry: JSON.parse(geojson)
+        geometry: JSON.parse(result.attributes['geojson'])
       }
     end
     return {

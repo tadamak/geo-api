@@ -4,23 +4,44 @@ class GeoAddress < ApplicationRecord
     self.where("ST_Contains(polygon, ST_GeomFromText('POINT(#{lng} #{lat})', 4326))").order(level: :desc).limit(1).first
   end
 
+  # 複数住所を1つのGeoJSONに変換する (GeoAddress:GeoJSON = N:1)
   def self.geojson(address_codes)
     results = self.select('address_code, ST_AsGeoJSON(polygon) as geojson').where(address_code: address_codes)
     features = []
     results.each do |result|
-      geojson = result.attributes['geojson']
       features << {
         type: 'Feature',
         properties: {
           code: result.address_code
         },
-        geometry: JSON.parse(geojson)
+        geometry: JSON.parse(result.attributes['geojson'])
       }
     end
     return {
       type: 'FeatureCollection',
       features: features
     }
+  end
+
+  # 住所単位にGeoJSONを生成する (GeoAddress:GeoJSON = 1:1)
+  def self.geojsons(address_codes)
+    results = self.select('address_code, ST_AsGeoJSON(polygon) as geojson').where(address_code: address_codes)
+    geojsons = []
+    results.each do |result|
+      geojsons << {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            properties: {
+              code: result.address_code
+            },
+            geometry: JSON.parse(result.attributes['geojson'])
+          }
+        ]
+      }
+    end
+    return geojsons
   end
 
   def self.counts_by_address_code(locations, level)
