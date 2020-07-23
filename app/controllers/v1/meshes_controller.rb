@@ -23,11 +23,8 @@ class V1::MeshesController < ApplicationController
   end
 
   def shapes
-    @geojsons = []
     codes = params[:codes].split(',')
-    codes.each do |code|
-      @geojsons << Mesh.geojson(code)
-    end
+    @geojsons = Mesh.geojsons(codes)
   end
 
   private

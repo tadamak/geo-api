@@ -10,6 +10,7 @@ class Mesh < ApplicationRecord
     FIFTH:  5
   }
 
+  # 複数メッシュを1つのGeoJSONに変換する (Mesh:GeoJSON = N:1)
   def self.geojson(codes)
     results = self.select('code, ST_AsGeoJSON(polygon) as geojson').where(code: codes)
     features = []
@@ -27,6 +28,27 @@ class Mesh < ApplicationRecord
       type: 'FeatureCollection',
       features: features
     }
+  end
+
+  # メッシュ単位にGeoJSONを生成する (Mesh:GeoJSON = 1:1)
+  def self.geojsons(codes)
+    results = self.select('code, ST_AsGeoJSON(polygon) as geojson').where(code: codes)
+    geojsons = []
+    results.each do |result|
+      geojsons << {
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            properties: {
+              code: result.code
+            },
+            geometry: JSON.parse(result.attributes['geojson'])
+          }
+        ]
+      }
+    end
+    return geojsons
   end
 
   def self.counts_by_code(locations, level)
