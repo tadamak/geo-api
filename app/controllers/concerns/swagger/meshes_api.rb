@@ -38,11 +38,11 @@ module Swagger::MeshesApi
         end
         parameter name: :limit do
           key :in, :query
-          key :description, '取得件数。最大値は100。'
+          key :description, '取得件数。最大値は1000。'
           key :required, false
           key :type, :integer
           key :default, 10
-          key :maximum, 100
+          key :maximum, 1000
         end
         parameter name: :offset do
           key :in, :query
