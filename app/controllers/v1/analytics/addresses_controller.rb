@@ -6,7 +6,7 @@ class V1::Analytics::AddressesController < ApplicationController
   def contains
     locations = params[:locations]
     locations = JSON.parse(locations) if locations.kind_of?(String)
-    level = params[:level]
+    level = params[:level].to_i
     @counts_by_address_code = GeoAddress.counts_by_address_code(locations, level)
   end
 

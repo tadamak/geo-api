@@ -6,7 +6,7 @@ class V1::Analytics::MeshesController < ApplicationController
   def contains
     locations = params[:locations]
     locations = JSON.parse(locations) if locations.kind_of?(String)
-    level = params[:level]
+    level = params[:level].to_i
     @counts_by_mesh_code = Mesh.counts_by_code(locations, level)
   end
 

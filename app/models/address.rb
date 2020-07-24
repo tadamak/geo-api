@@ -53,4 +53,18 @@ class Address < ApplicationRecord
     end
     details
   end
+
+  def self.code_by_level(code, level)
+    case level
+    when LEVEL[:PREF] then
+      code = code[0, CODE_DIGIT[:PREF]]
+    when LEVEL[:CITY] then
+      code = code[0, CODE_DIGIT[:CITY]]
+    when LEVEL[:TOWN] then
+      code = code[0, CODE_DIGIT[:TOWN]]
+    when LEVEL[:BLOCK] then
+      code = code[0, CODE_DIGIT[:BLOCK]]
+    end
+    code
+  end
 end

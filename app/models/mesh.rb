@@ -64,7 +64,7 @@ class Mesh < ApplicationRecord
       FROM (#{sql}) as t
       GROUP BY t.code;")
 
-    meshes = Mesh.where(code: meshCounts.pluck(:code)).to_a
+    meshes = Mesh.where(code: meshCounts.pluck(:code))
 
     counts_by_code = []
     meshCounts.each do |meshCount|

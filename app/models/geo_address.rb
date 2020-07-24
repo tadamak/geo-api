@@ -50,7 +50,8 @@ class GeoAddress < ApplicationRecord
       lat = l.split(',')[0]
       lng = l.split(',')[1]
       sql += "UNION ALL\n" unless sql.empty?
-      sql += "SELECT address_code FROM geo_addresses WHERE (ST_Contains(polygon, ST_GEOMFROMTEXT('POINT(#{lng} #{lat})', 4326))) AND level = #{level}\n"
+      # NOTE: 都道府県のST_Containsが遅いため、最も下のレベル3(丁目・番地)で解析をする
+      sql += "SELECT address_code FROM geo_addresses WHERE (ST_Contains(polygon, ST_GEOMFROMTEXT('POINT(#{lng} #{lat})', 4326))) AND level = 3\n"
     end
 
     geo_addresses = self.find_by_sql("
@@ -58,14 +59,24 @@ class GeoAddress < ApplicationRecord
       FROM (#{sql}) as t
       GROUP BY t.address_code;")
 
-    addresses = Address.where(code: geo_addresses.pluck(:address_code)).to_a
+    count = {}
+    geo_addresses.each do |geo_address|
+      code = Address.code_by_level(geo_address.address_code, level)
+      if count[code].nil?
+        count[code] = geo_address.attributes['count']
+      elsif
+        count[code] += geo_address.attributes['count']
+      end
+    end
+
+    addresses = Address.where(code: count.keys)
 
     counts_by_address_code = []
-    geo_addresses.each do |geo_address|
-      address = addresses.select{|a| a.code == geo_address.address_code}.first
+    count.map do |code, value|
+      address = addresses.select{|a| a.code == code}.first
       counts_by_address_code << {
         address: address,
-        count: geo_address.attributes['count']
+        count: value
       }
     end
     counts_by_address_code
