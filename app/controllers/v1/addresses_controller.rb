@@ -47,26 +47,51 @@ class V1::AddressesController < ApplicationController
   private
 
   def validate_index_params
-    codes = params[:codes]
-    render status: :bad_request, json: { status: 400, message: 'Parameter(codes) is required.' } if codes.blank?
+    codes = params[:codes]&.split(',')
+    if codes.blank?
+      return render_400(ErrorCode::REQUIRED_PARAM, 'codes の指定が必要です。')
+    elsif codes.length > Constants::MAX_LIMIT
+      return render_400(ErrorCode::INVALID_PARAM, "codes の指定数が最大値(#{Constants::MAX_LIMIT}件)を超えています。")
+    end
   end
 
   def validate_search_params
+    limit = params[:limit].to_i
+    offset = params[:offset].to_i
     code = params[:code]
+    if limit < 0
+      return render_400(ErrorCode::INVALID_PARAM, "limit には正の整数を指定してください。")
+    end
+    if limit > Constants::MAX_LIMIT
+      return render_400(ErrorCode::INVALID_PARAM, "limit の指定数が最大値(#{Constants::MAX_LIMIT}件)を超えています。")
+    end
+    if offset < 0
+      return render_400(ErrorCode::INVALID_PARAM, "offset には正の整数を指定してください。")
+    end
     if code.present?
       @address = Address.find_by(code: code)
-      render status: :bad_request, json: { status: 400, message: 'Invalid address code.' } if @address.nil?
+      if @address.nil?
+        return render_400(ErrorCode::INVALID_PARAM, "存在しない住所コードを指定しています。")
+      end
     end
   end
 
   def validate_geocoding_params
-    locations = params[:locations]
-    render status: :bad_request, json: { status: 400, message: 'Parameter(locations) is required.' } if locations.blank?
+    locations = params[:locations]&.split(':')
+    if locations.blank?
+      return render_400(ErrorCode::REQUIRED_PARAM, 'locations の指定が必要です。')
+    elsif locations.length > Constants::MAX_LIMIT
+      return render_400(ErrorCode::INVALID_PARAM, "locations の指定数が最大値(#{Constants::MAX_LIMIT}件)を超えています。")
+    end
   end
 
   def validate_shapes_params
-    codes = params[:codes]
-    render status: :bad_request, json: { status: 400, message: 'Parameter(codes) is required.' } if codes.blank?
+    codes = params[:codes]&.split(',')
+    if codes.blank?
+      return render_400(ErrorCode::REQUIRED_PARAM, 'codes の指定が必要です。')
+    elsif codes.length > Constants::MAX_LIMIT
+      return render_400(ErrorCode::INVALID_PARAM, "codes の指定数が最大値(#{Constants::MAX_LIMIT}件)を超えています。")
+    end
   end
 
   def get_search_level

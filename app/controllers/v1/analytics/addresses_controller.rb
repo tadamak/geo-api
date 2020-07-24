@@ -14,8 +14,15 @@ class V1::Analytics::AddressesController < ApplicationController
 
   def validate_contains_params
     locations = params[:locations]
-    render status: :bad_request, json: { status: 400, message: 'Required locations.' } if locations.blank?
+    if locations.blank?
+      return render_400(ErrorCode::REQUIRED_PARAM, 'locations の指定が必要です。')
+    elsif locations.length > Constants::MAX_LIMIT
+      return render_400(ErrorCode::INVALID_PARAM, "locations の指定数が最大値(#{Constants::MAX_LIMIT}件)を超えています。")
+    end
+
     level = params[:level]
-    render status: :bad_request, json: { status: 400, message: 'Required level.' } if level.blank?
+    if level.blank?
+      return render_400(ErrorCode::REQUIRED_PARAM, 'level の指定が必要です。')
+    end
   end
 end
