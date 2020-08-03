@@ -7,7 +7,14 @@ class V1::Analytics::MeshesController < ApplicationController
     locations = params[:locations]
     locations = JSON.parse(locations) if locations.kind_of?(String)
     level = params[:level].to_i
-    @counts_by_mesh_code = Mesh.counts_by_code(locations, level)
+    counts_by_mesh_code = Mesh.counts_by_code(locations, level)
+    json = counts_by_mesh_code.map do |c|
+      {
+        mesh: MeshSerializer.new(c[:mesh]),
+        count: c[:count]
+      }
+    end
+    render json: json
   end
 
   private

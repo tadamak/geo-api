@@ -7,24 +7,26 @@ class V1::AddressesController < ApplicationController
   before_action :validate_shapes_params, only: [:shapes]
 
   def index
-    @addresses = Address.where(code: params[:codes].split(','))
+    addresses = Address.where(code: params[:codes].split(','))
+    render json: addresses
   end
 
   def search
     if params[:word].present?
-      @addresses = Address.where('name LIKE ?', "%#{params[:word]}%")
+      addresses = Address.where('name LIKE ?', "%#{params[:word]}%")
     else
       search_level = get_search_level # 一階層下の住所レベルを取得
-      @addresses = Address.where(level: search_level)
-      @addresses = @addresses.where('code LIKE ?', "#{@address.code}%") if @address.present?
+      addresses = Address.where(level: search_level)
+      addresses = addresses.where('code LIKE ?', "#{@address.code}%") if @address.present?
     end
 
     offset = get_offset
     limit = get_limit
-    total = @addresses.unscope(:select).count
-    @addresses = @addresses.offset(offset).limit(limit)
+    total = addresses.unscope(:select).count
+    addresses = addresses.offset(offset).limit(limit)
 
     response.headers['X-Total-Count'] = total
+    render json: addresses
   end
 
   def geocoding
@@ -36,12 +38,14 @@ class V1::AddressesController < ApplicationController
       geo_address = GeoAddress.reverse_geocoding(lat, lng)
       codes << geo_address.address_code if geo_address.present?
     end
-    @addresses = Address.where(code: codes)
+    addresses = Address.where(code: codes)
+    render json: addresses
   end
 
   def shapes
     codes = params[:codes].split(',')
-    @geojsons = GeoAddress.geojsons(codes)
+    geojsons = GeoAddress.geojsons(codes)
+    render json: geojsons
   end
 
   private

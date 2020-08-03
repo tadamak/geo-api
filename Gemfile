@@ -45,3 +45,7 @@ end
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'swagger-blocks'
+
+gem 'active_model_serializers'
+
+gem 'oj', '~> 3.6', '>= 3.6.7'

@@ -6,25 +6,28 @@ class V1::MeshesController < ApplicationController
   before_action :validate_shapes_params, only: [:shapes]
 
   def index
-    @meshes = Mesh.where(code: params[:codes].split(','))
+    meshes = Mesh.where(code: params[:codes].split(','))
+    render json: meshes
   end
 
   def search
     search_level = get_search_level # 一階層下の地域メッシュレベルを取得
-    @meshes = Mesh.where(level: search_level)
-    @meshes = @meshes.where('code LIKE ?', "#{@mesh.code}%") if @mesh.present?
+    meshes = Mesh.where(level: search_level)
+    meshes = meshes.where('code LIKE ?', "#{@mesh.code}%") if @mesh.present?
 
     offset = get_offset
     limit = get_limit
-    total = @meshes.count
-    @meshes = @meshes.offset(offset).limit(limit)
+    total = meshes.count
+    meshes = meshes.offset(offset).limit(limit)
 
     response.headers['X-Total-Count'] = total
+    render json: meshes
   end
 
   def shapes
     codes = params[:codes].split(',')
-    @geojsons = Mesh.geojsons(codes)
+    geojsons = Mesh.geojsons(codes)
+    render json: geojsons
   end
 
   private

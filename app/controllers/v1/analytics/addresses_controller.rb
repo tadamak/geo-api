@@ -7,7 +7,14 @@ class V1::Analytics::AddressesController < ApplicationController
     locations = params[:locations]
     locations = JSON.parse(locations) if locations.kind_of?(String)
     level = params[:level].to_i
-    @counts_by_address_code = GeoAddress.counts_by_address_code(locations, level)
+    counts_by_address_code = GeoAddress.counts_by_address_code(locations, level)
+    json = counts_by_address_code.map do |c|
+      {
+        address: AddressSerializer.new(c[:address]),
+        count: c[:count]
+      }
+    end
+    render json: json
   end
 
   private
