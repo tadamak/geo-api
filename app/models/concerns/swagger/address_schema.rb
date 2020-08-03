@@ -15,7 +15,6 @@ module Swagger::AddressSchema
       end
       property :level do
         key :type, :integer
-        key :format, :int32
         key :example, 1
       end
       property :location do
@@ -45,7 +44,6 @@ module Swagger::AddressSchema
           end
           property :level do
             key :type, :integer
-            key :format, :int32
             key :example, 1
           end
         end

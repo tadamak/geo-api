@@ -22,7 +22,6 @@ module Swagger::AnalyticsApi
             end
             property :level do
               key :type, :integer
-              key :format, :int32
               key :example, 1
             end
           end
@@ -39,7 +38,6 @@ module Swagger::AnalyticsApi
               end
               property :count do
                 key :type, :integer
-                key :format, :int32
                 key :example, 5
               end
             end
@@ -48,7 +46,9 @@ module Swagger::AnalyticsApi
 
         response 400 do
           schema do
-            key :'$ref', :Error
+            property :error do
+              key :'$ref', :Error
+            end
           end
         end
       end
@@ -73,7 +73,6 @@ module Swagger::AnalyticsApi
             end
             property :level do
               key :type, :integer
-              key :format, :int32
               key :example, 1
             end
           end
@@ -90,7 +89,6 @@ module Swagger::AnalyticsApi
               end
               property :count do
                 key :type, :integer
-                key :format, :int32
                 key :example, 5
               end
             end
@@ -99,7 +97,9 @@ module Swagger::AnalyticsApi
 
         response 400 do
           schema do
-            key :'$ref', :Error
+            property :error do
+              key :'$ref', :Error
+            end
           end
         end
       end

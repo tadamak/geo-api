@@ -11,7 +11,6 @@ module Swagger::MeshSchema
       end
       property :level do
         key :type, :integer
-        key :format, :int32
         key :example, 3
       end
     end

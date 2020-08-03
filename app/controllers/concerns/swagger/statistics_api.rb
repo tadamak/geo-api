@@ -28,13 +28,11 @@ module Swagger::StatisticsApi
                 property :populations do
                   key :type, :integer
                   key :description, '人口'
-                  key :format, :int32
                   key :example, 36000
                 end
                 property :households do
                   key :type, :integer
                   key :description, '世帯数'
-                  key :format, :int32
                   key :example, 12000
                 end
               end
@@ -44,7 +42,9 @@ module Swagger::StatisticsApi
 
         response 400 do
           schema do
-            key :'$ref', :Error
+            property :error do
+              key :'$ref', :Error
+            end
           end
         end
       end

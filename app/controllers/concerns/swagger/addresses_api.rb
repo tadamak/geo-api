@@ -26,7 +26,9 @@ module Swagger::AddressesApi
 
         response 400 do
           schema do
-            key :'$ref', :Error
+            property :error do
+              key :'$ref', :Error
+            end
           end
         end
       end
@@ -81,7 +83,9 @@ module Swagger::AddressesApi
 
         response 400 do
           schema do
-            key :'$ref', :Error
+            property :error do
+              key :'$ref', :Error
+            end
           end
         end
       end
@@ -110,7 +114,9 @@ module Swagger::AddressesApi
 
         response 400 do
           schema do
-            key :'$ref', :Error
+            property :error do
+              key :'$ref', :Error
+            end
           end
         end
       end
@@ -139,7 +145,9 @@ module Swagger::AddressesApi
 
         response 400 do
           schema do
-            key :'$ref', :Error
+            property :error do
+              key :'$ref', :Error
+            end
           end
         end
       end
