@@ -23,6 +23,12 @@ module Swagger::MeshesApi
             end
           end
         end
+
+        response 400 do
+          schema do
+            key :'$ref', :Error
+          end
+        end
       end
     end
 
@@ -66,6 +72,12 @@ module Swagger::MeshesApi
             key :format, :int64
           end
         end
+
+        response 400 do
+          schema do
+            key :'$ref', :Error
+          end
+        end
       end
     end
 
@@ -87,6 +99,12 @@ module Swagger::MeshesApi
             items do
               key :'$ref', :GeoJson
             end
+          end
+        end
+
+        response 400 do
+          schema do
+            key :'$ref', :Error
           end
         end
       end

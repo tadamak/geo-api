@@ -23,6 +23,12 @@ module Swagger::AddressesApi
             end
           end
         end
+
+        response 400 do
+          schema do
+            key :'$ref', :Error
+          end
+        end
       end
     end
 
@@ -72,6 +78,12 @@ module Swagger::AddressesApi
             key :format, :int64
           end
         end
+
+        response 400 do
+          schema do
+            key :'$ref', :Error
+          end
+        end
       end
     end
 
@@ -95,6 +107,12 @@ module Swagger::AddressesApi
             end
           end
         end
+
+        response 400 do
+          schema do
+            key :'$ref', :Error
+          end
+        end
       end
     end
 
@@ -116,6 +134,12 @@ module Swagger::AddressesApi
             items do
               key :'$ref', :Address
             end
+          end
+        end
+
+        response 400 do
+          schema do
+            key :'$ref', :Error
           end
         end
       end

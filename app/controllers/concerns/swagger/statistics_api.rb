@@ -41,6 +41,12 @@ module Swagger::StatisticsApi
             end
           end
         end
+
+        response 400 do
+          schema do
+            key :'$ref', :Error
+          end
+        end
       end
     end
   end
