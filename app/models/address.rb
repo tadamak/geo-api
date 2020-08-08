@@ -1,32 +1,30 @@
 class Address < ApplicationRecord
   include Swagger::AddressSchema
 
-  attr_accessor :lat, :lng
-
   # 住所階層
   LEVEL = {
     PREF:  1,
     CITY:  2,
-    TOWN:  3,
-    BLOCK: 4
+    TOWN:  3
   }
 
   # 住所コード桁数
   CODE_DIGIT = {
     PREF: 2,
     CITY: 5,
-    TOWN: 12,
-    BLOCK: 20
+    TOWN: 12
   }
 
-  default_scope { select('*, X(point) as lng, Y(point) as lat') }
-
-  def lat
-    self.attributes['lat']
+  def name
+    pref_name + city_name.to_s + town_name.to_s
   end
 
-  def lng
-    self.attributes['lng']
+  def location
+    return nil if latitude.nil? || longitude.nil?
+    {
+      lat: latitude,
+      lng: longitude
+    }
   end
 
   def codes
@@ -34,21 +32,17 @@ class Address < ApplicationRecord
     codes << code[0, CODE_DIGIT[:PREF]]
     codes << code[0, CODE_DIGIT[:CITY]]  if code.length >= CODE_DIGIT[:CITY]
     codes << code[0, CODE_DIGIT[:TOWN]]  if code.length >= CODE_DIGIT[:TOWN]
-    codes << code[0, CODE_DIGIT[:BLOCK]] if code.length >= CODE_DIGIT[:BLOCK]
     codes
   end
 
   def details
-    addresses = Address.where(code: self.codes).order(level: :asc)
     details = []
-    addresses.each_with_index do |address, i|
-      name = address.name
-      # フルの住所名称から直前のレベルの住所名を除く (ex. "東京都墨田区"を"墨田区"に置換)
-      name = name.sub(/^#{addresses[i - 1].name}/, '') unless i.zero?
+    level.times do |i|
+      l = i + 1
       details << {
-        code: address.code,
-        name: name,
-        level: address.level
+        code: code_by_level(l),
+        name: name_by_level(l),
+        level: l
       }
     end
     details
@@ -62,9 +56,33 @@ class Address < ApplicationRecord
       code = code[0, CODE_DIGIT[:CITY]]
     when LEVEL[:TOWN] then
       code = code[0, CODE_DIGIT[:TOWN]]
-    when LEVEL[:BLOCK] then
-      code = code[0, CODE_DIGIT[:BLOCK]]
     end
     code
+  end
+
+  private
+
+  def code_by_level(level)
+    case level
+    when LEVEL[:PREF] then
+      c = code[0, CODE_DIGIT[:PREF]]
+    when LEVEL[:CITY] then
+      c = code[0, CODE_DIGIT[:CITY]]
+    when LEVEL[:TOWN] then
+      c = code[0, CODE_DIGIT[:TOWN]]
+    end
+    c
+  end
+
+  def name_by_level(level)
+    case level
+    when LEVEL[:PREF] then
+      n = pref_name
+    when LEVEL[:CITY] then
+      n = city_name
+    when LEVEL[:TOWN] then
+      n = town_name
+    end
+    n
   end
 end

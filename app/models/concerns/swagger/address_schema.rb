@@ -19,7 +19,6 @@ module Swagger::AddressSchema
       end
       property :location do
         key :type, :object
-        key :required, [:lat, :lng]
         property :lat do
           key :type, :number
           key :format, :float
