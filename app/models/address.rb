@@ -12,7 +12,7 @@ class Address < ApplicationRecord
   CODE_DIGIT = {
     PREF: 2,
     CITY: 5,
-    TOWN: 12
+    TOWN: 11
   }
 
   def name
