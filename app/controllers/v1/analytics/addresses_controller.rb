@@ -23,8 +23,8 @@ class V1::Analytics::AddressesController < ApplicationController
     locations = params[:locations]
     if locations.blank?
       return render_400(ErrorCode::REQUIRED_PARAM, 'locations の指定が必要です。')
-    elsif locations.length > Constants::MAX_LIMIT
-      return render_400(ErrorCode::INVALID_PARAM, "locations の指定数が最大値(#{Constants::MAX_LIMIT}件)を超えています。")
+    elsif locations.length > Constants::ANALYTICS_MAX_LIMIT
+      return render_400(ErrorCode::INVALID_PARAM, "locations の指定数が最大値(#{Constants::ANALYTICS_MAX_LIMIT}件)を超えています。")
     end
 
     level = params[:level]

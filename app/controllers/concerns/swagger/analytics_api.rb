@@ -9,7 +9,7 @@ module Swagger::AnalyticsApi
         key :tags, ['Analytics']
         parameter name: :body do
           key :in, :body
-          key :description, '緯度経度(カンマ区切り)の配列と住所レベル'
+          key :description, "緯度経度(カンマ区切り)の配列と住所レベル。配列の最大数は#{Constants::ANALYTICS_MAX_LIMIT}。"
           key :required, true
           schema do
             key :type, :object
@@ -60,7 +60,7 @@ module Swagger::AnalyticsApi
         key :tags, ['Analytics']
         parameter name: :body do
           key :in, :body
-          key :description, '緯度経度(カンマ区切り)の配列と地域メッシュレベル'
+          key :description, "緯度経度(カンマ区切り)の配列と地域メッシュレベル。配列の最大数は#{Constants::ANALYTICS_MAX_LIMIT}。"
           key :required, true
           schema do
             key :type, :object
