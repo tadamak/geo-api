@@ -50,7 +50,7 @@ class GeoAddress < ApplicationRecord
       lat = l.split(',')[0]
       lng = l.split(',')[1]
       sql += "UNION ALL\n" unless sql.empty?
-      # NOTE: 都道府県のST_Containsが遅いため、最も下のレベル3(丁目・番地)で解析をする
+      # NOTE: 都道府県のST_Containsが遅いため、最も下のレベル3(町丁・字等)で解析をする
       sql += "SELECT address_code FROM geo_addresses WHERE (ST_Contains(polygon, ST_GEOMFROMTEXT('POINT(#{lng} #{lat})', 4326))) AND level = 3\n"
     end
 
