@@ -101,8 +101,15 @@ module Swagger::AddressesApi
           key :required, true
           key :type, :string
         end
+        parameter name: :type do
+          key :in, :query
+          key :description, 'レスポンスのフォーマット。"geojson" または "topojson" を指定可能。'
+          key :required, false
+          key :type, :string
+          key :default, 'geojson'
+        end
 
-        response 200 do
+        response '200 GeoJSON' do
           key :description, '住所ポリゴン'
           schema do
             key :type, :array
@@ -112,7 +119,17 @@ module Swagger::AddressesApi
           end
         end
 
-        response 400 do
+        response '200 TopoJSON' do
+          key :description, '住所ポリゴン'
+          schema do
+            key :type, :array
+            items do
+              key :'$ref', :TopoJson
+            end
+          end
+        end
+
+        response '400 Error' do
           schema do
             property :error do
               key :'$ref', :Error
