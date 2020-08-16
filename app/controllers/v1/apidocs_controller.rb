@@ -35,6 +35,7 @@ class V1::ApidocsController < ApplicationController
     Address,
     Mesh,
     GeoJson,
+    TopoJson,
     Common::Error,
     V1::AddressesController,
     V1::MeshesController,

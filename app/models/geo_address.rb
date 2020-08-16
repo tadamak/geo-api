@@ -1,5 +1,7 @@
 class GeoAddress < ApplicationRecord
 
+  FORMAT = 'geojson'
+
   def self.reverse_geocoding(lat, lng)
     self.where("ST_Contains(polygon, ST_GeomFromText('POINT(#{lng} #{lat})', 4326))").order(level: :desc).limit(1).first
   end
