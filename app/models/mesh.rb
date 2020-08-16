@@ -71,28 +71,32 @@ class Mesh < ApplicationRecord
     return geojsons
   end
 
-  def self.counts_by_code(locations, level)
-    sql = ''
-    locations.each do |l|
-      lat = l.split(',')[0]
-      lng = l.split(',')[1]
-      sql += "UNION ALL\n" unless sql.empty?
-      sql += "SELECT code FROM meshes WHERE (ST_Contains(polygon, ST_GEOMFROMTEXT('POINT(#{lng} #{lat})', 4326))) AND level = #{level}\n"
+  def self.counts_by_code(all_locations, level)
+    each_slice_num = 1000
+    slice_locations = all_locations.each_slice(each_slice_num).to_a
+    results = Parallel.map(slice_locations) do |locations|
+      sql = ''
+      locations.each do |l|
+        lat = l.split(',')[0]
+        lng = l.split(',')[1]
+        sql += "UNION ALL\n" unless sql.empty?
+        sql += "SELECT code FROM meshes WHERE (ST_Contains(polygon, ST_GEOMFROMTEXT('POINT(#{lng} #{lat})', 4326))) AND level = #{level}\n"
+      end
+      self.find_by_sql("SELECT t.code FROM (#{sql}) as t").pluck(:code)
     end
 
-    meshCounts = self.find_by_sql("
-      SELECT t.code, count(*) as count
-      FROM (#{sql}) as t
-      GROUP BY t.code;")
+    mesh_codes = results.flatten
+    # 重複する地域メッシュコードでまとめて件数を取得する {mesh_code => count}
+    countResults = mesh_codes.group_by(&:itself).map{ |key, value| [key, value.count] }.to_h
 
-    meshes = Mesh.where(code: meshCounts.pluck(:code))
+    meshes = Mesh.where(code: mesh_codes)
 
     counts_by_code = []
-    meshCounts.each do |meshCount|
-      mesh = meshes.select{|m| m.code == meshCount.code}.first
+    countResults.each do |code, value|
+      mesh = meshes.select{|m| m.code == code}.first
       counts_by_code << {
         mesh: mesh,
-        count: meshCount.attributes['count']
+        count: value
       }
     end
     counts_by_code

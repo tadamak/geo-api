@@ -48,4 +48,4 @@ gem 'swagger-blocks'
 
 gem 'active_model_serializers'
 
-gem 'oj', '~> 3.6', '>= 3.6.7'
+gem 'parallel'
