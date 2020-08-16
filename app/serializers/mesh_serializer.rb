@@ -1,3 +1,3 @@
 class MeshSerializer < ActiveModel::Serializer
-  attributes :code, :level
+  attributes :code, :level, :details
 end

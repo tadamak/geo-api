@@ -10,6 +10,27 @@ class Mesh < ApplicationRecord
     FIFTH:  5
   }
 
+  # 地域メッシュコード桁数
+  CODE_DIGIT = {
+    FIRST:  4,
+    SECOND: 6,
+    THIRD:  8,
+    FOURTH: 9,
+    FIFTH:  10
+  }
+
+  def details
+    details = []
+    level.times do |i|
+      l = i + 1
+      details << {
+        code: code_by_level(l),
+        level: l
+      }
+    end
+    details
+  end
+
   # 複数メッシュを1つのGeoJSONに変換する (Mesh:GeoJSON = N:1)
   def self.geojson(codes)
     results = self.select('code, ST_AsGeoJSON(polygon) as geojson').where(code: codes)
@@ -75,5 +96,23 @@ class Mesh < ApplicationRecord
       }
     end
     counts_by_code
+  end
+
+  private
+
+  def code_by_level(level)
+    case level
+    when LEVEL[:FIRST] then
+      c = code[0, CODE_DIGIT[:FIRST]]
+    when LEVEL[:SECOND] then
+      c = code[0, CODE_DIGIT[:SECOND]]
+    when LEVEL[:THIRD] then
+      c = code[0, CODE_DIGIT[:THIRD]]
+    when LEVEL[:FOURTH] then
+      c = code[0, CODE_DIGIT[:FOURTH]]
+    when LEVEL[:FIFTH] then
+      c = code[0, CODE_DIGIT[:FIFTH]]
+    end
+    c
   end
 end
