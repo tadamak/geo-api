@@ -38,7 +38,6 @@ module Swagger::GeoJsonSchema
                 key :type, :number
                 key :format, :float
               end
-              key :examples, [139.77286583728858, 35.70370213544527]
             end
           end
         end

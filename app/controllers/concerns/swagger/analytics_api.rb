@@ -45,6 +45,7 @@ module Swagger::AnalyticsApi
         end
 
         response 400 do
+          key :description, 'Error'
           schema do
             property :error do
               key :'$ref', :Error
@@ -96,6 +97,7 @@ module Swagger::AnalyticsApi
         end
 
         response 400 do
+          key :description, 'Error'
           schema do
             property :error do
               key :'$ref', :Error
