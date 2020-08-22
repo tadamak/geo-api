@@ -50,5 +50,3 @@ test:
 production:
   <<: *default
   database: geo
-  username: geo_user
-  password: <%= ENV['AAA_DATABASE_PASSWORD'] %>
