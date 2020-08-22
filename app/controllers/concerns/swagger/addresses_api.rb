@@ -132,6 +132,7 @@ module Swagger::AddressesApi
         end
 
         response '400 Error' do
+          key :description, 'Error'
           schema do
             property :error do
               key :'$ref', :Error
