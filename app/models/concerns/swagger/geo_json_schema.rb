@@ -30,15 +30,28 @@ module Swagger::GeoJsonSchema
             key :required, [:type, :coordinates]
             property :type do
               key :type, :string
-              key :example, 'Polygon'
+              key :example, 'MultiPolygon'
             end
             property :coordinates do
               key :type, :array
               items do
-                key :type, :number
-                key :format, :float
+                key :type, :array
+                items do
+                  key :type, :array
+                  items do
+                    key :type, :array
+                    items do
+                      key :type, :number
+                      key :format, :float
+                    end
+                  end
+                  key :example, [
+                    [139.77286583700004, 35.70370213500004],
+                    [139.77279358, 35.70312019800003],
+                    [139.77366136200004, 35.70303991899996]
+                  ]  
+                end
               end
-              key :examples, [139.77286583728858, 35.70370213544527]
             end
           end
         end

@@ -13,12 +13,13 @@ module Swagger::StatisticsApi
           key :required, true
           key :type, :string
         end
+
         response 200 do
           key :description, '住所コード毎の件数'
           schema do
             key :type, :array
             items do
-              key :required, [:address_code, :count]
+              key :required, [:address, :count]
               property :address do
                 key :'$ref', :Address
               end
@@ -41,6 +42,7 @@ module Swagger::StatisticsApi
         end
 
         response 400 do
+          key :description, 'Error'
           schema do
             property :error do
               key :'$ref', :Error

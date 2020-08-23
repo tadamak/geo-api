@@ -17,12 +17,12 @@ module Swagger::AnalyticsApi
               key :type, :array
               items do
                 key :type, :string
-                key :example, '35.689568,139.691717'
               end
+              key :example, [ '35.68151,139.76699', '35.68956,139.69171' ]
             end
             property :level do
               key :type, :integer
-              key :example, 1
+              key :example, 3
             end
           end
         end
@@ -38,13 +38,14 @@ module Swagger::AnalyticsApi
               end
               property :count do
                 key :type, :integer
-                key :example, 5
+                key :example, 2
               end
             end
           end
         end
 
         response 400 do
+          key :description, 'Error'
           schema do
             property :error do
               key :'$ref', :Error
@@ -68,12 +69,12 @@ module Swagger::AnalyticsApi
               key :type, :array
               items do
                 key :type, :string
-                key :example, '35.689568,139.691717'
               end
+              key :example, [ '35.68151,139.76699', '35.68956,139.69171' ]
             end
             property :level do
               key :type, :integer
-              key :example, 1
+              key :example, 5
             end
           end
         end
@@ -89,13 +90,14 @@ module Swagger::AnalyticsApi
               end
               property :count do
                 key :type, :integer
-                key :example, 5
+                key :example, 2
               end
             end
           end
         end
 
         response 400 do
+          key :description, 'Error'
           schema do
             property :error do
               key :'$ref', :Error

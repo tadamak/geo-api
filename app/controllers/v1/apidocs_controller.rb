@@ -11,10 +11,18 @@ class V1::ApidocsController < ApplicationController
     tag do
       key :name, 'Address'
       key :description, '住所API'
+      externalDocs do
+        key :description, 'About'
+        key :url, '/addresses/about'
+      end
     end
     tag do
       key :name, 'Mesh'
       key :description, '地域メッシュAPI'
+      externalDocs do
+        key :description, 'About'
+        key :url, '/meshes/about'
+      end
     end
     tag do
       key :name, 'Analytics'
