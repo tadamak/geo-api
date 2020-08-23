@@ -7,8 +7,8 @@ module ErrorCode
     code: 1002,
     type: 'required_param'
   }
-  REQUEST_LIMIT_EXCEEDED = {
+  RATE_LIMIT_EXCEEDED = {
     code: 1003,
-    type: 'request_limit_exceeded'
+    type: 'rate_limit_exceeded'
   }
 end
