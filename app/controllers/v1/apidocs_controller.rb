@@ -37,6 +37,11 @@ class V1::ApidocsController < ApplicationController
     key :basePath, '/v1'
     key :consumes, ['application/json']
     key :produces, ['application/json']
+    security_definition :access_token do
+      key :type, :apiKey
+      key :name, :access_token
+      key :in, :query
+    end
   end
 
   SWAGGERED_CLASSES = [
