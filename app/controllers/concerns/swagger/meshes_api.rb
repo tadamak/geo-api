@@ -7,6 +7,9 @@ module Swagger::MeshesApi
       operation :get do
         key :description, '指定したコードの地域メッシュ情報を取得します。'
         key :tags, ['Mesh']
+        security do
+          key :access_token, []
+        end
         parameter name: :codes do
           key :in, :query
           key :description, '地域メッシュコード。カンマ区切りで複数指定可能。(ex. codes=30365090,30365091)'
@@ -39,6 +42,9 @@ module Swagger::MeshesApi
       operation :get do
         key :description, '指定した条件に合致する地域メッシュ情報をリストで取得します。'
         key :tags, ['Mesh']
+        security do
+          key :access_token, []
+        end
         parameter name: :code do
           key :in, :query
           key :description, '地域メッシュコード。指定したコードの１階層下の地域メッシュ情報を取得します。'
@@ -91,6 +97,9 @@ module Swagger::MeshesApi
       operation :get do
         key :description, '指定した地域メッシュコードのポリゴンを取得します。'
         key :tags, ['Mesh']
+        security do
+          key :access_token, []
+        end
         parameter name: :codes do
           key :in, :query
           key :description, '地域メッシュコード。カンマ区切りで複数指定可能。(ex. codes=30365090,30365091)'

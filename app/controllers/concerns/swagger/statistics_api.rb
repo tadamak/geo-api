@@ -7,6 +7,9 @@ module Swagger::StatisticsApi
       operation :get do
         key :description, '指定した住所コードの人口・世帯数情報を取得します。'
         key :tags, ['Statistics']
+        security do
+          key :access_token, []
+        end
         parameter name: :address_codes do
           key :in, :query
           key :description, '住所コード。カンマ区切りで複数指定可能。(ex. address_codes=13101,13102)'

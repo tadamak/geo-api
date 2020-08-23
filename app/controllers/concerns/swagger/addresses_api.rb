@@ -7,6 +7,9 @@ module Swagger::AddressesApi
       operation :get do
         key :description, '指定したコードの住所情報を取得します。'
         key :tags, ['Address']
+        security do
+          key :access_token, []
+        end
         parameter name: :codes do
           key :in, :query
           key :description, '住所コード。カンマ区切りで複数指定可能。(ex. codes=13,13101)'
@@ -39,6 +42,9 @@ module Swagger::AddressesApi
       operation :get do
         key :description, '指定した条件に合致する住所情報をリストで取得します。'
         key :tags, ['Address']
+        security do
+          key :access_token, []
+        end
         parameter name: :word do
           key :in, :query
           key :description, '住所名称。指定したワードが含まれる住所情報を取得します。codeとの併用は不可。'
@@ -97,6 +103,9 @@ module Swagger::AddressesApi
       operation :get do
         key :description, '指定した住所コードのポリゴンを取得します。'
         key :tags, ['Address']
+        security do
+          key :access_token, []
+        end
         parameter name: :codes do
           key :in, :query
           key :description, '住所コード。カンマ区切りで複数指定可能。(ex. codes=13101,13102)'
@@ -146,6 +155,9 @@ module Swagger::AddressesApi
       operation :get do
         key :description, '指定した緯度経度を元に逆ジオコーディングした結果の住所情報を取得します。'
         key :tags, ['Address']
+        security do
+          key :access_token, []
+        end
         parameter name: :locations do
           key :in, :query
           key :description, '緯度経度。カンマ区切りで"緯度,経度"の順で指定。コロン区切りで複数指定可能。(ex. locations=35.689568,139.691717:35.604588,140.123184)'
