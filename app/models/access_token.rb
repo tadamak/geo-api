@@ -1,7 +1,7 @@
 class AccessToken < ApplicationRecord
 
   def update_count
-    count = is_between_period?(self.requested_at) ? self.count_per_hour + 1 : 0
+    count = is_between_period?(self.requested_at) ? self.count_per_hour + 1 : 1
     self.update!(count_per_hour: count, requested_at: Time.now)
   end
 

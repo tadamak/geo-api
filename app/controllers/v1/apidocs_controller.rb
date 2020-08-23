@@ -1,4 +1,7 @@
 class V1::ApidocsController < ApplicationController
+  skip_before_action :check_access_token
+  skip_after_action :update_access_token_count
+
   include Swagger::Blocks
 
   swagger_root do
