@@ -8,8 +8,8 @@ class V1::ApidocsController < ApplicationController
     key :swagger, '2.0'
     info do
       key :version, '1.0.0'
-      key :title, 'Geo API 🌏'
-      key :description, '空間情報検索API'
+      key :title, 'Geo API'
+      key :description, 'Geo API (空間情報検索)ドキュメント'
     end
     tag do
       key :name, 'Address'
@@ -35,7 +35,7 @@ class V1::ApidocsController < ApplicationController
       key :name, 'Statistics'
       key :description, '統計API'
     end
-    key :schemes, ['https', 'http']
+    key :schemes, ['https']
     key :host, 'api.geo.qazsato.com'
     key :basePath, '/v1'
     key :consumes, ['application/json']

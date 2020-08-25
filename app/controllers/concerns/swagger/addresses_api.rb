@@ -120,7 +120,7 @@ module Swagger::AddressesApi
           key :default, 'geojson'
         end
 
-        response '200 GeoJSON' do
+        response 200 do
           key :description, '住所ポリゴン'
           schema do
             key :type, :array
@@ -130,17 +130,7 @@ module Swagger::AddressesApi
           end
         end
 
-        response '200 TopoJSON' do
-          key :description, '住所ポリゴン'
-          schema do
-            key :type, :array
-            items do
-              key :'$ref', :TopoJson
-            end
-          end
-        end
-
-        response '400 Error' do
+        response 400 do
           key :description, 'Error'
           schema do
             property :error do
