@@ -60,6 +60,7 @@ module Swagger::AnalyticsApi
 
     swagger_path '/analytics/meshes/contains' do
       operation :post do
+        key :deprecated, true
         key :description, '指定した緯度経度がどのポリゴン内に含まれているかを解析し、地域メッシュ毎の件数を取得します。'
         key :tags, ['Analytics']
         security do
