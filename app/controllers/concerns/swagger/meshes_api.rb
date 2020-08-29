@@ -5,6 +5,7 @@ module Swagger::MeshesApi
   included do
     swagger_path '/meshes' do
       operation :get do
+        key :deprecated, true
         key :description, '指定したコードの地域メッシュ情報を取得します。'
         key :tags, ['Mesh']
         security do
@@ -40,6 +41,7 @@ module Swagger::MeshesApi
 
     swagger_path '/meshes/search' do
       operation :get do
+        key :deprecated, true
         key :description, '指定した条件に合致する地域メッシュ情報をリストで取得します。'
         key :tags, ['Mesh']
         security do
@@ -95,6 +97,7 @@ module Swagger::MeshesApi
 
     swagger_path '/meshes/shapes' do
       operation :get do
+        key :deprecated, true
         key :description, '指定した地域メッシュコードのポリゴンを取得します。'
         key :tags, ['Mesh']
         security do
