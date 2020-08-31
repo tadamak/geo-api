@@ -24,14 +24,6 @@ class V1::ApidocsController < ApplicationController
       end
     end
     tag do
-      key :name, 'Mesh'
-      key :description, '地域メッシュAPI'
-      externalDocs do
-        key :description, 'About'
-        key :url, '/meshes/about'
-      end
-    end
-    tag do
       key :name, 'Analytics'
       key :description, '解析API'
     end
@@ -53,12 +45,10 @@ class V1::ApidocsController < ApplicationController
 
   SWAGGERED_CLASSES = [
     Address,
-    Mesh,
     GeoJson,
     TopoJson,
     Common::Error,
     V1::AddressesController,
-    V1::MeshesController,
     V1::Analytics::AddressesController,
     V1::Statistics::AddressesController,
     self
