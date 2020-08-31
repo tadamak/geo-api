@@ -9,18 +9,9 @@ Rails.application.routes.draw do
       get :shapes, on: :collection
     end
 
-    # Mesh API
-    resources :meshes, param: :code, only: [:index] do
-      get :search, on: :collection
-      get :shapes, on: :collection
-    end
-
     # Analytics API
     namespace :analytics do
       resource :addresses, only: [] do
-        post :contains, on: :collection
-      end
-      resource :meshes, only: [] do
         post :contains, on: :collection
       end
     end
