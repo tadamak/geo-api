@@ -47,10 +47,12 @@ class V1::ApidocsController < ApplicationController
     Address,
     GeoJson,
     TopoJson,
+    SchoolDistrict,
     Common::Error,
     V1::AddressesController,
     V1::Analytics::AddressesController,
     V1::Statistics::AddressesController,
+    V1::SchoolDistrictsController,
     self
   ].freeze
 

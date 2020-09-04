@@ -22,5 +22,10 @@ Rails.application.routes.draw do
         get :populations, on: :collection
       end
     end
+
+    # School API
+    resources :school_districts, only: [:index] do
+      get :shapes, on: :collection
+    end
   end
 end
