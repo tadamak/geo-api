@@ -10,11 +10,17 @@ module Swagger::SchoolDistrictsApi
         security do
           key :access_token, []
         end
-        parameter name: :address_codes do
+        parameter name: :address_code do
           key :in, :query
-          key :description, '住所コード。カンマ区切りで複数指定可能。(ex. codes=13,13101)'
+          key :description, '住所コード。レベル2(市区町村)のみ指定可能。'
           key :required, true
           key :type, :string
+        end
+        parameter name: :school_type do
+          key :in, :query
+          key :description, '学校種別。"1" (小学校)または "2" (中学校)を指定可能。'
+          key :required, false
+          key :type, :integer
         end
 
         response 200 do
@@ -45,11 +51,17 @@ module Swagger::SchoolDistrictsApi
         security do
           key :access_token, []
         end
-        parameter name: :address_codes do
+        parameter name: :address_code do
           key :in, :query
-          key :description, '住所コード。カンマ区切りで複数指定可能。(ex. codes=13101,13102)'
+          key :description, '住所コード。レベル2(市区町村)のみ指定可能。'
           key :required, true
           key :type, :string
+        end
+        parameter name: :school_type do
+          key :in, :query
+          key :description, '学校種別。"1" (小学校)または "2" (中学校)を指定可能。'
+          key :required, false
+          key :type, :integer
         end
 
         response 200 do
