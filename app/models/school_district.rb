@@ -11,14 +11,14 @@ class SchoolDistrict < ApplicationRecord
     }
   end
 
-  def self.geojson(address_codes, school_type = nil)
-    results = self.select('address_code, school_type, school_name, ST_AsGeoJSON(polygon) as geojson').where(address_code: address_codes)
-    results = results.where(school_type: school_type) unless school_type.nil?
+  def self.geojson
+    results = self.select('id, address_code, school_type, school_name, ST_AsGeoJSON(polygon) as geojson')
     features = []
     results.each do |result|
       features << {
         type: 'Feature',
         properties: {
+          id: result.id,
           address_code: result.address_code,
           school_type: result.school_type_before_type_cast,
           school_name: result.school_name,
