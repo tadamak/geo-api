@@ -76,7 +76,7 @@ module Swagger::SchoolDistrictsApi
       end
     end
 
-    swagger_path '/school_districts/shapes' do
+    swagger_path '/school_districts/shape' do
       operation :get do
         key :description, '指定した住所コードの学区ポリゴンを取得します。'
         key :tags, ['School']
@@ -114,7 +114,7 @@ module Swagger::SchoolDistrictsApi
       end
     end
 
-    swagger_path '/school_districts/{id}/shapes' do
+    swagger_path '/school_districts/{id}/shape' do
       operation :get do
         key :description, '指定したIDの学区ポリゴンを取得します。'
         key :tags, ['School']

@@ -1,8 +1,8 @@
 class V1::SchoolDistrictsController < ApplicationController
   include Swagger::SchoolDistrictsApi
 
-  before_action :validate_index_params, only: [:index, :index_shapes]
-  before_action :validate_show_params, only: [:show, :show_shapes]
+  before_action :validate_index_params, only: [:index, :index_shape]
+  before_action :validate_show_params, only: [:show, :show_shape]
 
   def index
     address_code = params[:address_code]
@@ -20,7 +20,7 @@ class V1::SchoolDistrictsController < ApplicationController
     render json: school_district
   end
 
-  def index_shapes
+  def index_shape
     address_code = params[:address_code]
     school_type = params[:school_type]
     school_districts = SchoolDistrict.where(address_code: address_code)
@@ -28,7 +28,7 @@ class V1::SchoolDistrictsController < ApplicationController
     render json: school_districts.geojson
   end
 
-  def show_shapes
+  def show_shape
     id = params[:id]
     school_district = SchoolDistrict.where(id: id)
     render json: school_district.geojson

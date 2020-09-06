@@ -4,7 +4,7 @@ class V1::AddressesController < ApplicationController
   before_action :validate_index_params, only: [:index]
   before_action :validate_search_params, only: [:search]
   before_action :validate_geocoding_params, only: [:geocoding]
-  before_action :validate_shapes_params, only: [:shapes]
+  before_action :validate_shape_params, only: [:shape]
 
   def index
     addresses = Address.where(code: params[:codes].split(','))
@@ -42,12 +42,12 @@ class V1::AddressesController < ApplicationController
     render json: addresses
   end
 
-  def shapes
+  def shape
     codes = params[:codes].split(',')
     if params[:type] == TopoAddress::FORMAT
       render json: TopoAddress.topojsons(codes)
     else
-      render json: GeoAddress.geojsons(codes)
+      render json: GeoAddress.geojson(codes)
     end
   end
 
@@ -92,7 +92,7 @@ class V1::AddressesController < ApplicationController
     end
   end
 
-  def validate_shapes_params
+  def validate_shape_params
     codes = params[:codes]&.split(',')
     type = params[:type]
     if codes.blank?
