@@ -31,6 +31,10 @@ class V1::ApidocsController < ApplicationController
       key :name, 'Statistics'
       key :description, '統計API'
     end
+    tag do
+      key :name, 'School'
+      key :description, '学区API'
+    end
     key :schemes, ['https']
     key :host, 'api.geo.qazsato.com'
     key :basePath, '/v1'
@@ -47,10 +51,12 @@ class V1::ApidocsController < ApplicationController
     Address,
     GeoJson,
     TopoJson,
+    SchoolDistrict,
     Common::Error,
     V1::AddressesController,
     V1::Analytics::AddressesController,
     V1::Statistics::AddressesController,
+    V1::SchoolDistrictsController,
     self
   ].freeze
 
