@@ -32,7 +32,7 @@ class V1::ApidocsController < ApplicationController
       key :description, '統計API'
     end
     tag do
-      key :name, 'School'
+      key :name, 'School District'
       key :description, '学区API'
     end
     key :schemes, ['https']
