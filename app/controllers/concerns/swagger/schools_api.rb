@@ -16,9 +16,15 @@ module Swagger::SchoolsApi
           key :required, true
           key :type, :string
         end
-        parameter name: :type do
+        parameter name: :school_type do
           key :in, :query
-          key :description, '学校種別'
+          key :description, '学校種別 (1: 小学校, 2: 中学校, 3: 中等教育学校, 4: 高等学校, 5: 高等専門学校, 6: 短期大学, 7: 大学, 8: 特別支援学校)'
+          key :required, false
+          key :type, :integer
+        end
+        parameter name: :school_admin do
+          key :in, :query
+          key :description, '学校管理 (1: 国, 2: 都道府県, 3: 市区町村, 4: 民間, 0: その他)'
           key :required, false
           key :type, :integer
         end

@@ -5,7 +5,13 @@ class V1::SchoolsController < ApplicationController
 
   def index
     address_code = params[:address_code]
+    school_type = params[:school_type]
+    school_admin = params[:school_admin]
+
     schools = School.where(address_code: address_code)
+    schools = schools.where(school_type: school_type) unless school_type.blank?
+    schools = schools.where(school_admin: school_admin) unless school_admin.blank?
+
     render json: schools
   end
 
