@@ -32,6 +32,10 @@ class V1::ApidocsController < ApplicationController
       key :description, '統計API'
     end
     tag do
+      key :name, 'School'
+      key :description, '学校API'
+    end
+    tag do
       key :name, 'School District'
       key :description, '学区API'
     end
@@ -51,11 +55,13 @@ class V1::ApidocsController < ApplicationController
     Address,
     GeoJson,
     TopoJson,
+    School,
     SchoolDistrict,
     Common::Error,
     V1::AddressesController,
     V1::Analytics::AddressesController,
     V1::Statistics::AddressesController,
+    V1::SchoolsController,
     V1::SchoolDistrictsController,
     self
   ].freeze
