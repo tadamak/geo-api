@@ -18,11 +18,11 @@ module Swagger::SchoolDistrictSchema
       property :school_type do
         key :type, :integer
         key :example, 1
-        key :description, '学校種別。"1" (小学校)または "2" (中学校)'
+        key :description, '学校種別 (1: 小学校, 2: 中学校)'
       end
       property :school_name do
         key :type, :string
-        key :example, '千代田区立お茶の水小学校'
+        key :example, 'お茶の水小学校'
         key :description, '学校名称'
       end
       property :school_address do
