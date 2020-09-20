@@ -47,7 +47,7 @@ class GeoAddress < ApplicationRecord
   end
 
   def self.counts_by_address_code(all_locations, level)
-    each_slice_num = 1000
+    each_slice_num = 100
     slice_locations = all_locations.each_slice(each_slice_num).to_a
     results = Parallel.map(slice_locations) do |locations|
       sql = ''
