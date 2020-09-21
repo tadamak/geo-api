@@ -16,7 +16,7 @@ class V1::ViewMapStatesController < ApplicationController
   private
 
   def view_map_state_params
-    params.require(:view_map_state).permit(:title, :zoom, :latitude, :longitude, :analysis_type, :analysis_level, locations: [:lat, :lng])
+    params.require(:view_map_state).permit(:title, :zoom, :latitude, :longitude, :analysis_type, :analysis_level, :map_theme, :polygon_color, locations: [:lat, :lng])
   end
 
   def validate_create_params
