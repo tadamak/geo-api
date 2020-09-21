@@ -31,5 +31,8 @@ Rails.application.routes.draw do
       get :shape, on: :collection, action: :index_shape
       get :shape, on: :member, action: :show_shape
     end
+
+    # View Map State API
+    resources :view_map_states, param: :code, only: [:create, :show]
   end
 end
