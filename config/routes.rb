@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     end
 
     # School API
-    resources :schools, only: [:index]
+    resources :schools, param: :code, only: [:index]
 
     # School District API
     resources :school_districts, only: [:index, :show] do
