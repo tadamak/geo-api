@@ -44,16 +44,16 @@ module Swagger::SchoolDistrictsApi
       end
     end
 
-    swagger_path '/school_districts/{id}' do
+    swagger_path '/school_districts/{code}' do
       operation :get do
-        key :description, '指定したIDの学区情報を取得します。'
+        key :description, '指定したコードの学区情報を取得します。'
         key :tags, ['School District']
         security do
           key :access_token, []
         end
-        parameter name: :id do
+        parameter name: :code do
           key :in, :path
-          key :description, '学区ID'
+          key :description, '学区コード'
           key :required, true
           key :type, :string
         end
@@ -114,16 +114,16 @@ module Swagger::SchoolDistrictsApi
       end
     end
 
-    swagger_path '/school_districts/{id}/shape' do
+    swagger_path '/school_districts/{code}/shape' do
       operation :get do
-        key :description, '指定したIDの学区ポリゴンを取得します。'
+        key :description, '指定したコードの学区ポリゴンを取得します。'
         key :tags, ['School District']
         security do
           key :access_token, []
         end
-        parameter name: :id do
+        parameter name: :code do
           key :in, :path
-          key :description, '学区ID'
+          key :description, '学区コード'
           key :required, true
           key :type, :string
         end

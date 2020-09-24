@@ -7,7 +7,7 @@ class V1::SchoolDistrictsController < ApplicationController
   def index
     address_code = params[:address_code]
     school_type = params[:school_type]
-    school_districts = SchoolDistrict.select(:id, :address_code, :school_name, :school_type, :school_address, :latitude, :longitude).where(address_code: address_code)
+    school_districts = SchoolDistrict.select(:code, :address_code, :school_name, :school_type, :school_address, :latitude, :longitude).where(address_code: address_code)
     if school_type.present?
       school_districts = school_districts.where(school_type: school_type)
     end
@@ -15,8 +15,8 @@ class V1::SchoolDistrictsController < ApplicationController
   end
   
   def show
-    id = params[:id]
-    school_district = SchoolDistrict.select(:id, :address_code, :school_name, :school_type, :school_address, :latitude, :longitude).find_by(id: id)
+    code = params[:code]
+    school_district = SchoolDistrict.select(:code, :address_code, :school_name, :school_type, :school_address, :latitude, :longitude).find_by(code: code)
     render json: school_district
   end
 
@@ -29,8 +29,8 @@ class V1::SchoolDistrictsController < ApplicationController
   end
 
   def show_shape
-    id = params[:id]
-    school_district = SchoolDistrict.where(id: id)
+    code = params[:code]
+    school_district = SchoolDistrict.where(code: code)
     render json: school_district.geojson
   end
 
@@ -50,10 +50,10 @@ class V1::SchoolDistrictsController < ApplicationController
   end
 
   def validate_show_params
-    id = params[:id]
-    school_district = SchoolDistrict.find_by(id: id)
+    code = params[:code]
+    school_district = SchoolDistrict.find_by(code: code)
     if school_district.nil?
-      return render_400(ErrorCode::REQUIRED_PARAM, '存在しない id を指定しています。')
+      return render_400(ErrorCode::REQUIRED_PARAM, '存在しない code を指定しています。')
     end
   end
 end
