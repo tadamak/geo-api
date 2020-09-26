@@ -25,15 +25,15 @@ module Swagger::SchoolSchema
         key :example, 3
         key :description, '学校管理 (1: 国, 2: 都道府県, 3: 市区町村, 4: 民間, 0: その他)'
       end
+      property :school_address do
+        key :type, :string
+        key :example, '猿楽町1-1-1'
+        key :description, '学校住所'
+      end
       property :address_code do
         key :type, :string
         key :example, '13101'
         key :description, '住所コード'
-      end
-      property :address_name do
-        key :type, :string
-        key :example, '猿楽町1-1-1'
-        key :description, '住所名称'
       end
       property :location do
         key :type, :object

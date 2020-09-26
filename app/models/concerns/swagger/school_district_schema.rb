@@ -15,6 +15,11 @@ module Swagger::SchoolDistrictSchema
         key :example, '13101'
         key :description, '学区が含まれる住所コード'
       end
+      property :school_code do
+        key :type, :string
+        key :example, 'sc-13-xn77h6d2n'
+        key :description, '学校コード'
+      end
       property :school_type do
         key :type, :integer
         key :example, 1
