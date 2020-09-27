@@ -49,5 +49,37 @@ module Swagger::SchoolsApi
         end
       end
     end
+
+    swagger_path '/schools/{code}' do
+      operation :get do
+        key :description, '指定したコードの学校情報を取得します。'
+        key :tags, ['School']
+        security do
+          key :access_token, []
+        end
+        parameter name: :code do
+          key :in, :path
+          key :description, '学校コード'
+          key :required, true
+          key :type, :string
+        end
+
+        response 200 do
+          key :description, '学校情報'
+          schema do
+            key :'$ref', :School
+          end
+        end
+
+        response 400 do
+          key :description, 'Error'
+          schema do
+            property :error do
+              key :'$ref', :Error
+            end
+          end
+        end
+      end
+    end
   end
 end
