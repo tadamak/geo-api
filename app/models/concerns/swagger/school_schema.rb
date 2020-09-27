@@ -32,7 +32,7 @@ module Swagger::SchoolSchema
       end
       property :address_code do
         key :type, :string
-        key :example, '13101'
+        key :example, '13101024001'
         key :description, '住所コード'
       end
       property :location do
