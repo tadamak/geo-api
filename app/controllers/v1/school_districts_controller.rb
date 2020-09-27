@@ -35,10 +35,22 @@ class V1::SchoolDistrictsController < ApplicationController
   end
 
   def show_address
-    subquery = "SELECT polygon FROM school_districts WHERE code = '#{params[:code]}'"
+    code = params[:code]
+    subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
     address_codes = GeoAddress.where("ST_Intersects(polygon, (#{subquery}))").where(level: Address::LEVEL[:TOWN]).pluck(:address_code)
     addresses = Address.where(code: address_codes)
     render json: addresses
+  end
+
+  def show_school_district
+    code = params[:code]
+    school_type = params[:school_type]
+    subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
+    school_districts = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude)
+                                     .where("ST_Intersects(polygon, (#{subquery}))")
+                                     .where.not(code: code)
+    school_districts = school_districts.where(school_type: school_type) unless school_type.nil?
+    render json: school_districts
   end
 
   private

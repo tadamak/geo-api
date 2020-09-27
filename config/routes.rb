@@ -31,6 +31,7 @@ Rails.application.routes.draw do
       get :shape, on: :collection, action: :index_shape
       get :shape, on: :member, action: :show_shape
       get :addresses, on: :member, action: :show_address
+      get :school_districts, on: :member, action: :show_school_district
     end
 
     # View Map State API
