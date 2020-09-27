@@ -2,7 +2,7 @@ class V1::SchoolDistrictsController < ApplicationController
   include Swagger::SchoolDistrictsApi
 
   before_action :validate_index_params, only: [:index, :index_shape]
-  before_action :validate_show_params, only: [:show, :show_shape]
+  before_action :validate_show_params, only: [:show, :show_shape, :show_address]
 
   def index
     address_code = params[:address_code]
@@ -32,6 +32,13 @@ class V1::SchoolDistrictsController < ApplicationController
     code = params[:code]
     school_district = SchoolDistrict.where(code: code)
     render json: school_district.geojson
+  end
+
+  def show_address
+    subquery = "SELECT polygon FROM school_districts WHERE code = '#{params[:code]}'"
+    address_codes = GeoAddress.where("ST_Intersects(polygon, (#{subquery}))").where(level: Address::LEVEL[:TOWN]).pluck(:address_code)
+    addresses = Address.where(code: address_codes)
+    render json: addresses
   end
 
   private

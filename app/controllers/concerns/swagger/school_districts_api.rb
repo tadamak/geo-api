@@ -145,5 +145,40 @@ module Swagger::SchoolDistrictsApi
         end
       end
     end
+
+    swagger_path '/school_districts/{code}/addresses' do
+      operation :get do
+        key :description, '指定したコードの学区に含まれる住所(町丁・字等)を取得します。'
+        key :tags, ['School District']
+        security do
+          key :access_token, []
+        end
+        parameter name: :code do
+          key :in, :path
+          key :description, '学区コード'
+          key :required, true
+          key :type, :string
+        end
+
+        response 200 do
+          key :description, '住所情報'
+          schema do
+            key :type, :array
+            items do
+              key :'$ref', :Address
+            end
+          end
+        end
+
+        response 400 do
+          key :description, 'Error'
+          schema do
+            property :error do
+              key :'$ref', :Error
+            end
+          end
+        end
+      end
+    end
   end
 end

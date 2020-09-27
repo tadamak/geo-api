@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     resources :school_districts, param: :code, only: [:index, :show] do
       get :shape, on: :collection, action: :index_shape
       get :shape, on: :member, action: :show_shape
+      get :addresses, on: :member, action: :show_address
     end
 
     # View Map State API
