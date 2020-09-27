@@ -4,7 +4,7 @@ module Swagger::SchoolSchema
 
   included do
     swagger_schema :School do
-      key :required, [:code, :name, :school_type, :school_admin, :address_code, :address_name, :location]
+      key :required, [:code, :name, :school_type, :school_admin, :school_address, :address_code, :location, :school_district_code]
       property :code do
         key :type, :string
         key :example, 'sc-13-xn77h6d2n'
@@ -49,6 +49,11 @@ module Swagger::SchoolSchema
           key :example, 139.76699
           key :description, '学校の経度'
         end
+      end
+      property :school_district_code do
+        key :type, :string
+        key :example, 'sd-1-xn77h66rv'
+        key :description, '学区コード'
       end
     end
   end

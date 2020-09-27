@@ -4,7 +4,7 @@ module Swagger::SchoolDistrictSchema
 
   included do
     swagger_schema :SchoolDistrict do
-      key :required, [:code, :address_code, :school_type, :school_name, :school_address, :location]
+      key :required, [:code, :address_code, :school_code, :school_type, :school_name, :school_address, :location]
       property :code do
         key :type, :integer
         key :example, 'sd-1-xn77h66rv'

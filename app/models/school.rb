@@ -5,6 +5,7 @@ class School < ApplicationRecord
   enum school_admin: { national: 1, prefecture: 2, area: 3, non_government: 4, other: 0 }
 
   belongs_to :address, class_name: 'Address', primary_key: :code, foreign_key: :address_code
+  has_one :school_district, class_name: 'SchoolDistrict', primary_key: :code, foreign_key: :school_code
 
   def location
     return nil if latitude.nil? || longitude.nil?

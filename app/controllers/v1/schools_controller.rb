@@ -8,7 +8,7 @@ class V1::SchoolsController < ApplicationController
     school_type = params[:school_type]
     school_admin = params[:school_admin]
 
-    schools = School.where('address_code LIKE ?', "#{address_code}%")
+    schools = School.includes(:school_district).where('address_code LIKE ?', "#{address_code}%")
     schools = schools.where(school_type: school_type) unless school_type.blank?
     schools = schools.where(school_admin: school_admin) unless school_admin.blank?
 
