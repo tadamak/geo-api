@@ -2,7 +2,7 @@ class V1::SchoolDistrictsController < ApplicationController
   include Swagger::SchoolDistrictsApi
 
   before_action :validate_index_params, only: [:index, :index_shape]
-  before_action :validate_show_params, only: [:show, :show_shape, :show_address]
+  before_action :validate_show_params, only: [:show, :show_shape, :show_address, :show_school_district]
 
   def index
     address_code = params[:address_code]
@@ -45,9 +45,11 @@ class V1::SchoolDistrictsController < ApplicationController
   def show_school_district
     code = params[:code]
     school_type = params[:school_type]
+    address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
     school_districts = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude)
                                      .where("ST_Intersects(polygon, (#{subquery}))")
+                                     .where('address_code LIKE ?', "#{address_code}%")
                                      .where.not(code: code)
     school_districts = school_districts.where(school_type: school_type) unless school_type.nil?
     render json: school_districts
@@ -70,8 +72,8 @@ class V1::SchoolDistrictsController < ApplicationController
 
   def validate_show_params
     code = params[:code]
-    school_district = SchoolDistrict.find_by(code: code)
-    if school_district.nil?
+    @school_district = SchoolDistrict.find_by(code: code)
+    if @school_district.nil?
       return render_400(ErrorCode::REQUIRED_PARAM, '存在しない code を指定しています。')
     end
   end
