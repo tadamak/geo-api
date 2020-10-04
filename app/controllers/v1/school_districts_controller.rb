@@ -38,24 +38,29 @@ class V1::SchoolDistrictsController < ApplicationController
     code = params[:code]
     filter = params[:filter]
     address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
-    geo_addresses = GeoAddress.where(level: Address::LEVEL[:TOWN]).where('address_code LIKE ?', "#{address_code}%")
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
-    if filter == SchoolDistrict::FILTER[:CONTAIN]
-      geo_addresses = geo_addresses.where("ST_Contains((#{subquery}), polygon)")
-    elsif filter == SchoolDistrict::FILTER[:PARTIAL]
-      geo_addresses = geo_addresses.where("ST_Intersects((#{subquery}), polygon)")
-                                   .where.not("ST_Touches((#{subquery}), polygon)")
-                                   .where.not("ST_Contains((#{subquery}), polygon)")
-    else
-      geo_addresses = geo_addresses.where("ST_Intersects((#{subquery}), polygon)")
-                                   .where.not("ST_Touches((#{subquery}), polygon)")
-    end
+    geo_addresses = GeoAddress.where(level: Address::LEVEL[:TOWN])
+                              .where('address_code LIKE ?', "#{address_code}%")
+                              .where("ST_Intersects((#{subquery}), polygon)")
+                              .where.not("ST_Touches((#{subquery}), polygon)")
 
     # 住所と学区のポリゴンデータは作成元が異なるため、僅かな重なりが発生してしまう。
-    # そのため、住所の面積と、学区と住所の重なった面積(積集合)の割合を求め、重なり割合が 1% 未満のものは誤差として除外する。
+    # そのため、住所の面積と、学区と住所の重なった面積(積集合)の割合を求め、重なり割合が 3% 未満のものは誤差として除外する。
+    # さらに、重なり割合が 97% 以上の場合は完全に含んでいると判断する。
     address_codes = geo_addresses.pluck(:address_code)
     results = GeoAddress.select("address_code, ST_Area(polygon) AS area1, ST_Area(ST_Intersection(polygon, (#{subquery}))) AS area2").where(address_code: address_codes)
-    address_codes = results.select{ |r| r.area2 / r.area1 * 100 >= 1.0}.map{ |r| r.address_code}
+    filtered_results = []
+    results.each do |r|
+      overlap_ratio = r.area2 / r.area1 * 100 # 住所と学区の重なり割合
+      next if overlap_ratio < 3.0
+      if filter == SchoolDistrict::FILTER[:CONTAIN]
+        next if overlap_ratio < 97.0
+      elsif filter == SchoolDistrict::FILTER[:PARTIAL]
+        next if overlap_ratio >= 97.0
+      end
+      filtered_results << r
+    end
+    address_codes = filtered_results.map { |r| r.address_code }
 
     addresses = Address.where(code: address_codes)
     render json: addresses
