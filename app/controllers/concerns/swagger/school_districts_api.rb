@@ -159,6 +159,12 @@ module Swagger::SchoolDistrictsApi
           key :required, true
           key :type, :string
         end
+        parameter name: :filter do
+          key :in, :query
+          key :description, '絞り込み条件。"contain" (完全に含まれる住所のみ)または "partial" (部分的に含まれる住所のみ)を指定可能。未指定時は全て取得。'
+          key :required, false
+          key :type, :string
+        end
 
         response 200 do
           key :description, '住所情報'
@@ -199,6 +205,12 @@ module Swagger::SchoolDistrictsApi
           key :description, '学校種別。"1" (小学校)または "2" (中学校)を指定可能。'
           key :required, false
           key :type, :integer
+        end
+        parameter name: :filter do
+          key :in, :query
+          key :description, '絞り込み条件。"contain" (完全に含まれる学区のみ)または "partial" (部分的に含まれる学区のみ)を指定可能。未指定時は全て取得。'
+          key :required, false
+          key :type, :string
         end
 
         response 200 do

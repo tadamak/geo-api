@@ -3,6 +3,12 @@ class SchoolDistrict < ApplicationRecord
 
   enum school_type: { elementary_school: 1, junior_high_school: 2 }
 
+  # 絞り込み条件
+  FILTER = {
+    CONTAIN: 'contain',
+    PARTIAL: 'partial'
+  }
+
   belongs_to :school, class_name: 'School', primary_key: :code, foreign_key: :school_code
   belongs_to :address, class_name: 'Address', primary_key: :code, foreign_key: :address_code
 
