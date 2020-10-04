@@ -50,7 +50,14 @@ class V1::SchoolDistrictsController < ApplicationController
       geo_addresses = geo_addresses.where("ST_Intersects((#{subquery}), polygon)")
                                    .where.not("ST_Touches((#{subquery}), polygon)")
     end
-    addresses = Address.where(code: geo_addresses.pluck(:address_code))
+
+    # 住所と学区のポリゴンデータは作成元が異なるため、僅かな重なりが発生してしまう。
+    # そのため、住所の面積と、学区と住所の重なった面積(積集合)の割合を求め、重なり割合が 1% 未満のものは誤差として除外する。
+    address_codes = geo_addresses.pluck(:address_code)
+    results = GeoAddress.select("address_code, ST_Area(polygon) AS area1, ST_Area(ST_Intersection(polygon, (#{subquery}))) AS area2").where(address_code: address_codes)
+    address_codes = results.select{ |r| r.area2 / r.area1 * 100 >= 1.0}.map{ |r| r.address_code}
+
+    addresses = Address.where(code: address_codes)
     render json: addresses
   end
 
