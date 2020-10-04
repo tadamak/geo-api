@@ -36,8 +36,13 @@ class V1::SchoolDistrictsController < ApplicationController
 
   def show_address
     code = params[:code]
+    address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
-    address_codes = GeoAddress.where("ST_Intersects(polygon, (#{subquery}))").where(level: Address::LEVEL[:TOWN]).pluck(:address_code)
+    address_codes = GeoAddress.where("ST_Intersects((#{subquery}), polygon)")
+                              .where.not("ST_Touches((#{subquery}), polygon)")
+                              .where('address_code LIKE ?', "#{address_code}%")
+                              .where(level: Address::LEVEL[:TOWN])
+                              .pluck(:address_code)
     addresses = Address.where(code: address_codes)
     render json: addresses
   end
@@ -48,7 +53,8 @@ class V1::SchoolDistrictsController < ApplicationController
     address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
     school_districts = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude)
-                                     .where("ST_Intersects(polygon, (#{subquery}))")
+                                     .where("ST_Intersects((#{subquery}), polygon)")
+                                     .where.not("ST_Touches((#{subquery}), polygon)")
                                      .where('address_code LIKE ?', "#{address_code}%")
                                      .where.not(code: code)
     school_districts = school_districts.where(school_type: school_type) unless school_type.nil?
