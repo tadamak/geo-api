@@ -3,6 +3,7 @@ class V1::SchoolDistrictsController < ApplicationController
 
   before_action :validate_index_params, only: [:index, :index_shape]
   before_action :validate_show_params, only: [:show, :show_shape, :show_address, :show_school_district]
+  before_action :validate_search_params, only: [:search]
 
   def index
     address_code = params[:address_code]
@@ -18,6 +19,18 @@ class V1::SchoolDistrictsController < ApplicationController
     code = params[:code]
     school_district = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude).find_by(code: code)
     render json: school_district
+  end
+
+  def search
+    school_districts = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude).where('school_name LIKE ?', "%#{params[:word]}%")
+
+    offset = get_offset
+    limit = get_limit
+    total = school_districts.unscope(:select).count
+    school_districts = school_districts.offset(offset).limit(limit)
+
+    response.headers['X-Total-Count'] = total
+    render json: school_districts
   end
 
   def index_shape
@@ -110,5 +123,22 @@ class V1::SchoolDistrictsController < ApplicationController
     if @school_district.nil?
       return render_400(ErrorCode::REQUIRED_PARAM, '存在しない code を指定しています。')
     end
+  end
+
+  def validate_search_params
+    word = params[:word]
+    if word.blank?
+      return render_400(ErrorCode::REQUIRED_PARAM, 'word の指定が必要です。')
+    end
+  end
+
+  def get_limit
+    limit = params[:limit].blank? ? Constants::DEFAULT_LIMIT : params[:limit].to_i
+    limit = Constants::MAX_LIMIT if limit > Constants::MAX_LIMIT
+    limit
+  end
+
+  def get_offset
+    params[:offset].blank? ? Constants::DEFAULT_OFFSET : params[:offset].to_i
   end
 end

@@ -76,6 +76,61 @@ module Swagger::SchoolDistrictsApi
       end
     end
 
+    swagger_path '/school_districts/search' do
+      operation :get do
+        key :description, '指定した条件に合致する学区情報をリストで取得します。'
+        key :tags, ['School Districts']
+        security do
+          key :access_token, []
+        end
+        parameter name: :word do
+          key :in, :query
+          key :description, '学校名称。指定したワードが含まれる学区情報を取得します。'
+          key :required, false
+          key :type, :string
+        end
+        parameter name: :limit do
+          key :in, :query
+          key :description, "取得件数。最大値は#{Constants::MAX_LIMIT}。"
+          key :required, false
+          key :type, :integer
+          key :default, Constants::DEFAULT_LIMIT
+          key :maximum, Constants::MAX_LIMIT
+        end
+        parameter name: :offset do
+          key :in, :query
+          key :description, '取得開始位置。'
+          key :required, false
+          key :type, :integer
+          key :default, 0
+        end
+
+        response 200 do
+          key :description, '学区情報'
+          schema do
+            key :type, :array
+            items do
+              key :'$ref', :SchoolDistrict
+            end
+          end
+          header 'X-Total-Count' do
+            key :description, 'リクエストに対する総件数'
+            key :type, :integer
+            key :format, :int64
+          end
+        end
+
+        response 400 do
+          key :description, 'Error'
+          schema do
+            property :error do
+              key :'$ref', :Error
+            end
+          end
+        end
+      end
+    end
+
     swagger_path '/school_districts/shape' do
       operation :get do
         key :description, '指定した住所コードの学区ポリゴンを取得します。'
