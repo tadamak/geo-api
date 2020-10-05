@@ -57,6 +57,12 @@ module Swagger::AddressesApi
           key :required, false
           key :type, :string
         end
+        parameter name: :level do
+          key :in, :query
+          key :description, '住所レベル。指定したレベルの住所情報を取得します。wordを指定した場合のみ利用可能。'
+          key :required, false
+          key :type, :integer
+        end
         parameter name: :limit do
           key :in, :query
           key :description, "取得件数。最大値は#{Constants::MAX_LIMIT}。"

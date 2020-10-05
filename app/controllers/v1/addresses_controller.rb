@@ -13,7 +13,9 @@ class V1::AddressesController < ApplicationController
 
   def search
     if params[:word].present?
-      addresses = Address.where('name LIKE ?', "%#{params[:word]}%")
+      q = "%#{params[:word]}%"
+      addresses = Address.where('pref_name LIKE ? OR city_name LIKE ? OR town_name LIKE ?', q, q, q)
+      addresses = addresses.where(level: params[:level]) if params[:level].present?
     else
       search_level = get_search_level # 一階層下の住所レベルを取得
       addresses = Address.where(level: search_level)
