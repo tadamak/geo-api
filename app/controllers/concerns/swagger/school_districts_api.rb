@@ -79,7 +79,7 @@ module Swagger::SchoolDistrictsApi
     swagger_path '/school_districts/search' do
       operation :get do
         key :description, '指定した条件に合致する学区情報をリストで取得します。'
-        key :tags, ['School Districts']
+        key :tags, ['School District']
         security do
           key :access_token, []
         end
