@@ -22,11 +22,14 @@ class V1::SchoolDistrictsController < ApplicationController
   end
 
   def search
-    school_districts = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude).where('school_name LIKE ?', "%#{params[:word]}%")
-
+    q = params[:word]
+    school_districts = SchoolDistrict.select("code, address_code, school_code, school_name, school_type, school_address, latitude, longitude, MATCH (school_name) AGAINST ('#{q}') AS score")
+                                     .where("MATCH (school_name) AGAINST ('#{q}')")
+                                     .having('score > ?', 1)
+                                     .order(score: :desc)
     offset = get_offset
     limit = get_limit
-    total = school_districts.unscope(:select).count
+    total = school_districts.length
     school_districts = school_districts.offset(offset).limit(limit)
 
     response.headers['X-Total-Count'] = total

@@ -13,18 +13,22 @@ class V1::AddressesController < ApplicationController
 
   def search
     if params[:word].present?
-      q = "%#{params[:word]}%"
-      addresses = Address.where('pref_name LIKE ? OR city_name LIKE ? OR town_name LIKE ?', q, q, q)
+      q = params[:word]
+      addresses = Address.select("*, MATCH (pref_name,city_name,town_name) AGAINST ('#{q}') AS score")
+                         .where("MATCH (pref_name,city_name,town_name) AGAINST ('#{q}')")
+                         .having('score > ?', 1)
+                         .order(score: :desc)
       addresses = addresses.where(level: params[:level]) if params[:level].present?
+      total = addresses.length
     else
       search_level = get_search_level # 一階層下の住所レベルを取得
       addresses = Address.where(level: search_level)
       addresses = addresses.where('code LIKE ?', "#{@address.code}%") if @address.present?
+      total = addresses.unscope(:select).count
     end
 
     offset = get_offset
     limit = get_limit
-    total = addresses.unscope(:select).count
     addresses = addresses.offset(offset).limit(limit)
 
     response.headers['X-Total-Count'] = total
