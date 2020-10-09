@@ -52,11 +52,9 @@ class GeoAddress < ApplicationRecord
     results = Parallel.map(slice_locations) do |locations|
       sql = ''
       locations.each do |l|
-        lat = l.split(',')[0]
-        lng = l.split(',')[1]
         sql += "UNION ALL\n" unless sql.empty?
         # NOTE: 都道府県のST_Containsが遅いため、最も下のレベル3(町丁・字等)で解析をする
-        sql += "SELECT address_code FROM geo_addresses WHERE (ST_Contains(polygon, ST_GEOMFROMTEXT('POINT(#{lng} #{lat})', 4326))) AND level = #{Address::LEVEL[:TOWN]}\n"
+        sql += "SELECT address_code FROM geo_addresses WHERE (ST_Contains(polygon, ST_GEOMFROMTEXT('POINT(#{l[:lng]} #{l[:lat]})', 4326))) AND level = #{Address::LEVEL[:TOWN]}\n"
       end
       self.find_by_sql("SELECT t.address_code FROM (#{sql}) as t").pluck(:address_code)
     end

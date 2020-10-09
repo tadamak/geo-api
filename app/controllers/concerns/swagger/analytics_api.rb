@@ -12,7 +12,7 @@ module Swagger::AnalyticsApi
         end
         parameter name: :body do
           key :in, :body
-          key :description, "緯度経度(カンマ区切り)の配列と住所レベル。配列の最大数は#{Constants::ANALYTICS_MAX_LIMIT}。"
+          key :description, "緯度経度の配列と住所レベル。配列の最大数は#{Constants::ANALYTICS_MAX_LIMIT}。"
           key :required, true
           schema do
             key :type, :object
@@ -21,7 +21,7 @@ module Swagger::AnalyticsApi
               items do
                 key :type, :string
               end
-              key :example, [ '35.68151,139.76699', '35.68956,139.69171' ]
+              key :example, [ { "lat": 35.68151, "lng": 139.76699 }, { "lat": 35.68956, "lng": 139.69171 } ]
             end
             property :level do
               key :type, :integer
