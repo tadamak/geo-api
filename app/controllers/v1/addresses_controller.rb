@@ -36,16 +36,12 @@ class V1::AddressesController < ApplicationController
   end
 
   def geocoding
-    locations = params[:locations].split(':')
-    codes = []
-    locations.each do |location|
-      lat = location.split(',')[0]
-      lng = location.split(',')[1]
-      geo_address = GeoAddress.reverse_geocoding(lat, lng)
-      codes << geo_address.address_code if geo_address.present?
-    end
-    addresses = Address.where(code: codes)
-    render json: addresses
+    location = params[:location]
+    lat = location.split(',')[0]
+    lng = location.split(',')[1]
+    geo_address = GeoAddress.reverse_geocoding(lat, lng)
+    address = Address.find_by(code: geo_address.address_code)
+    render json: address
   end
 
   def shape
@@ -90,11 +86,9 @@ class V1::AddressesController < ApplicationController
   end
 
   def validate_geocoding_params
-    locations = params[:locations]&.split(':')
-    if locations.blank?
-      return render_400(ErrorCode::REQUIRED_PARAM, 'locations の指定が必要です。')
-    elsif locations.length > Constants::MAX_LIMIT
-      return render_400(ErrorCode::INVALID_PARAM, "locations の指定数が最大値(#{Constants::MAX_LIMIT}件)を超えています。")
+    location = params[:location]
+    if location.blank?
+      return render_400(ErrorCode::REQUIRED_PARAM, 'location の指定が必要です。')
     end
   end
 

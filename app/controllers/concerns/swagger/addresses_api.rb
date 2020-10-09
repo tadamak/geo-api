@@ -112,9 +112,9 @@ module Swagger::AddressesApi
         security do
           key :access_token, []
         end
-        parameter name: :locations do
+        parameter name: :location do
           key :in, :query
-          key :description, '緯度経度。カンマ区切りで"緯度,経度"の順で指定。コロン区切りで複数指定可能。(ex. locations=35.689568,139.691717:35.604588,140.123184)'
+          key :description, '緯度経度。カンマ区切りで"緯度,経度"の順で指定。(ex. location=35.689568,139.691717)'
           key :required, true
           key :type, :string
         end
@@ -122,10 +122,7 @@ module Swagger::AddressesApi
         response 200 do
           key :description, '住所情報'
           schema do
-            key :type, :array
-            items do
-              key :'$ref', :Address
-            end
+            key :'$ref', :Address
           end
         end
 
