@@ -41,13 +41,13 @@ class V1::SchoolDistrictsController < ApplicationController
     school_type = params[:school_type]
     school_districts = SchoolDistrict.where('address_code LIKE ?', "#{address_code}%")
     school_districts = school_districts.where(school_type: school_type) unless school_type.nil?
-    render json: school_districts.geojson
+    render json: school_districts.geojsons
   end
 
   def show_shape
     code = params[:code]
     school_district = SchoolDistrict.where(code: code)
-    render json: school_district.geojson
+    render json: school_district.geojsons.first
   end
 
   def show_address

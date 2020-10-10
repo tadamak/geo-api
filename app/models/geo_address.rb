@@ -31,16 +31,11 @@ class GeoAddress < ApplicationRecord
     geojsons = []
     results.each do |result|
       geojsons << {
-        type: 'FeatureCollection',
-        features: [
-          {
-            type: 'Feature',
-            properties: {
-              code: result.address_code
-            },
-            geometry: JSON.parse(result.attributes['geojson'])
-          }
-        ]
+        type: 'Feature',
+        properties: {
+          code: result.address_code
+        },
+        geometry: JSON.parse(result.attributes['geojson'])
       }
     end
     return geojsons

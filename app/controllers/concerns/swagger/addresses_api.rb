@@ -137,7 +137,7 @@ module Swagger::AddressesApi
       end
     end
 
-    swagger_path '/addresses/shape' do
+    swagger_path '/addresses/shapes' do
       operation :get do
         key :description, '指定した住所コードのポリゴンを取得します。'
         key :tags, ['Address']
@@ -161,7 +161,10 @@ module Swagger::AddressesApi
         response 200 do
           key :description, '住所ポリゴン'
           schema do
-            key :'$ref', :GeoJson
+            key :type, :array
+            items do
+              key :'$ref', :GeoJson
+            end
           end
         end
 

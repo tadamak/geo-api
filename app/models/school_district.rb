@@ -20,11 +20,11 @@ class SchoolDistrict < ApplicationRecord
     }
   end
 
-  def self.geojson
+  def self.geojsons
     results = self.select('code, address_code, school_code, school_type, school_name, ST_AsGeoJSON(polygon) as geojson')
-    features = []
+    geojsons = []
     results.each do |result|
-      features << {
+      geojsons << {
         type: 'Feature',
         properties: {
           code: result.code,
@@ -36,9 +36,6 @@ class SchoolDistrict < ApplicationRecord
         geometry: JSON.parse(result.attributes['geojson'])
       }
     end
-    return {
-      type: 'FeatureCollection',
-      features: features
-    }
+    return geojsons
   end
 end

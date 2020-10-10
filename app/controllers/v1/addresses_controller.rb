@@ -44,12 +44,12 @@ class V1::AddressesController < ApplicationController
     render json: address
   end
 
-  def shape
+  def shapes
     codes = params[:codes].split(',')
     if params[:type] == TopoAddress::FORMAT
       render json: TopoAddress.topojsons(codes)
     else
-      render json: GeoAddress.geojson(codes)
+      render json: GeoAddress.geojsons(codes)
     end
   end
 
