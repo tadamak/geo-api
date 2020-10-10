@@ -35,9 +35,14 @@ module Swagger::AnalyticsApi
           schema do
             key :type, :array
             items do
-              key :required, [:address, :count]
-              property :address do
-                key :'$ref', :Address
+              key :required, [:address_code, :address_name, :count]
+              property :address_code do
+                key :type, :integer
+                key :example, 13
+              end
+              property :address_name do
+                key :type, :string
+                key :example, '東京都'
               end
               property :count do
                 key :type, :integer
