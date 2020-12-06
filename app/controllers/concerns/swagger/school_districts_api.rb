@@ -266,7 +266,7 @@ module Swagger::SchoolDistrictsApi
         end
         parameter name: :filter do
           key :in, :query
-          key :description, '絞り込み条件。"contain" (完全に含まれる学区のみ)または "partial" (部分的に含まれる学区のみ)を指定可能。未指定時は全て取得。'
+          key :description, '絞り込み条件。"contain" (完全に含まれる学区のみ), "partial" (部分的に含まれる学区のみ), "touch" (隣接している学区のみ) のいずれかを指定可能。未指定時は含まれる全ての学区を取得。'
           key :required, false
           key :type, :string
         end

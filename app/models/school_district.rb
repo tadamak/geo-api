@@ -6,7 +6,8 @@ class SchoolDistrict < ApplicationRecord
   # 絞り込み条件
   FILTER = {
     CONTAIN: 'contain',
-    PARTIAL: 'partial'
+    PARTIAL: 'partial',
+    TOUCH: 'touch'
   }
 
   belongs_to :school, class_name: 'School', primary_key: :code, foreign_key: :school_code
