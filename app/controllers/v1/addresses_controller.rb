@@ -14,10 +14,13 @@ class V1::AddressesController < ApplicationController
   def search
     if params[:word].present?
       q = params[:word]
-      addresses = Address.select("*, MATCH (pref_name,city_name,town_name) AGAINST ('#{q}') AS score")
-                         .where("MATCH (pref_name,city_name,town_name) AGAINST ('#{q}')")
-                         .having('score > ?', 1)
-                         .order(score: :desc)
+      # 全文検索 (完全一致)
+      addresses = Address.where("MATCH (pref_name,city_name,town_name) AGAINST ('#{q}' IN BOOLEAN MODE)")
+      # 全文検索 (揺らぎ考慮)
+      # addresses = Address.select("*, MATCH (pref_name,city_name,town_name) AGAINST ('#{q}') AS score")
+      #                    .where("MATCH (pref_name,city_name,town_name) AGAINST ('#{q}')")
+      #                    .having('score > ?', 1)
+      #                    .order(score: :desc)
       addresses = addresses.where(level: params[:level]) if params[:level].present?
       total = addresses.length
     else

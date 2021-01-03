@@ -23,10 +23,14 @@ class V1::SchoolDistrictsController < ApplicationController
 
   def search
     q = params[:word]
-    school_districts = SchoolDistrict.select("code, address_code, school_code, school_name, school_type, school_address, latitude, longitude, MATCH (school_name) AGAINST ('#{q}') AS score")
-                                     .where("MATCH (school_name) AGAINST ('#{q}')")
-                                     .having('score > ?', 1)
-                                     .order(score: :desc)
+    # 全文検索 (完全一致)
+    school_districts = SchoolDistrict.select("code, address_code, school_code, school_name, school_type, school_address, latitude, longitude")
+                                     .where("MATCH (school_name) AGAINST ('#{q}' IN BOOLEAN MODE)")
+    # 全文検索 (揺らぎ考慮)
+    # school_districts = SchoolDistrict.select("code, address_code, school_code, school_name, school_type, school_address, latitude, longitude, MATCH (school_name) AGAINST ('#{q}') AS score")
+    #                                  .where("MATCH (school_name) AGAINST ('#{q}')")
+    #                                  .having('score > ?', 1)
+    #                                  .order(score: :desc)
     offset = get_offset
     limit = get_limit
     total = school_districts.length
