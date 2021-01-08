@@ -15,7 +15,7 @@ class V1::AddressesController < ApplicationController
     if params[:word].present?
       q = params[:word]
       # 全文検索 (完全一致)
-      addresses = Address.where("MATCH (pref_name,city_name,town_name) AGAINST ('#{q}' IN BOOLEAN MODE)")
+      addresses = Address.where("MATCH (pref_name,city_name,town_name) AGAINST ('+#{q}' IN BOOLEAN MODE)")
       # 全文検索 (揺らぎ考慮)
       # addresses = Address.select("*, MATCH (pref_name,city_name,town_name) AGAINST ('#{q}') AS score")
       #                    .where("MATCH (pref_name,city_name,town_name) AGAINST ('#{q}')")
