@@ -4,9 +4,9 @@ module Swagger::SchoolDistrictSchema
 
   included do
     swagger_schema :SchoolDistrict do
-      key :required, [:code, :address_code, :school_code, :school_type, :school_name, :school_address, :location]
+      key :required, [:code, :address_code, :school_code, :school_type, :school_name, :school_address, :location, :year]
       property :code do
-        key :type, :integer
+        key :type, :string
         key :example, 'sd-1-xn77h66rv'
         key :description, '学区コード'
       end
@@ -49,6 +49,11 @@ module Swagger::SchoolDistrictSchema
           key :example, 139.76699
           key :description, '学校の経度'
         end
+      end
+      property :year do
+        key :type, :integer
+        key :example, 2016
+        key :description, 'データ作成年度'
       end
     end
   end

@@ -8,7 +8,7 @@ class V1::SchoolDistrictsController < ApplicationController
   def index
     address_code = params[:address_code]
     school_type = params[:school_type]
-    school_districts = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude).where('address_code LIKE ?', "#{address_code}%")
+    school_districts = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).where('address_code LIKE ?', "#{address_code}%")
     if school_type.present?
       school_districts = school_districts.where(school_type: school_type)
     end
@@ -17,17 +17,17 @@ class V1::SchoolDistrictsController < ApplicationController
   
   def show
     code = params[:code]
-    school_district = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude).find_by(code: code)
+    school_district = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).find_by(code: code)
     render json: school_district
   end
 
   def search
     q = params[:word]
     # 全文検索 (完全一致)
-    school_districts = SchoolDistrict.select("code, address_code, school_code, school_name, school_type, school_address, latitude, longitude")
+    school_districts = SchoolDistrict.select("code, address_code, school_code, school_name, school_type, school_address, latitude, longitude, year")
                                      .where("MATCH (school_name) AGAINST ('+#{q}' IN BOOLEAN MODE)")
     # 全文検索 (揺らぎ考慮)
-    # school_districts = SchoolDistrict.select("code, address_code, school_code, school_name, school_type, school_address, latitude, longitude, MATCH (school_name) AGAINST ('#{q}') AS score")
+    # school_districts = SchoolDistrict.select("code, address_code, school_code, school_name, school_type, school_address, latitude, longitude, year, MATCH (school_name) AGAINST ('#{q}') AS score")
     #                                  .where("MATCH (school_name) AGAINST ('#{q}')")
     #                                  .having('score > ?', 1)
     #                                  .order(score: :desc)
@@ -92,7 +92,7 @@ class V1::SchoolDistrictsController < ApplicationController
     school_type = params[:school_type]
     address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
-    school_districts = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude)
+    school_districts = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year)
                                      .where.not(code: code)
     if filter == SchoolDistrict::FILTER[:CONTAIN]
       school_districts = school_districts.where("ST_Contains((#{subquery}), polygon)")
