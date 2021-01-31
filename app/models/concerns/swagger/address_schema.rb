@@ -4,7 +4,7 @@ module Swagger::AddressSchema
 
   included do
     swagger_schema :Address do
-      key :required, [:code, :name, :level, :location, :details]
+      key :required, [:code, :name, :level, :location, :area, :details]
       property :code do
         key :type, :string
         key :description, '住所コード'
@@ -22,6 +22,7 @@ module Swagger::AddressSchema
       end
       property :location do
         key :type, :object
+        key :required, [:lat, :lng]
         property :lat do
           key :type, :number
           key :format, :float
@@ -34,6 +35,12 @@ module Swagger::AddressSchema
           key :description, '代表地点の経度'
           key :example, 139.76699
         end
+      end
+      property :area do
+        key :type, :number
+        key :format, :float
+        key :example, 379201.719
+        key :description, '面積(㎡)'
       end
       property :details do
         key :type, :array
