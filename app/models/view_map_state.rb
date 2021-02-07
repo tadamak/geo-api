@@ -4,7 +4,6 @@ class ViewMapState < ApplicationRecord
   enum map_theme: { standard: 1, silver: 2, retro: 3, night: 4, dark: 5, aubergine: 6, satellite: 7 }
 
   def location
-    return nil if latitude.nil? || longitude.nil?
     {
       lat: latitude,
       lng: longitude

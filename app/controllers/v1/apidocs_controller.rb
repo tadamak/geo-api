@@ -9,7 +9,7 @@ class V1::ApidocsController < ApplicationController
     info do
       key :version, '1.0.0'
       key :title, 'Geo API'
-      key :description, 'Geo API (地理空間情報)のドキュメントです。<br>住所や地域メッシュを元にした GIS 分析をおこなうための API を提供しています。'
+      key :description, 'Geo API (地理空間情報)のドキュメントです。<br>住所や鉄道情報を元にした GIS 分析をおこなうための API を提供しています。'
     end
     externalDocs do
       key :description, "Geo API の共通仕様について"
@@ -22,6 +22,10 @@ class V1::ApidocsController < ApplicationController
         key :description, 'About'
         key :url, '/addresses/about'
       end
+    end
+    tag do
+      key :name, 'Railway'
+      key :description, '鉄道API'
     end
     tag do
       key :name, 'Analytics'
@@ -55,11 +59,13 @@ class V1::ApidocsController < ApplicationController
     Address,
     GeoJson,
     TopoJson,
+    RailwayStation,
     School,
     SchoolDistrict,
     Common::Error,
     V1::AddressesController,
     V1::Analytics::AddressesController,
+    V1::Railways::StationsController,
     V1::Statistics::AddressesController,
     V1::SchoolsController,
     V1::SchoolDistrictsController,

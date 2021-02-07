@@ -14,7 +14,6 @@ class SchoolDistrict < ApplicationRecord
   belongs_to :address, class_name: 'Address', primary_key: :code, foreign_key: :address_code
 
   def location
-    return nil if latitude.nil? || longitude.nil?
     {
       lat: latitude,
       lng: longitude

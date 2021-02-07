@@ -32,7 +32,7 @@ class V1::AddressesController < ApplicationController
 
     offset = get_offset
     limit = get_limit
-    addresses = addresses.offset(offset).limit(limit)
+    addresses = addresses.offset(offset).limit(limit).order(code: :asc)
 
     response.headers['X-Total-Count'] = total
     render json: addresses
@@ -114,15 +114,5 @@ class V1::AddressesController < ApplicationController
     else
       @address.level + 1
     end
-  end
-
-  def get_limit
-    limit = params[:limit].blank? ? Constants::DEFAULT_LIMIT : params[:limit].to_i
-    limit = Constants::MAX_LIMIT if limit > Constants::MAX_LIMIT
-    limit
-  end
-
-  def get_offset
-    params[:offset].blank? ? Constants::DEFAULT_OFFSET : params[:offset].to_i
   end
 end

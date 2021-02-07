@@ -20,7 +20,6 @@ class Address < ApplicationRecord
   end
 
   def location
-    return nil if latitude.nil? || longitude.nil?
     {
       lat: latitude,
       lng: longitude

@@ -8,7 +8,6 @@ class School < ApplicationRecord
   has_one :school_district, class_name: 'SchoolDistrict', primary_key: :code, foreign_key: :school_code
 
   def location
-    return nil if latitude.nil? || longitude.nil?
     {
       lat: latitude,
       lng: longitude
