@@ -50,4 +50,14 @@ class ApplicationController < ActionController::API
     response.headers['X-Rate-Limit-Reset'] = reset
     response.headers['X-Rate-Limit-Remaining'] = remaining
   end
+
+  def get_limit
+    limit = params[:limit].blank? ? Constants::DEFAULT_LIMIT : params[:limit].to_i
+    limit = Constants::MAX_LIMIT if limit > Constants::MAX_LIMIT
+    limit
+  end
+
+  def get_offset
+    params[:offset].blank? ? Constants::DEFAULT_OFFSET : params[:offset].to_i
+  end
 end

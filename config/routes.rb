@@ -16,6 +16,11 @@ Rails.application.routes.draw do
       end
     end
 
+    # Railway API
+    namespace :railways do
+      resources :stations, param: :code, only: [:index, :show]
+    end
+
     # Statistics API
     namespace :statistics do
       resource :addresses, only: [] do
