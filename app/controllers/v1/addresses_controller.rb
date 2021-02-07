@@ -32,7 +32,7 @@ class V1::AddressesController < ApplicationController
 
     offset = get_offset
     limit = get_limit
-    addresses = addresses.offset(offset).limit(limit)
+    addresses = addresses.offset(offset).limit(limit).order(code: :asc)
 
     response.headers['X-Total-Count'] = total
     render json: addresses
