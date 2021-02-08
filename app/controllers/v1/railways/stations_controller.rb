@@ -46,7 +46,7 @@ class V1::Railways::StationsController < ApplicationController
     code = params[:code]
     @station = RailwayStation.find_by(code: code)
     if @station.nil?
-      return render_400(ErrorCode::REQUIRED_PARAM, '存在しない code を指定しています。')
+      return render_400(ErrorCode::INVALID_PARAM, '存在しない code を指定しています。')
     end
   end
 end
