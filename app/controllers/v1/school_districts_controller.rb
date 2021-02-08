@@ -93,7 +93,7 @@ class V1::SchoolDistrictsController < ApplicationController
     address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
     school_districts = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year)
-                                     .where.not(code: code)
+                                     .where.not(code: code).order(address_code: :asc)
     if filter == SchoolDistrict::FILTER[:CONTAIN]
       school_districts = school_districts.where("ST_Contains((#{subquery}), polygon)")
     elsif filter == SchoolDistrict::FILTER[:PARTIAL]
