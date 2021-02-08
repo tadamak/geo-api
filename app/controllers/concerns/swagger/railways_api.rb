@@ -40,6 +40,11 @@ module Swagger::RailwaysApi
               key :'$ref', :Station
             end
           end
+          header 'X-Total-Count' do
+            key :description, 'リクエストに対する総件数'
+            key :type, :integer
+            key :format, :int64
+          end
         end
 
         response 400 do

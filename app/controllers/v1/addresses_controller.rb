@@ -7,7 +7,14 @@ class V1::AddressesController < ApplicationController
   before_action :validate_shape_params, only: [:shape]
 
   def index
-    addresses = Address.where(code: params[:codes].split(',')).order(code: :asc)
+    addresses = Address.where(code: params[:codes].split(','))
+
+    total = addresses.count
+    offset = get_offset
+    limit = get_limit
+    addresses = addresses.offset(offset).limit(limit).order(code: :asc)
+
+    response.headers['X-Total-Count'] = total
     render json: addresses
   end
 
