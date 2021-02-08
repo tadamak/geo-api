@@ -103,13 +103,6 @@ module Swagger::AddressesApi
           key :required, true
           key :type, :string
         end
-        parameter name: :type do
-          key :in, :query
-          key :description, 'レスポンスのフォーマット。"geojson" または "topojson" を指定可能。'
-          key :required, false
-          key :type, :string
-          key :default, 'geojson'
-        end
 
         response 200 do
           key :description, '住所ポリゴン'

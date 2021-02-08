@@ -61,11 +61,7 @@ class V1::AddressesController < ApplicationController
 
   def shapes
     codes = params[:codes].split(',')
-    if params[:type] == TopoAddress::FORMAT
-      render json: TopoAddress.topojsons(codes)
-    else
-      render json: GeoAddress.geojsons(codes)
-    end
+    render json: GeoAddress.geojsons(codes)
   end
 
   def shape
@@ -124,9 +120,6 @@ class V1::AddressesController < ApplicationController
       return render_400(ErrorCode::REQUIRED_PARAM, 'codes の指定が必要です。')
     elsif codes.length > Constants::MAX_LIMIT
       return render_400(ErrorCode::INVALID_PARAM, "codes の指定数が最大値(#{Constants::MAX_LIMIT}件)を超えています。")
-    end
-    if type.present? && ![GeoAddress::FORMAT, TopoAddress::FORMAT].include?(type)
-      return render_400(ErrorCode::INVALID_PARAM, "誤った type を指定しています。")
     end
   end
 
