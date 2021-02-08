@@ -82,7 +82,7 @@ class V1::SchoolDistrictsController < ApplicationController
     end
     address_codes = filtered_results.map { |r| r.address_code }
 
-    addresses = Address.where(code: address_codes)
+    addresses = Address.where(code: address_codes).order(code: :asc)
     render json: addresses
   end
 
