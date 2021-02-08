@@ -30,7 +30,7 @@ class V1::ViewMapStatesController < ApplicationController
     code = params[:code]
     @view_map_state = ViewMapState.find_by(code: code)
     if @view_map_state.nil?
-      return render_400(ErrorCode::REQUIRED_PARAM, '存在しない code を指定しています。')
+      return render_400(ErrorCode::INVALID_PARAM, '存在しない code を指定しています。')
     end
   end
 end

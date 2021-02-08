@@ -58,6 +58,38 @@ module Swagger::AddressesApi
       end
     end
 
+    swagger_path '/addresses/{code}' do
+      operation :get do
+        key :description, '指定したコードの住所情報を取得します。'
+        key :tags, ['Address']
+        security do
+          key :access_token, []
+        end
+        parameter name: :code do
+          key :in, :path
+          key :description, '住所コード'
+          key :required, true
+          key :type, :string
+        end
+
+        response 200 do
+          key :description, '住所情報'
+          schema do
+            key :'$ref', :Station
+          end
+        end
+
+        response 400 do
+          key :description, 'Error'
+          schema do
+            property :error do
+              key :'$ref', :Error
+            end
+          end
+        end
+      end
+    end
+
     swagger_path '/addresses/search' do
       operation :get do
         key :description, '指定した条件に合致する住所情報をリストで取得します。'

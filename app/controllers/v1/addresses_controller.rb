@@ -2,6 +2,7 @@ class V1::AddressesController < ApplicationController
   include Swagger::AddressesApi
 
   before_action :validate_index_params, only: [:index]
+  before_action :validate_show_params, only: [:show]
   before_action :validate_search_params, only: [:search]
   before_action :validate_geocoding_params, only: [:geocoding]
   before_action :validate_shape_params, only: [:shape]
@@ -16,6 +17,10 @@ class V1::AddressesController < ApplicationController
 
     response.headers['X-Total-Count'] = total
     render json: addresses
+  end
+
+  def show
+    render json: @address
   end
 
   def search
@@ -69,8 +74,14 @@ class V1::AddressesController < ApplicationController
     codes = params[:codes]&.split(',')
     if codes.blank?
       return render_400(ErrorCode::REQUIRED_PARAM, 'codes の指定が必要です。')
-    elsif codes.length > Constants::MAX_LIMIT
-      return render_400(ErrorCode::INVALID_PARAM, "codes の指定数が最大値(#{Constants::MAX_LIMIT}件)を超えています。")
+    end
+  end
+
+  def validate_show_params
+    code = params[:code]
+    @address = Address.find_by(code: code)
+    if @address.nil?
+      return render_400(ErrorCode::INVALID_PARAM, '存在しない code を指定しています。')
     end
   end
 
