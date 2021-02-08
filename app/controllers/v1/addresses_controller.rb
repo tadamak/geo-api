@@ -7,7 +7,7 @@ class V1::AddressesController < ApplicationController
   before_action :validate_shape_params, only: [:shape]
 
   def index
-    addresses = Address.where(code: params[:codes].split(','))
+    addresses = Address.where(code: params[:codes].split(',')).order(code: :asc)
     render json: addresses
   end
 
