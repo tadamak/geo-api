@@ -61,7 +61,15 @@ class V1::AddressesController < ApplicationController
 
   def shapes
     codes = params[:codes].split(',')
-    render json: GeoAddress.geojsons(codes)
+    addresses = Address.where(code: codes)
+
+    total = addresses.count
+    offset = get_offset
+    limit = get_limit
+    addresses = addresses.offset(offset).limit(limit).order(code: :asc)
+
+    response.headers['X-Total-Count'] = total
+    render json: GeoAddress.geojsons(addresses.pluck(:code))
   end
 
   def shape
