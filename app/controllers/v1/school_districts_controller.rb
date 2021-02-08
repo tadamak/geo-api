@@ -8,7 +8,7 @@ class V1::SchoolDistrictsController < ApplicationController
   def index
     address_code = params[:address_code]
     school_type = params[:school_type]
-    school_districts = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).where('address_code LIKE ?', "#{address_code}%")
+    school_districts = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).where('address_code LIKE ?', "#{address_code}%").order(address_code: :asc)
     if school_type.present?
       school_districts = school_districts.where(school_type: school_type)
     end
