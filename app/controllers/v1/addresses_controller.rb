@@ -9,13 +9,19 @@ class V1::AddressesController < ApplicationController
   before_action :validate_shapes_params, only: [:shapes]
 
   def index
-    addresses = Address.where(code: params[:codes].split(','))
+    name = params[:name]
+    level = params[:level]
+    codes = params[:codes]
+    parent_code = params[:parent_code]
+
+    addresses = Address
+    addresses = addresses.where("MATCH (pref_name,city_name,town_name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
+    addresses = addresses.where(level: level) if level.present?
+    addresses = addresses.where(code: codes.split(',')) if codes.present?
+    addresses = addresses.where('code LIKE ?', "#{parent_code}%") if parent_code.present?
 
     total = addresses.count
-    offset = get_offset
-    limit = get_limit
-    addresses = addresses.offset(offset).limit(limit).order(code: :asc)
-
+    addresses = addresses.offset(get_offset).limit(get_limit).order(code: :asc)
     response.headers['X-Total-Count'] = total
     render json: addresses
   end
@@ -80,9 +86,9 @@ class V1::AddressesController < ApplicationController
   private
 
   def validate_index_params
-    codes = params[:codes]&.split(',')
-    if codes.blank?
-      return render_400(ErrorCode::REQUIRED_PARAM, 'codes の指定が必要です。')
+    level = params[:level].to_i
+    if level.present? && !Address::LEVEL.values.include?(level)
+      return render_400(ErrorCode::INVALID_PARAM, 'level の指定が誤っています。')
     end
   end
 

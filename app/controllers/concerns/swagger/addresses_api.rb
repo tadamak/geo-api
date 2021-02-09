@@ -10,10 +10,28 @@ module Swagger::AddressesApi
         security do
           key :access_token, []
         end
+        parameter name: :name do
+          key :in, :query
+          key :description, '住所名称。指定したワードが含まれる住所情報を取得します。'
+          key :required, false
+          key :type, :string
+        end
+        parameter name: :level do
+          key :in, :query
+          key :description, '住所レベル。指定したレベルの住所情報を取得します。'
+          key :required, false
+          key :type, :integer
+        end
         parameter name: :codes do
           key :in, :query
-          key :description, '住所コード。カンマ区切りで複数指定可能。(ex. codes=13,13101)'
-          key :required, true
+          key :description, '住所コード。指定したコードの住所情報を取得します。カンマ区切りで複数指定可能。(ex. codes=13,13101)'
+          key :required, false
+          key :type, :string
+        end
+        parameter name: :parent_code do
+          key :in, :query
+          key :description, '住所コード。指定したコード配下の住所情報を取得します。'
+          key :required, false
           key :type, :string
         end
         parameter name: :limit do
