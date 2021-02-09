@@ -86,8 +86,8 @@ class V1::AddressesController < ApplicationController
   private
 
   def validate_index_params
-    level = params[:level].to_i
-    if level.present? && !Address::LEVEL.values.include?(level)
+    level = params[:level]
+    if level.present? && !Address::LEVEL.values.include?(level.to_i)
       return render_400(ErrorCode::INVALID_PARAM, 'level の指定が誤っています。')
     end
   end
