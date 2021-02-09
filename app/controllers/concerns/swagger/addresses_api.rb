@@ -108,7 +108,7 @@ module Swagger::AddressesApi
       end
     end
 
-    swagger_path '/addresses/shapes' do
+    swagger_path '/addresses/shape' do
       operation :get do
         key :description, '住所ポリゴンを取得します。'
         key :tags, ['Address']

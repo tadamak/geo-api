@@ -5,8 +5,8 @@ Rails.application.routes.draw do
     # Address API
     resources :addresses, param: :code, only: [:index, :show] do
       get :geocoding, on: :collection
-      get :shapes, on: :collection
-      get :shape, on: :member
+      get :shape, on: :collection, action: :index_shape
+      get :shape, on: :member, action: :show_shape
     end
 
     # Analytics API
@@ -34,7 +34,7 @@ Rails.application.routes.draw do
     # School District API
     resources :school_districts, param: :code, only: [:index, :show] do
       get :search, on: :collection
-      get :shapes, on: :collection, action: :index_shape
+      get :shape, on: :collection, action: :index_shape
       get :shape, on: :member, action: :show_shape
       get :addresses, on: :member, action: :show_address
       get :school_districts, on: :member, action: :show_school_district

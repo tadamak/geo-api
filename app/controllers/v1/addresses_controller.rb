@@ -1,11 +1,11 @@
 class V1::AddressesController < ApplicationController
   include Swagger::AddressesApi
 
-  before_action :validate_page_params, only: [:index, :shapes]
+  before_action :validate_page_params, only: [:index, :index_shape]
   before_action :validate_index_params, only: [:index]
-  before_action :validate_show_params, only: [:show, :shape]
+  before_action :validate_show_params, only: [:show, :show_shape]
   before_action :validate_geocoding_params, only: [:geocoding]
-  before_action :validate_shapes_params, only: [:shapes]
+  before_action :validate_index_shape_params, only: [:index_shape]
 
   def index
     name = params[:name]
@@ -38,7 +38,7 @@ class V1::AddressesController < ApplicationController
     render json: address
   end
 
-  def shapes
+  def index_shape
     codes = params[:codes].split(',')
     addresses = Address.where(code: codes)
 
@@ -51,7 +51,7 @@ class V1::AddressesController < ApplicationController
     render json: GeoAddress.geojsons(addresses.pluck(:code))
   end
 
-  def shape
+  def show_shape
     render json: GeoAddress.geojsons(@address.code).first
   end
 
@@ -79,7 +79,7 @@ class V1::AddressesController < ApplicationController
     end
   end
 
-  def validate_shapes_params
+  def validate_index_shape_params
     codes = params[:codes]&.split(',')
     type = params[:type]
     if codes.blank?
