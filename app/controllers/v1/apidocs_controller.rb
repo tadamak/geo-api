@@ -57,10 +57,10 @@ class V1::ApidocsController < ApplicationController
 
   SWAGGERED_CLASSES = [
     Address,
-    GeoJson,
     RailwayStation,
     School,
     SchoolDistrict,
+    GeoJson,
     Common::Error,
     V1::AddressesController,
     V1::Analytics::AddressesController,
