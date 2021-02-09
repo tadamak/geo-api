@@ -1,6 +1,7 @@
 class V1::AddressesController < ApplicationController
   include Swagger::AddressesApi
 
+  before_action :validate_page_params, only: [:index, :search, :shapes]
   before_action :validate_index_params, only: [:index]
   before_action :validate_show_params, only: [:show, :shape]
   before_action :validate_search_params, only: [:search]
@@ -94,18 +95,7 @@ class V1::AddressesController < ApplicationController
   end
 
   def validate_search_params
-    limit = params[:limit].to_i
-    offset = params[:offset].to_i
     code = params[:code]
-    if limit < 0
-      return render_400(ErrorCode::INVALID_PARAM, "limit には正の整数を指定してください。")
-    end
-    if limit > Constants::MAX_LIMIT
-      return render_400(ErrorCode::INVALID_PARAM, "limit の指定数が最大値(#{Constants::MAX_LIMIT}件)を超えています。")
-    end
-    if offset < 0
-      return render_400(ErrorCode::INVALID_PARAM, "offset には正の整数を指定してください。")
-    end
     if code.present?
       @address = Address.find_by(code: code)
       if @address.nil?

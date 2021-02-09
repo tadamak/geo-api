@@ -139,14 +139,4 @@ class V1::SchoolDistrictsController < ApplicationController
       return render_400(ErrorCode::REQUIRED_PARAM, 'word の指定が必要です。')
     end
   end
-
-  def get_limit
-    limit = params[:limit].blank? ? Constants::DEFAULT_LIMIT : params[:limit].to_i
-    limit = Constants::MAX_LIMIT if limit > Constants::MAX_LIMIT
-    limit
-  end
-
-  def get_offset
-    params[:offset].blank? ? Constants::DEFAULT_OFFSET : params[:offset].to_i
-  end
 end

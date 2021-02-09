@@ -60,4 +60,18 @@ class ApplicationController < ActionController::API
   def get_offset
     params[:offset].blank? ? Constants::DEFAULT_OFFSET : params[:offset].to_i
   end
+
+  def validate_page_params
+    limit = params[:limit].to_i
+    offset = params[:offset].to_i
+    if limit < 0
+      return render_400(ErrorCode::INVALID_PARAM, "limit には正の整数を指定してください。")
+    end
+    if limit > Constants::MAX_LIMIT
+      return render_400(ErrorCode::INVALID_PARAM, "limit の指定数が最大値(#{Constants::MAX_LIMIT}件)を超えています。")
+    end
+    if offset < 0
+      return render_400(ErrorCode::INVALID_PARAM, "offset には正の整数を指定してください。")
+    end
+  end
 end
