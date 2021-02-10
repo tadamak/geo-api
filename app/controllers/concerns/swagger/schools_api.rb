@@ -13,7 +13,7 @@ module Swagger::SchoolsApi
         parameter name: :address_code do
           key :in, :query
           key :description, '住所コード。レベル2(市区町村)のみ指定可能。'
-          key :required, true
+          key :required, false
           key :type, :string
         end
         parameter name: :school_type do
@@ -27,6 +27,21 @@ module Swagger::SchoolsApi
           key :description, '学校管理 (1: 国, 2: 都道府県, 3: 市区町村, 4: 民間, 0: その他)'
           key :required, false
           key :type, :integer
+        end
+        parameter name: :limit do
+          key :in, :query
+          key :description, "取得件数。最大値は#{Constants::MAX_LIMIT}。"
+          key :required, false
+          key :type, :integer
+          key :default, Constants::DEFAULT_LIMIT
+          key :maximum, Constants::MAX_LIMIT
+        end
+        parameter name: :offset do
+          key :in, :query
+          key :description, '取得開始位置。'
+          key :required, false
+          key :type, :integer
+          key :default, 0
         end
 
         response 200 do

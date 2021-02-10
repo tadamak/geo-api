@@ -73,5 +73,7 @@ class ApplicationController < ActionController::API
     if offset < 0
       return render_400(ErrorCode::INVALID_PARAM, "offset には正の整数を指定してください。")
     end
+    @limit = get_limit
+    @offset = get_offset
   end
 end

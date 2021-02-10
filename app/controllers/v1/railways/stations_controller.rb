@@ -10,7 +10,7 @@ class V1::Railways::StationsController < ApplicationController
     stations = stations.where('address_code LIKE ?', "#{address_code}%") if address_code.present?
 
     total = stations.count
-    stations = stations.offset(get_offset).limit(get_limit).order(address_code: :asc)
+    stations = stations.offset(@offset).limit(@limit).order(address_code: :asc)
     response.headers['X-Total-Count'] = total
     render json: stations
   end

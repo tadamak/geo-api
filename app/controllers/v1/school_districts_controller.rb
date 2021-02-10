@@ -1,57 +1,40 @@
 class V1::SchoolDistrictsController < ApplicationController
   include Swagger::SchoolDistrictsApi
 
+  before_action :validate_page_params, only: [:index, :index_shape, :show_address, :show_school_district]
   before_action :validate_index_params, only: [:index, :index_shape]
   before_action :validate_show_params, only: [:show, :show_shape, :show_address, :show_school_district]
   before_action :validate_search_params, only: [:search]
 
   def index
-    address_code = params[:address_code]
-    school_type = params[:school_type]
-    school_districts = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).where('address_code LIKE ?', "#{address_code}%").order(address_code: :asc)
-    if school_type.present?
-      school_districts = school_districts.where(school_type: school_type)
-    end
+    school_districts = get_school_districts
+    total = school_districts.count
+    school_districts = school_districts.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).offset(@offset).limit(@limit).order(address_code: :asc)
+    response.headers['X-Total-Count'] = total
+
     render json: school_districts
   end
   
-  def show
-    code = params[:code]
-    school_district = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).find_by(code: code)
-    render json: school_district
-  end
-
-  def search
-    q = params[:word]
-    # 全文検索 (完全一致)
-    school_districts = SchoolDistrict.select("code, address_code, school_code, school_name, school_type, school_address, latitude, longitude, year")
-                                     .where("MATCH (school_name) AGAINST ('+#{q}' IN BOOLEAN MODE)")
-    # 全文検索 (揺らぎ考慮)
-    # school_districts = SchoolDistrict.select("code, address_code, school_code, school_name, school_type, school_address, latitude, longitude, year, MATCH (school_name) AGAINST ('#{q}') AS score")
-    #                                  .where("MATCH (school_name) AGAINST ('#{q}')")
-    #                                  .having('score > ?', 1)
-    #                                  .order(score: :desc)
-    offset = get_offset
-    limit = get_limit
-    total = school_districts.length
-    school_districts = school_districts.offset(offset).limit(limit)
-
-    response.headers['X-Total-Count'] = total
-    render json: school_districts
-  end
-
   def index_shape
-    address_code = params[:address_code]
-    school_type = params[:school_type]
-    school_districts = SchoolDistrict.where('address_code LIKE ?', "#{address_code}%")
-    school_districts = school_districts.where(school_type: school_type) unless school_type.nil?
-    render json: school_districts.geojsons
+    school_districts = get_school_districts
+    total = school_districts.count
+    school_districts = school_districts.offset(@offset).limit(@limit).order(address_code: :asc)
+    response.headers['X-Total-Count'] = total
+
+    if params[:merged] == 'false'
+      geojson = school_districts.geojsons
+    else
+      geojson = school_districts.geojson
+    end
+    render json: geojson
+  end
+
+  def show
+    render json: @school_district
   end
 
   def show_shape
-    code = params[:code]
-    school_district = SchoolDistrict.where(code: code)
-    render json: school_district.geojsons.first
+    render json: @school_district.geojsons.first
   end
 
   def show_address
@@ -82,7 +65,11 @@ class V1::SchoolDistrictsController < ApplicationController
     end
     address_codes = filtered_results.map { |r| r.address_code }
 
-    addresses = Address.where(code: address_codes).order(code: :asc)
+    addresses = Address.where(code: address_codes)
+    total = addresses.count
+    addresses = addresses.offset(@offset).limit(@limit).order(code: :asc)
+    response.headers['X-Total-Count'] = total
+    
     render json: addresses
   end
 
@@ -92,8 +79,7 @@ class V1::SchoolDistrictsController < ApplicationController
     school_type = params[:school_type]
     address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
-    school_districts = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year)
-                                     .where.not(code: code).order(address_code: :asc)
+    school_districts = SchoolDistrict.where.not(code: code).order(address_code: :asc)
     if filter == SchoolDistrict::FILTER[:CONTAIN]
       school_districts = school_districts.where("ST_Contains((#{subquery}), polygon)")
     elsif filter == SchoolDistrict::FILTER[:PARTIAL]
@@ -107,6 +93,11 @@ class V1::SchoolDistrictsController < ApplicationController
                                          .where.not("ST_Touches((#{subquery}), polygon)")
     end
     school_districts = school_districts.where(school_type: school_type) unless school_type.nil?
+
+    total = school_districts.count
+    school_districts = school_districts.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).offset(@offset).limit(@limit).order(address_code: :asc)
+    response.headers['X-Total-Count'] = total
+
     render json: school_districts
   end
 
@@ -115,9 +106,7 @@ class V1::SchoolDistrictsController < ApplicationController
   def validate_index_params
     address_code = params[:address_code]
     school_type = params[:school_type]
-    if address_code.blank?
-      return render_400(ErrorCode::REQUIRED_PARAM, 'address_code の指定が必要です。')
-    elsif address_code.length != Address::CODE_DIGIT[:CITY]
+    if address_code.present? && address_code.length != Address::CODE_DIGIT[:CITY]
       return render_400(ErrorCode::INVALID_PARAM, "address_code はレベル2(市区町村)を指定してください。")
     end
     if school_type.present? && !SchoolDistrict.school_types.values.include?(school_type.to_i)
@@ -127,7 +116,7 @@ class V1::SchoolDistrictsController < ApplicationController
 
   def validate_show_params
     code = params[:code]
-    @school_district = SchoolDistrict.find_by(code: code)
+    @school_district = SchoolDistrict.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).find_by(code: code)
     if @school_district.nil?
       return render_400(ErrorCode::INVALID_PARAM, '存在しない code を指定しています。')
     end
@@ -138,5 +127,16 @@ class V1::SchoolDistrictsController < ApplicationController
     if word.blank?
       return render_400(ErrorCode::REQUIRED_PARAM, 'word の指定が必要です。')
     end
+  end
+
+  def get_school_districts
+    name = params[:name]
+    address_code = params[:address_code]
+    school_type = params[:school_type]
+    school_districts = SchoolDistrict
+    school_districts = school_districts.where("MATCH (school_name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
+    school_districts = school_districts.where('address_code LIKE ?', "#{address_code}%") if address_code.present?
+    school_districts = school_districts.where(school_type: school_type) if school_type.present?
+    return school_districts
   end
 end

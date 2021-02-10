@@ -9,16 +9,16 @@ class V1::AddressesController < ApplicationController
   def index
     addresses = get_addresses
     total = addresses.count
-    addresses = addresses.offset(get_offset).limit(get_limit).order(code: :asc)
+    addresses = addresses.offset(@offset).limit(@limit).order(code: :asc)
     response.headers['X-Total-Count'] = total
+
     render json: addresses
   end
 
   def index_shape
     addresses = get_addresses
     total = addresses.count
-    addresses = addresses.offset(get_offset).limit(get_limit).order(code: :asc)
-
+    addresses = addresses.offset(@offset).limit(@limit).order(code: :asc)
     response.headers['X-Total-Count'] = total
 
     if params[:merged] == 'false'

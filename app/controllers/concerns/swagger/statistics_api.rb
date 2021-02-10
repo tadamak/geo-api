@@ -3,7 +3,7 @@ module Swagger::StatisticsApi
   include Swagger::Blocks
 
   included do
-    swagger_path '[WIP]/statistics/addresses/populations' do
+    swagger_path '/statistics/addresses/populations' do
       operation :get do
         key :description, '指定した住所コードの人口・世帯数情報を取得します。'
         key :tags, ['Statistics']

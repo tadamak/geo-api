@@ -1,17 +1,15 @@
 class V1::SchoolsController < ApplicationController
   include Swagger::SchoolsApi
 
+  before_action :validate_page_params, only: [:index]
   before_action :validate_index_params, only: [:index]
   before_action :validate_show_params, only: [:show]
 
   def index
-    address_code = params[:address_code]
-    school_type = params[:school_type]
-    school_admin = params[:school_admin]
-
-    schools = School.includes(:school_district).where('address_code LIKE ?', "#{address_code}%").order(address_code: :asc)
-    schools = schools.where(school_type: school_type) unless school_type.blank?
-    schools = schools.where(school_admin: school_admin) unless school_admin.blank?
+    schools = get_schools
+    total = schools.count
+    schools = schools.offset(@offset).limit(@limit).order(address_code: :asc)
+    response.headers['X-Total-Count'] = total
 
     render json: schools
   end
@@ -24,9 +22,7 @@ class V1::SchoolsController < ApplicationController
 
   def validate_index_params
     address_code = params[:address_code]
-    if address_code.blank?
-      return render_400(ErrorCode::REQUIRED_PARAM, 'address_code の指定が必要です。')
-    elsif address_code.length != Address::CODE_DIGIT[:CITY]
+    if address_code.present? && address_code.length != Address::CODE_DIGIT[:CITY]
       return render_400(ErrorCode::INVALID_PARAM, "address_code はレベル2(市区町村)を指定してください。")
     end
   end
@@ -37,5 +33,18 @@ class V1::SchoolsController < ApplicationController
     if @school.nil?
       return render_400(ErrorCode::INVALID_PARAM, '存在しない code を指定しています。')
     end
+  end
+
+  def get_schools
+    address_code = params[:address_code]
+    school_type = params[:school_type]
+    school_admin = params[:school_admin]
+
+    schools = School.includes(:school_district)
+    schools = schools.where('address_code LIKE ?', "#{address_code}%") if address_code.present?
+    schools = schools.where(school_type: school_type) if school_type.present?
+    schools = schools.where(school_admin: school_admin) if school_admin.present?
+
+    return schools
   end
 end
