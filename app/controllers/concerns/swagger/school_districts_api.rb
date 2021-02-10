@@ -217,6 +217,21 @@ module Swagger::SchoolDistrictsApi
           key :required, false
           key :type, :string
         end
+        parameter name: :limit do
+          key :in, :query
+          key :description, "取得件数。最大値は#{Constants::MAX_LIMIT}。"
+          key :required, false
+          key :type, :integer
+          key :default, Constants::DEFAULT_LIMIT
+          key :maximum, Constants::MAX_LIMIT
+        end
+        parameter name: :offset do
+          key :in, :query
+          key :description, '取得開始位置。'
+          key :required, false
+          key :type, :integer
+          key :default, 0
+        end
 
         response 200 do
           key :description, '住所情報'
@@ -263,6 +278,21 @@ module Swagger::SchoolDistrictsApi
           key :description, '絞り込み条件。"contain" (完全に含まれる学区のみ), "partial" (部分的に含まれる学区のみ), "touch" (隣接している学区のみ) のいずれかを指定可能。未指定時は含まれる全ての学区を取得。'
           key :required, false
           key :type, :string
+        end
+        parameter name: :limit do
+          key :in, :query
+          key :description, "取得件数。最大値は#{Constants::MAX_LIMIT}。"
+          key :required, false
+          key :type, :integer
+          key :default, Constants::DEFAULT_LIMIT
+          key :maximum, Constants::MAX_LIMIT
+        end
+        parameter name: :offset do
+          key :in, :query
+          key :description, '取得開始位置。'
+          key :required, false
+          key :type, :integer
+          key :default, 0
         end
 
         response 200 do
