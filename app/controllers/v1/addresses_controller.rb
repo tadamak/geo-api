@@ -2,31 +2,39 @@ class V1::AddressesController < ApplicationController
   include Swagger::AddressesApi
 
   before_action :validate_page_params, only: [:index, :index_shape]
-  before_action :validate_index_params, only: [:index]
+  before_action :validate_index_params, only: [:index, :index_shape]
   before_action :validate_show_params, only: [:show, :show_shape]
   before_action :validate_geocoding_params, only: [:geocoding]
-  before_action :validate_index_shape_params, only: [:index_shape]
 
   def index
-    name = params[:name]
-    level = params[:level]
-    codes = params[:codes]
-    parent_code = params[:parent_code]
-
-    addresses = Address
-    addresses = addresses.where("MATCH (pref_name,city_name,town_name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
-    addresses = addresses.where(level: level) if level.present?
-    addresses = addresses.where(code: codes.split(',')) if codes.present?
-    addresses = addresses.where('code LIKE ?', "#{parent_code}%") if parent_code.present?
-
+    addresses = get_addresses
     total = addresses.count
     addresses = addresses.offset(get_offset).limit(get_limit).order(code: :asc)
     response.headers['X-Total-Count'] = total
     render json: addresses
   end
 
+  def index_shape
+    addresses = get_addresses
+    total = addresses.count
+    addresses = addresses.offset(get_offset).limit(get_limit).order(code: :asc)
+
+    response.headers['X-Total-Count'] = total
+
+    if params[:merged] == 'false'
+      geojson = GeoAddress.geojsons(addresses.pluck(:code))
+    else
+      geojson = GeoAddress.geojson(addresses.pluck(:code))
+    end
+    render json: geojson
+  end
+
   def show
     render json: @address
+  end
+
+  def show_shape
+    render json: GeoAddress.geojsons(@address.code).first
   end
 
   def geocoding
@@ -36,23 +44,6 @@ class V1::AddressesController < ApplicationController
     geo_address = GeoAddress.reverse_geocoding(lat, lng)
     address = Address.find_by(code: geo_address.address_code)
     render json: address
-  end
-
-  def index_shape
-    codes = params[:codes].split(',')
-    addresses = Address.where(code: codes)
-
-    total = addresses.count
-    offset = get_offset
-    limit = get_limit
-    addresses = addresses.offset(offset).limit(limit).order(code: :asc)
-
-    response.headers['X-Total-Count'] = total
-    render json: GeoAddress.geojsons(addresses.pluck(:code))
-  end
-
-  def show_shape
-    render json: GeoAddress.geojsons(@address.code).first
   end
 
   private
@@ -79,13 +70,17 @@ class V1::AddressesController < ApplicationController
     end
   end
 
-  def validate_index_shape_params
-    codes = params[:codes]&.split(',')
-    type = params[:type]
-    if codes.blank?
-      return render_400(ErrorCode::REQUIRED_PARAM, 'codes の指定が必要です。')
-    elsif codes.length > Constants::MAX_LIMIT
-      return render_400(ErrorCode::INVALID_PARAM, "codes の指定数が最大値(#{Constants::MAX_LIMIT}件)を超えています。")
-    end
+  def get_addresses
+    name = params[:name]
+    level = params[:level]
+    codes = params[:codes]
+    parent_code = params[:parent_code]
+
+    addresses = Address
+    addresses = addresses.where("MATCH (pref_name,city_name,town_name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
+    addresses = addresses.where(level: level) if level.present?
+    addresses = addresses.where(code: codes.split(',')) if codes.present?
+    addresses = addresses.where('code LIKE ?', "#{parent_code}%") if parent_code.present?
+    return addresses
   end
 end

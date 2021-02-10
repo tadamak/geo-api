@@ -115,11 +115,36 @@ module Swagger::AddressesApi
         security do
           key :access_token, []
         end
+        parameter name: :name do
+          key :in, :query
+          key :description, '住所名称'
+          key :required, false
+          key :type, :string
+        end
+        parameter name: :level do
+          key :in, :query
+          key :description, '住所レベル'
+          key :required, false
+          key :type, :integer
+        end
         parameter name: :codes do
           key :in, :query
-          key :description, '住所コード。カンマ区切りで複数指定可能。(ex. codes=13101,13102)'
-          key :required, true
+          key :description, '住所コード。カンマ区切りで複数指定可能。(ex. codes=13,13101)'
+          key :required, false
           key :type, :string
+        end
+        parameter name: :parent_code do
+          key :in, :query
+          key :description, '住所コード。指定したコード配下の住所情報を取得。'
+          key :required, false
+          key :type, :string
+        end
+        parameter name: :merged do
+          key :in, :query
+          key :description, 'ポリゴンをマージするか否か。真: FeatureCollection, 偽: Feature の Array。'
+          key :required, false
+          key :type, :boolean
+          key :default, true
         end
         parameter name: :limit do
           key :in, :query
