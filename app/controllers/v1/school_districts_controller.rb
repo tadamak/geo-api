@@ -34,7 +34,7 @@ class V1::SchoolDistrictsController < ApplicationController
   end
 
   def show_shape
-    render json: @school_district.geojsons.first
+    render json: SchoolDistrict.where(code: params[:code]).geojsons.first
   end
 
   def show_address
