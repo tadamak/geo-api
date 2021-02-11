@@ -10,6 +10,12 @@ module Swagger::SchoolsApi
         security do
           key :access_token, []
         end
+        parameter name: :name do
+          key :in, :query
+          key :description, '学校名'
+          key :required, false
+          key :type, :string
+        end
         parameter name: :address_code do
           key :in, :query
           key :description, '住所コード。レベル2(市区町村)のみ指定可能。'
@@ -38,7 +44,7 @@ module Swagger::SchoolsApi
         end
         parameter name: :offset do
           key :in, :query
-          key :description, '取得開始位置。'
+          key :description, '取得開始位置'
           key :required, false
           key :type, :integer
           key :default, 0

@@ -5,13 +5,11 @@ class V1::Railways::StationsController < ApplicationController
   before_action :validate_show_params, only: [:show]
 
   def index
-    address_code = params[:address_code]
-    stations = RailwayStation
-    stations = stations.where('address_code LIKE ?', "#{address_code}%") if address_code.present?
-
+    stations = get_stations
     total = stations.count
     stations = stations.offset(@offset).limit(@limit).order(address_code: :asc)
     response.headers['X-Total-Count'] = total
+
     render json: stations
   end
 
@@ -27,5 +25,14 @@ class V1::Railways::StationsController < ApplicationController
     if @station.nil?
       return render_400(ErrorCode::INVALID_PARAM, '存在しない code を指定しています。')
     end
+  end
+
+  def get_stations
+    name = params[:name]
+    address_code = params[:address_code]
+    stations = RailwayStation
+    stations = stations.where("MATCH (name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
+    stations = stations.where('address_code LIKE ?', "#{address_code}%") if address_code.present?
+    return stations
   end
 end

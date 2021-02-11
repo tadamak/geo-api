@@ -44,7 +44,7 @@ module Swagger::AddressesApi
         end
         parameter name: :offset do
           key :in, :query
-          key :description, '取得開始位置。'
+          key :description, '取得開始位置'
           key :required, false
           key :type, :integer
           key :default, 0
@@ -156,7 +156,7 @@ module Swagger::AddressesApi
         end
         parameter name: :offset do
           key :in, :query
-          key :description, '取得開始位置。'
+          key :description, '取得開始位置'
           key :required, false
           key :type, :integer
           key :default, 0

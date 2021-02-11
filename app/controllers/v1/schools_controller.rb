@@ -44,11 +44,13 @@ class V1::SchoolsController < ApplicationController
   end
 
   def get_schools
+    name = params[:name]
     address_code = params[:address_code]
     school_type = params[:school_type]
     school_admin = params[:school_admin]
 
     schools = School.includes(:school_district)
+    schools = schools.where("MATCH (name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
     schools = schools.where('address_code LIKE ?', "#{address_code}%") if address_code.present?
     schools = schools.where(school_type: school_type) if school_type.present?
     schools = schools.where(school_admin: school_admin) if school_admin.present?

@@ -32,7 +32,7 @@ module Swagger::RailwaysApi
         end
         parameter name: :offset do
           key :in, :query
-          key :description, '取得開始位置。'
+          key :description, '取得開始位置'
           key :required, false
           key :type, :integer
           key :default, 0
@@ -125,7 +125,7 @@ module Swagger::RailwaysApi
         end
         parameter name: :offset do
           key :in, :query
-          key :description, '取得開始位置。'
+          key :description, '取得開始位置'
           key :required, false
           key :type, :integer
           key :default, 0
@@ -196,9 +196,15 @@ module Swagger::RailwaysApi
         security do
           key :access_token, []
         end
+        parameter name: :name do
+          key :in, :query
+          key :description, '駅名'
+          key :required, false
+          key :type, :string
+        end
         parameter name: :address_code do
           key :in, :query
-          key :description, '住所コード。'
+          key :description, '住所コード'
           key :required, false
           key :type, :string
         end
@@ -212,7 +218,7 @@ module Swagger::RailwaysApi
         end
         parameter name: :offset do
           key :in, :query
-          key :description, '取得開始位置。'
+          key :description, '取得開始位置'
           key :required, false
           key :type, :integer
           key :default, 0
