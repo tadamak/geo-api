@@ -61,6 +61,29 @@ class ApplicationController < ActionController::API
     params[:offset].blank? ? Constants::DEFAULT_OFFSET : params[:offset].to_i
   end
 
+  def get_sort
+    sort = params[:sort]
+    return nil if sort.blank?
+    order = {}
+    sort.split(',').each do |s|
+      value = s.first == '-' ? :desc : :asc
+      key = s.first == '-' ? s.slice(1, s.length) : s
+      order[key] = value
+    end
+    return order
+  end
+
+  def is_enable_sort_key?(enable_keys)
+    sort = get_sort
+    return false unless sort.present?
+    sort.keys.each do |key|
+      unless enable_keys.include?(key)
+        return false
+      end
+    end
+    return true
+  end
+
   def validate_page_params
     limit = params[:limit].to_i
     offset = params[:offset].to_i

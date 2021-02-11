@@ -9,7 +9,7 @@ class V1::AddressesController < ApplicationController
   def index
     addresses = get_addresses
     total = addresses.count
-    addresses = addresses.offset(@offset).limit(@limit).order(code: :asc)
+    addresses = addresses.offset(@offset).limit(@limit)
     response.headers['X-Total-Count'] = total
 
     render json: addresses
@@ -18,7 +18,7 @@ class V1::AddressesController < ApplicationController
   def index_shape
     addresses = get_addresses
     total = addresses.count
-    addresses = addresses.offset(@offset).limit(@limit).order(code: :asc)
+    addresses = addresses.offset(@offset).limit(@limit)
     response.headers['X-Total-Count'] = total
 
     if params[:merged] == 'false'
@@ -49,7 +49,12 @@ class V1::AddressesController < ApplicationController
   private
 
   def validate_index_params
+    enable_sort_keys = ['code', 'level', 'area']
+    sort = params[:sort]
     level = params[:level]
+    if sort.present? && !is_enable_sort_key?(enable_sort_keys)
+      return render_400(ErrorCode::INVALID_PARAM, 'sort の指定が誤っています。')
+    end
     if level.present? && !Address::LEVEL.values.include?(level.to_i)
       return render_400(ErrorCode::INVALID_PARAM, 'level の指定が誤っています。')
     end
@@ -75,12 +80,14 @@ class V1::AddressesController < ApplicationController
     level = params[:level]
     codes = params[:codes]
     parent_code = params[:parent_code]
+    sort = get_sort || [code: :asc]
 
     addresses = Address
     addresses = addresses.where("MATCH (pref_name,city_name,town_name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
     addresses = addresses.where(level: level) if level.present?
     addresses = addresses.where(code: codes.split(',')) if codes.present?
     addresses = addresses.where('code LIKE ?', "#{parent_code}%") if parent_code.present?
+    addresses = addresses.order(sort)
     return addresses
   end
 end

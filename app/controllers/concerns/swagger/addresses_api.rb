@@ -49,6 +49,13 @@ module Swagger::AddressesApi
           key :type, :integer
           key :default, 0
         end
+        parameter name: :sort do
+          key :in, :query
+          key :description, "並び順。'code', 'level', 'area' が選択可。"
+          key :required, false
+          key :type, :string
+          key :default, 'code'
+        end
 
         response 200 do
           key :description, '住所情報'
@@ -160,6 +167,13 @@ module Swagger::AddressesApi
           key :required, false
           key :type, :integer
           key :default, 0
+        end
+        parameter name: :sort do
+          key :in, :query
+          key :description, "並び順。'code', 'level', 'area' が選択可。"
+          key :required, false
+          key :type, :string
+          key :default, 'code'
         end
 
         response 200 do

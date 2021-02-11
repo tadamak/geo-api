@@ -223,6 +223,13 @@ module Swagger::RailwaysApi
           key :type, :integer
           key :default, 0
         end
+        parameter name: :sort do
+          key :in, :query
+          key :description, "並び順。'address_code', 'name', 'code' が選択可。"
+          key :required, false
+          key :type, :string
+          key :default, 'address_code'
+        end
 
         response 200 do
           key :description, '駅情報'

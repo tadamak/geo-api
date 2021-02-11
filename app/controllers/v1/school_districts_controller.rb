@@ -4,12 +4,13 @@ class V1::SchoolDistrictsController < ApplicationController
   before_action :validate_page_params, only: [:index, :index_shape, :show_address, :show_school_district]
   before_action :validate_index_params, only: [:index, :index_shape]
   before_action :validate_show_params, only: [:show, :show_shape, :show_address, :show_school_district]
-  before_action :validate_search_params, only: [:search]
-
+  before_action :validate_show_address_params, only: [:show_address]
+  before_action :validate_show_school_district_params, only: [:show_school_district]
+  
   def index
     school_districts = get_school_districts
     total = school_districts.count
-    school_districts = school_districts.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).offset(@offset).limit(@limit).order(address_code: :asc)
+    school_districts = school_districts.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).offset(@offset).limit(@limit)
     response.headers['X-Total-Count'] = total
 
     render json: school_districts
@@ -18,7 +19,7 @@ class V1::SchoolDistrictsController < ApplicationController
   def index_shape
     school_districts = get_school_districts
     total = school_districts.count
-    school_districts = school_districts.offset(@offset).limit(@limit).order(address_code: :asc)
+    school_districts = school_districts.offset(@offset).limit(@limit)
     response.headers['X-Total-Count'] = total
 
     if params[:merged] == 'false'
@@ -40,6 +41,8 @@ class V1::SchoolDistrictsController < ApplicationController
   def show_address
     code = params[:code]
     filter = params[:filter]
+    sort = get_sort || [code: :asc]
+
     address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
     geo_addresses = GeoAddress.where(level: Address::LEVEL[:TOWN])
@@ -65,9 +68,9 @@ class V1::SchoolDistrictsController < ApplicationController
     end
     address_codes = filtered_results.map { |r| r.address_code }
 
-    addresses = Address.where(code: address_codes)
+    addresses = Address.where(code: address_codes).order(sort)
     total = addresses.count
-    addresses = addresses.offset(@offset).limit(@limit).order(code: :asc)
+    addresses = addresses.offset(@offset).limit(@limit)
     response.headers['X-Total-Count'] = total
     
     render json: addresses
@@ -77,9 +80,11 @@ class V1::SchoolDistrictsController < ApplicationController
     code = params[:code]
     filter = params[:filter]
     school_type = params[:school_type]
+    sort = get_sort || [address_code: :asc]
+
     address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
-    school_districts = SchoolDistrict.where.not(code: code).order(address_code: :asc)
+    school_districts = SchoolDistrict.where.not(code: code).order(sort)
     if filter == SchoolDistrict::FILTER[:CONTAIN]
       school_districts = school_districts.where("ST_Contains((#{subquery}), polygon)")
     elsif filter == SchoolDistrict::FILTER[:PARTIAL]
@@ -95,7 +100,7 @@ class V1::SchoolDistrictsController < ApplicationController
     school_districts = school_districts.where(school_type: school_type) unless school_type.nil?
 
     total = school_districts.count
-    school_districts = school_districts.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).offset(@offset).limit(@limit).order(address_code: :asc)
+    school_districts = school_districts.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).offset(@offset).limit(@limit)
     response.headers['X-Total-Count'] = total
 
     render json: school_districts
@@ -104,8 +109,13 @@ class V1::SchoolDistrictsController < ApplicationController
   private
 
   def validate_index_params
+    enable_sort_keys = ['address_code', 'school_name', 'code']
+    sort = params[:sort]
     address_code = params[:address_code]
     school_type = params[:school_type]
+    if sort.present? && !is_enable_sort_key?(enable_sort_keys)
+      return render_400(ErrorCode::INVALID_PARAM, 'sort の指定が誤っています。')
+    end
     if address_code.present? && address_code.length != Address::CODE_DIGIT[:CITY]
       return render_400(ErrorCode::INVALID_PARAM, "address_code はレベル2(市区町村)を指定してください。")
     end
@@ -122,10 +132,19 @@ class V1::SchoolDistrictsController < ApplicationController
     end
   end
 
-  def validate_search_params
-    word = params[:word]
-    if word.blank?
-      return render_400(ErrorCode::REQUIRED_PARAM, 'word の指定が必要です。')
+  def validate_show_address_params
+    enable_sort_keys = ['code', 'name']
+    sort = params[:sort]
+    if sort.present? && !is_enable_sort_key?(enable_sort_keys)
+      return render_400(ErrorCode::INVALID_PARAM, 'sort の指定が誤っています。')
+    end
+  end
+
+  def validate_show_school_district_params
+    enable_sort_keys = ['address_code', 'school_name']
+    sort = params[:sort]
+    if sort.present? && !is_enable_sort_key?(enable_sort_keys)
+      return render_400(ErrorCode::INVALID_PARAM, 'sort の指定が誤っています。')
     end
   end
 
@@ -133,10 +152,13 @@ class V1::SchoolDistrictsController < ApplicationController
     name = params[:name]
     address_code = params[:address_code]
     school_type = params[:school_type]
+    sort = get_sort || [address_code: :asc]
+
     school_districts = SchoolDistrict
     school_districts = school_districts.where("MATCH (school_name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
     school_districts = school_districts.where('address_code LIKE ?', "#{address_code}%") if address_code.present?
     school_districts = school_districts.where(school_type: school_type) if school_type.present?
+    school_districts = school_districts.order(sort)
     return school_districts
   end
 end
