@@ -179,10 +179,7 @@ module Swagger::AddressesApi
         response 200 do
           key :description, '住所ポリゴン'
           schema do
-            key :type, :array
-            items do
-              key :'$ref', :GeoJson
-            end
+            key :'$ref', :GeoJson
           end
           header 'X-Total-Count' do
             key :description, 'リクエストに対する総件数'
