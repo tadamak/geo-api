@@ -1,9 +1,9 @@
 class V1::Statistics::AddressesController < ApplicationController
   include Swagger::StatisticsApi
 
-  before_action :validate_populations_params, only: [:populations]
+  before_action :validate_population_params, only: [:population]
 
-  def populations
+  def population
     population = AddressPopulation.select("
       SUM(male_age_0_4) as male_age_0_4,
       SUM(male_age_5_9) as male_age_5_9,
@@ -83,7 +83,7 @@ class V1::Statistics::AddressesController < ApplicationController
 
   private
 
-  def validate_populations_params
+  def validate_population_params
     address_code = params[:address_code]
     if address_code.present?
       @address = Address.find_by(code: address_code)
