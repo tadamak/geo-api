@@ -57,6 +57,7 @@ class V1::ApidocsController < ApplicationController
 
   SWAGGERED_CLASSES = [
     Address,
+    AddressPopulation,
     RailwayStation,
     School,
     SchoolDistrict,
