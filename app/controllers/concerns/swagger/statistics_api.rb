@@ -13,7 +13,7 @@ module Swagger::StatisticsApi
         parameter name: :address_code do
           key :in, :query
           key :description, '住所コード'
-          key :required, true
+          key :required, false
           key :type, :string
         end
 

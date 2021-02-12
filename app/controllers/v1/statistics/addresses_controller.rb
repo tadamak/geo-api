@@ -37,7 +37,9 @@ class V1::Statistics::AddressesController < ApplicationController
       SUM(female_age_65_69) as female_age_65_69,
       SUM(female_age_70_74) as female_age_70_74,
       SUM(female_age_75) as female_age_75"
-    ).where('address_code LIKE ?', "#{@address.code}%").first
+    )
+    population = population.where('address_code LIKE ?', "#{@address.code}%") if @address.present?
+    population = population.first
 
     render json: {
       male: {
@@ -83,11 +85,9 @@ class V1::Statistics::AddressesController < ApplicationController
 
   def validate_populations_params
     address_code = params[:address_code]
-    @address = Address.find_by(code: address_code)
-    if address_code.blank?
-      return render_400(ErrorCode::REQUIRED_PARAM, 'address_code の指定が必要です。')
-    elsif @address.nil?
-      return render_400(ErrorCode::INVALID_PARAM, '存在しない address_code を指定しています。')
+    if address_code.present?
+      @address = Address.find_by(code: address_code)
+      return render_400(ErrorCode::INVALID_PARAM, '存在しない address_code を指定しています。') if @address.nil?
     end
   end
 end
