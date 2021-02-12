@@ -21,7 +21,7 @@ class V1::Railways::StationsController < ApplicationController
   private
 
   def validate_index_params
-    enable_sort_keys = ['address_code', 'name', 'code']
+    enable_sort_keys = ['code', 'name', 'address_code' ]
     sort = params[:sort]
     if sort.present? && !is_enable_sort_key?(enable_sort_keys)
       return render_400(ErrorCode::INVALID_PARAM, 'sort の指定が誤っています。')
@@ -39,7 +39,7 @@ class V1::Railways::StationsController < ApplicationController
   def get_stations
     name = params[:name]
     address_code = params[:address_code]
-    sort = get_sort || [address_code: :asc]
+    sort = get_sort || [code: :asc]
 
     stations = RailwayStation
     stations = stations.where("MATCH (name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?

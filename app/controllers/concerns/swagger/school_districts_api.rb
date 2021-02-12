@@ -45,7 +45,7 @@ module Swagger::SchoolDistrictsApi
         end
         parameter name: :sort do
           key :in, :query
-          key :description, "並び順。'address_code', 'school_name', 'code' が選択可。"
+          key :description, "並び順。'code', 'school_name', 'address_code' が選択可。"
           key :required, false
           key :type, :string
           key :default, 'address_code'
@@ -153,7 +153,7 @@ module Swagger::SchoolDistrictsApi
         end
         parameter name: :sort do
           key :in, :query
-          key :description, "並び順。'address_code', 'school_name', 'code' が選択可。"
+          key :description, "並び順。'code', 'school_name', 'address_code' が選択可。"
           key :required, false
           key :type, :string
           key :default, 'address_code'
@@ -317,7 +317,7 @@ module Swagger::SchoolDistrictsApi
         end
         parameter name: :sort do
           key :in, :query
-          key :description, "並び順。'address_code', 'school_name' が選択可。"
+          key :description, "並び順。'code', 'school_name', 'address_code' が選択可。"
           key :required, false
           key :type, :string
           key :default, 'address_code'

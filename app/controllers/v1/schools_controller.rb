@@ -21,7 +21,7 @@ class V1::SchoolsController < ApplicationController
   private
 
   def validate_index_params
-    enable_sort_keys = ['address_code', 'name', 'code']
+    enable_sort_keys = ['code', 'name', 'address_code']
     sort = params[:sort]
     address_code = params[:address_code]
     school_type = params[:school_type]
@@ -53,7 +53,7 @@ class V1::SchoolsController < ApplicationController
     address_code = params[:address_code]
     school_type = params[:school_type]
     school_admin = params[:school_admin]
-    sort = get_sort || [address_code: :asc]
+    sort = get_sort || [code: :asc]
 
     schools = School.includes(:school_district)
     schools = schools.where("MATCH (name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?

@@ -51,7 +51,7 @@ module Swagger::SchoolsApi
         end
         parameter name: :sort do
           key :in, :query
-          key :description, "並び順。'address_code', 'name', 'code' が選択可。"
+          key :description, "並び順。'code', 'name', 'address_code' が選択可。"
           key :required, false
           key :type, :string
           key :default, 'address_code'

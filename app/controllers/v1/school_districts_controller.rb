@@ -6,7 +6,7 @@ class V1::SchoolDistrictsController < ApplicationController
   before_action :validate_show_params, only: [:show, :show_shape, :show_address, :show_school_district]
   before_action :validate_show_address_params, only: [:show_address]
   before_action :validate_show_school_district_params, only: [:show_school_district]
-  
+
   def index
     school_districts = get_school_districts
     total = school_districts.count
@@ -15,7 +15,7 @@ class V1::SchoolDistrictsController < ApplicationController
 
     render json: school_districts
   end
-  
+
   def index_shape
     school_districts = get_school_districts
     total = school_districts.count
@@ -72,7 +72,7 @@ class V1::SchoolDistrictsController < ApplicationController
     total = addresses.count
     addresses = addresses.offset(@offset).limit(@limit)
     response.headers['X-Total-Count'] = total
-    
+
     render json: addresses
   end
 
@@ -80,7 +80,7 @@ class V1::SchoolDistrictsController < ApplicationController
     code = params[:code]
     filter = params[:filter]
     school_type = params[:school_type]
-    sort = get_sort || [address_code: :asc]
+    sort = get_sort || [code: :asc]
 
     address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
@@ -109,7 +109,7 @@ class V1::SchoolDistrictsController < ApplicationController
   private
 
   def validate_index_params
-    enable_sort_keys = ['address_code', 'school_name', 'code']
+    enable_sort_keys = ['code', 'school_name', 'address_code']
     sort = params[:sort]
     address_code = params[:address_code]
     school_type = params[:school_type]
@@ -141,7 +141,7 @@ class V1::SchoolDistrictsController < ApplicationController
   end
 
   def validate_show_school_district_params
-    enable_sort_keys = ['address_code', 'school_name']
+    enable_sort_keys = ['code', 'school_name', 'address_code']
     sort = params[:sort]
     if sort.present? && !is_enable_sort_key?(enable_sort_keys)
       return render_400(ErrorCode::INVALID_PARAM, 'sort の指定が誤っています。')
@@ -152,7 +152,7 @@ class V1::SchoolDistrictsController < ApplicationController
     name = params[:name]
     address_code = params[:address_code]
     school_type = params[:school_type]
-    sort = get_sort || [address_code: :asc]
+    sort = get_sort || [code: :asc]
 
     school_districts = SchoolDistrict
     school_districts = school_districts.where("MATCH (school_name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
