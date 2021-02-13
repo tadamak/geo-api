@@ -11,4 +11,12 @@ module ErrorCode
     code: 1003,
     type: 'rate_limit_exceeded'
   }
+  ROUTE_NOT_FOUND = {
+    code: 1004,
+    type: 'route_not_found'
+  }
+  INTERNAL_SERVER_ERROR = {
+    code: 9001,
+    type: 'internal_server_error'
+  }
 end

@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
   before_action :check_access_token
   after_action :update_access_token_count
+  rescue_from Exception, with: :render_500
 
   def check_access_token
     if params[:access_token].blank?
@@ -36,8 +37,24 @@ class ApplicationController < ActionController::API
     }
   end
 
+  def render_404
+    error_code = ErrorCode::ROUTE_NOT_FOUND
+    message = '存在しないパスを指定しています。'
+    render status: :not_found, json: {
+      error: Common::Error.new(error_code, message)
+    }
+  end
+
   def render_429(error_code, message)
     render status: :too_many_requests, json: {
+      error: Common::Error.new(error_code, message)
+    }
+  end
+
+  def render_500
+    error_code = ErrorCode::INTERNAL_SERVER_ERROR
+    message = 'システム内部で予期せぬエラーが発生しました。'
+    render status: :internal_server_error, json: {
       error: Common::Error.new(error_code, message)
     }
   end

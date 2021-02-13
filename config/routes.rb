@@ -42,4 +42,7 @@ Rails.application.routes.draw do
     # View Map State API
     resources :view_map_states, param: :code, only: [:create, :show]
   end
+
+  # Route Not Found
+  match '*unmatched_route', to: 'application#render_404', via: :all
 end
