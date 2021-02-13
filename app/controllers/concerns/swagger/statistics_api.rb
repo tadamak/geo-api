@@ -5,7 +5,7 @@ module Swagger::StatisticsApi
   included do
     swagger_path '/statistics/addresses/population' do
       operation :get do
-        key :description, '指定した住所コードの人口・世帯数情報を取得します。'
+        key :description, '指定した住所コードの性別・年齢毎の人口数を取得します。'
         key :tags, ['Statistics']
         security do
           key :access_token, []
