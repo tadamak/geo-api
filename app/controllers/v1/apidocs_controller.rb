@@ -7,13 +7,13 @@ class V1::ApidocsController < ApplicationController
   swagger_root do
     key :swagger, '2.0'
     info do
-      key :version, '1.0.0'
+      key :version, '1.1.0'
       key :title, 'Geo API'
       key :description, 'Geo API (地理空間情報)のドキュメントです。<br>住所や鉄道情報を元にした GIS 分析をおこなうための API を提供しています。'
     end
     externalDocs do
       key :description, "Geo API の共通仕様について"
-      key :url, "/about"    
+      key :url, "/about"
     end
     tag do
       key :name, 'Address'
