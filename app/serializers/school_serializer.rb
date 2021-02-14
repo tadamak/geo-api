@@ -1,5 +1,6 @@
 class SchoolSerializer < ActiveModel::Serializer
-  attributes :code, :name, :school_type, :school_admin, :school_address, :address_code, :location, :school_district_code, :distance
+  attributes :code, :name, :school_type, :school_admin, :school_address, :address_code, :location, :school_district_code
+  attribute :distance, if: :has_distance?
 
   def school_type
     object.school_type_before_type_cast
@@ -13,10 +14,11 @@ class SchoolSerializer < ActiveModel::Serializer
     object.school_district&.code
   end
 
+  def has_distance?
+    object.has_attribute?(:distance)
+  end
+
   def distance
-    if object.has_attribute?(:distance)
-      return object.distance.to_i
-    end
-    return nil
+    object.distance.to_i
   end
 end

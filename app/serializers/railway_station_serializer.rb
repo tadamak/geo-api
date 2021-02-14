@@ -1,10 +1,12 @@
 class RailwayStationSerializer < ActiveModel::Serializer
-  attributes :code, :name, :address_code, :address_name, :location, :distance
+  attributes :code, :name, :address_code, :address_name, :location
+  attribute :distance, if: :has_distance?
+
+  def has_distance?
+    object.has_attribute?(:distance)
+  end
 
   def distance
-    if object.has_attribute?(:distance)
-      return object.distance.to_i
-    end
-    return nil
+    object.distance.to_i
   end
 end
