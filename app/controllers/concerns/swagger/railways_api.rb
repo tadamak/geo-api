@@ -117,9 +117,9 @@ module Swagger::RailwaysApi
           key :required, false
           key :type, :string
         end
-        parameter name: :line_codes do
+        parameter name: :code do
           key :in, :query
-          key :description, '路線コード。カンマ区切りで複数指定可能。(ex. line_codes=li-xn76kpcu1,st-xn76kpcu2)'
+          key :description, '路線コード。カンマ区切りで複数指定可能。'
           key :required, false
           key :type, :string
         end
@@ -212,9 +212,9 @@ module Swagger::RailwaysApi
           key :required, false
           key :type, :string
         end
-        parameter name: :line_codes do
+        parameter name: :code do
           key :in, :query
-          key :description, '路線コード。カンマ区切りで複数指定可能。(ex. line_codes=li-xn76kpcu1,st-xn76kpcu2)'
+          key :description, '路線コード。カンマ区切りで複数指定可能。'
           key :required, false
           key :type, :string
         end

@@ -78,7 +78,7 @@ class V1::AddressesController < ApplicationController
   def get_addresses
     name = params[:name]
     level = params[:level]
-    codes = params[:codes]
+    codes = params[:code]
     parent_code = params[:parent_code]
     sort = get_sort || [code: :asc]
 

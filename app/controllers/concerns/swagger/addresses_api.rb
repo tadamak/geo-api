@@ -22,9 +22,9 @@ module Swagger::AddressesApi
           key :required, false
           key :type, :integer
         end
-        parameter name: :codes do
+        parameter name: :code do
           key :in, :query
-          key :description, '住所コード。カンマ区切りで複数指定可能。(ex. codes=13,13101)'
+          key :description, '住所コード。カンマ区切りで複数指定可能。'
           key :required, false
           key :type, :string
         end
@@ -134,9 +134,9 @@ module Swagger::AddressesApi
           key :required, false
           key :type, :integer
         end
-        parameter name: :codes do
+        parameter name: :code do
           key :in, :query
-          key :description, '住所コード。カンマ区切りで複数指定可能。(ex. codes=13,13101)'
+          key :description, '住所コード。カンマ区切りで複数指定可能。'
           key :required, false
           key :type, :string
         end
@@ -240,9 +240,10 @@ module Swagger::AddressesApi
         end
         parameter name: :location do
           key :in, :query
-          key :description, '緯度経度。カンマ区切りで"緯度,経度"の順で指定。(ex. location=35.689568,139.691717)'
+          key :description, '緯度経度。カンマ区切りで"緯度,経度"の順で指定。'
           key :required, true
           key :type, :string
+          key :example, '35.689568,139.691717'
         end
 
         response 200 do
