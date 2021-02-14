@@ -2,29 +2,23 @@ class V1::AddressesController < ApplicationController
   include Swagger::AddressesApi
 
   before_action :validate_page_params, only: [:index, :index_shape]
+  before_action :validate_distance_params, only: [:index, :index_shape]
   before_action :validate_index_params, only: [:index, :index_shape]
   before_action :validate_show_params, only: [:show, :show_shape]
   before_action :validate_geocoding_params, only: [:geocoding]
+  before_action :get_addresses, only: [:index, :index_shape]
 
   def index
-    addresses = get_addresses
-    total = addresses.count
-    addresses = addresses.offset(@offset).limit(@limit)
-    response.headers['X-Total-Count'] = total
-
-    render json: addresses
+    response.headers['X-Total-Count'] = @total
+    render json: @addresses
   end
 
   def index_shape
-    addresses = get_addresses
-    total = addresses.count
-    addresses = addresses.offset(@offset).limit(@limit)
-    response.headers['X-Total-Count'] = total
-
+    response.headers['X-Total-Count'] = @total
     if params[:merged] == 'false'
-      geojson = GeoAddress.geojsons(addresses.pluck(:code))
+      geojson = GeoAddress.geojsons(@addresses.pluck(:code))
     else
-      geojson = GeoAddress.geojson(addresses.pluck(:code))
+      geojson = GeoAddress.geojson(@addresses.pluck(:code))
     end
     render json: geojson
   end
@@ -50,6 +44,7 @@ class V1::AddressesController < ApplicationController
 
   def validate_index_params
     enable_sort_keys = ['code', 'level', 'area']
+    enable_sort_keys << 'distance' if params[:location].present?
     sort = params[:sort]
     level = params[:level]
     if sort.present? && !is_enable_sort_key?(enable_sort_keys)
@@ -76,18 +71,33 @@ class V1::AddressesController < ApplicationController
   end
 
   def get_addresses
+    # 検索条件
     name = params[:name]
     level = params[:level]
     codes = params[:code]
     parent_code = params[:parent_code]
+    location = get_location
+    radius = get_radius
+    distance = "St_distance_sphere(ST_GeomFromText('POINT(#{location[:lng]} #{location[:lat]})', 4326), ST_GeomFromText(CONCAT('POINT(', longitude, ' ', latitude, ')'), 4326))" if location.present?
     sort = get_sort || [code: :asc]
+    limit = get_limit
+    offset = get_offset
 
+    # 検索条件設定
     addresses = Address
     addresses = addresses.where("MATCH (pref_name,city_name,town_name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
     addresses = addresses.where(level: level) if level.present?
     addresses = addresses.where(code: codes.split(',')) if codes.present?
     addresses = addresses.where('code LIKE ?', "#{parent_code}%") if parent_code.present?
-    addresses = addresses.order(sort)
-    return addresses
+    addresses = addresses.where("#{distance} <= #{radius}") if location.present?
+
+    # 合計件数取得
+    @total = addresses.count
+
+    # 取得範囲設定
+    addresses = addresses.select("*, #{distance} as distance") if location.present?
+    addresses = addresses.order(sort).offset(offset).limit(limit)
+
+    @addresses =addresses
   end
 end

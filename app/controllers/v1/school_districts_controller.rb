@@ -2,30 +2,24 @@ class V1::SchoolDistrictsController < ApplicationController
   include Swagger::SchoolDistrictsApi
 
   before_action :validate_page_params, only: [:index, :index_shape, :show_address, :show_school_district]
+  before_action :validate_distance_params, only: [:index, :index_shape]
   before_action :validate_index_params, only: [:index, :index_shape]
   before_action :validate_show_params, only: [:show, :show_shape, :show_address, :show_school_district]
   before_action :validate_show_address_params, only: [:show_address]
   before_action :validate_show_school_district_params, only: [:show_school_district]
+  before_action :get_school_districts, only: [:index, :index_shape]
 
   def index
-    school_districts = get_school_districts
-    total = school_districts.count
-    school_districts = school_districts.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).offset(@offset).limit(@limit)
-    response.headers['X-Total-Count'] = total
-
-    render json: school_districts
+    response.headers['X-Total-Count'] = @total
+    render json: @school_districts
   end
 
   def index_shape
-    school_districts = get_school_districts
-    total = school_districts.count
-    school_districts = school_districts.offset(@offset).limit(@limit)
-    response.headers['X-Total-Count'] = total
-
+    response.headers['X-Total-Count'] = @total
     if params[:merged] == 'false'
-      geojson = school_districts.geojsons
+      geojson = @school_districts.geojsons
     else
-      geojson = school_districts.geojson
+      geojson = @school_districts.geojson
     end
     render json: geojson
   end
@@ -42,6 +36,8 @@ class V1::SchoolDistrictsController < ApplicationController
     code = params[:code]
     filter = params[:filter]
     sort = get_sort || [code: :asc]
+    limit = get_limit
+    offset = get_offset
 
     address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
@@ -70,7 +66,7 @@ class V1::SchoolDistrictsController < ApplicationController
 
     addresses = Address.where(code: address_codes).order(sort)
     total = addresses.count
-    addresses = addresses.offset(@offset).limit(@limit)
+    addresses = addresses.offset(offset).limit(limit)
     response.headers['X-Total-Count'] = total
 
     render json: addresses
@@ -81,6 +77,8 @@ class V1::SchoolDistrictsController < ApplicationController
     filter = params[:filter]
     school_type = params[:school_type]
     sort = get_sort || [code: :asc]
+    limit = get_limit
+    offset = get_offset
 
     address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
@@ -100,7 +98,7 @@ class V1::SchoolDistrictsController < ApplicationController
     school_districts = school_districts.where(school_type: school_type) unless school_type.nil?
 
     total = school_districts.count
-    school_districts = school_districts.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).offset(@offset).limit(@limit)
+    school_districts = school_districts.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).offset(offset).limit(limit)
     response.headers['X-Total-Count'] = total
 
     render json: school_districts
@@ -110,6 +108,7 @@ class V1::SchoolDistrictsController < ApplicationController
 
   def validate_index_params
     enable_sort_keys = ['code', 'school_name', 'address_code']
+    enable_sort_keys << 'distance' if params[:location].present?
     sort = params[:sort]
     address_code = params[:address_code]
     school_type = params[:school_type]
@@ -149,16 +148,32 @@ class V1::SchoolDistrictsController < ApplicationController
   end
 
   def get_school_districts
+    # 検索条件
     name = params[:name]
     address_code = params[:address_code]
     school_type = params[:school_type]
+    location = get_location
+    radius = get_radius
+    distance = "St_distance_sphere(ST_GeomFromText('POINT(#{location[:lng]} #{location[:lat]})', 4326), ST_GeomFromText(CONCAT('POINT(', longitude, ' ', latitude, ')'), 4326))" if location.present?
     sort = get_sort || [code: :asc]
+    limit = get_limit
+    offset = get_offset
 
+    # 検索条件設定
     school_districts = SchoolDistrict
     school_districts = school_districts.where("MATCH (school_name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
     school_districts = school_districts.where('address_code LIKE ?', "#{address_code}%") if address_code.present?
     school_districts = school_districts.where(school_type: school_type) if school_type.present?
     school_districts = school_districts.order(sort)
-    return school_districts
+    school_districts = school_districts.where("#{distance} <= #{radius}") if location.present?
+
+    # 合計件数取得
+    @total = school_districts.count
+
+    # 取得範囲設定
+    school_districts = school_districts.select("*, #{distance} as distance") if location.present?
+    school_districts = school_districts.order(sort).offset(offset).limit(limit)
+
+    @school_districts =school_districts
   end
 end

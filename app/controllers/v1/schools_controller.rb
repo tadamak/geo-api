@@ -2,16 +2,14 @@ class V1::SchoolsController < ApplicationController
   include Swagger::SchoolsApi
 
   before_action :validate_page_params, only: [:index]
+  before_action :validate_distance_params, only: [:index]
   before_action :validate_index_params, only: [:index]
   before_action :validate_show_params, only: [:show]
+  before_action :get_schools, only: [:index]
 
   def index
-    schools = get_schools
-    total = schools.count
-    schools = schools.offset(@offset).limit(@limit)
-    response.headers['X-Total-Count'] = total
-
-    render json: schools
+    response.headers['X-Total-Count'] = @total
+    render json: @schools
   end
 
   def show
@@ -22,6 +20,7 @@ class V1::SchoolsController < ApplicationController
 
   def validate_index_params
     enable_sort_keys = ['code', 'name', 'address_code']
+    enable_sort_keys << 'distance' if params[:location].present?
     sort = params[:sort]
     address_code = params[:address_code]
     school_type = params[:school_type]
@@ -49,18 +48,33 @@ class V1::SchoolsController < ApplicationController
   end
 
   def get_schools
+    # 検索条件
     name = params[:name]
     address_code = params[:address_code]
     school_type = params[:school_type]
     school_admin = params[:school_admin]
+    location = get_location
+    radius = get_radius
+    distance = "St_distance_sphere(ST_GeomFromText('POINT(#{location[:lng]} #{location[:lat]})', 4326), ST_GeomFromText(CONCAT('POINT(', longitude, ' ', latitude, ')'), 4326))" if location.present?
     sort = get_sort || [code: :asc]
+    limit = get_limit
+    offset = get_offset
 
+    # 検索条件設定
     schools = School.includes(:school_district)
     schools = schools.where("MATCH (name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
     schools = schools.where('address_code LIKE ?', "#{address_code}%") if address_code.present?
     schools = schools.where(school_type: school_type) if school_type.present?
     schools = schools.where(school_admin: school_admin) if school_admin.present?
-    schools = schools.order(sort)
-    return schools
+    schools = schools.where("#{distance} <= #{radius}") if location.present?
+
+    # 合計件数取得
+    @total = schools.count
+
+    # 取得範囲設定
+    schools = schools.select("*, #{distance} as distance") if location.present?
+    schools = schools.order(sort).offset(offset).limit(limit)
+
+    @schools =schools
   end
 end

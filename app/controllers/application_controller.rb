@@ -90,6 +90,19 @@ class ApplicationController < ActionController::API
     return order
   end
 
+  def get_radius
+    params[:radius].blank? ? Constants::DEFAULT_RADIUS : params[:radius].to_i
+  end
+
+  def get_location
+    location = params[:location]
+    return nil if location.blank?
+    {
+      lat: location.split(',')[0],
+      lng: location.split(',')[1]
+    }
+  end
+
   def is_enable_sort_key?(enable_keys)
     sort = get_sort
     return false unless sort.present?
@@ -113,7 +126,19 @@ class ApplicationController < ActionController::API
     if offset < 0
       return render_400(ErrorCode::INVALID_PARAM, "offset には正の整数を指定してください。")
     end
-    @limit = get_limit
-    @offset = get_offset
+  end
+
+  def validate_distance_params
+    location = params[:location]
+    radius = params[:radius].to_i
+    if location.present? && location.split(',').length != 2
+      return render_400(ErrorCode::INVALID_PARAM, "location はカンマ区切りで緯度,経度の順で指定してください。")
+    end
+    if radius < 0
+      return render_400(ErrorCode::INVALID_PARAM, "radius には正の整数を指定してください。")
+    end
+    if radius > Constants::MAX_RADIUS
+      return render_400(ErrorCode::INVALID_PARAM, "radius の指定数が最大値(#{Constants::MAX_RADIUS})を超えています。")
+    end
   end
 end

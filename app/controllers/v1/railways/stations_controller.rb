@@ -2,16 +2,14 @@ class V1::Railways::StationsController < ApplicationController
   include Swagger::RailwaysApi
 
   before_action :validate_page_params, only: [:index]
+  before_action :validate_distance_params, only: [:index]
   before_action :validate_index_params, only: [:index]
   before_action :validate_show_params, only: [:show]
+  before_action :get_stations, only: [:index]
 
   def index
-    stations = get_stations
-    total = stations.count
-    stations = stations.offset(@offset).limit(@limit)
-    response.headers['X-Total-Count'] = total
-
-    render json: stations
+    response.headers['X-Total-Count'] = @total
+    render json: @stations
   end
 
   def show
@@ -22,6 +20,7 @@ class V1::Railways::StationsController < ApplicationController
 
   def validate_index_params
     enable_sort_keys = ['code', 'name', 'address_code' ]
+    enable_sort_keys << 'distance' if params[:location].present?
     sort = params[:sort]
     if sort.present? && !is_enable_sort_key?(enable_sort_keys)
       return render_400(ErrorCode::INVALID_PARAM, 'sort の指定が誤っています。')
@@ -37,14 +36,29 @@ class V1::Railways::StationsController < ApplicationController
   end
 
   def get_stations
+    # 検索条件
     name = params[:name]
     address_code = params[:address_code]
+    location = get_location
+    radius = get_radius
+    distance = "St_distance_sphere(ST_GeomFromText('POINT(#{location[:lng]} #{location[:lat]})', 4326), ST_GeomFromText(CONCAT('POINT(', longitude, ' ', latitude, ')'), 4326))" if location.present?
     sort = get_sort || [code: :asc]
+    limit = get_limit
+    offset = get_offset
 
+    # 検索条件設定
     stations = RailwayStation
     stations = stations.where("MATCH (name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
     stations = stations.where('address_code LIKE ?', "#{address_code}%") if address_code.present?
-    stations = stations.order(sort)
-    return stations
+    stations = stations.where("#{distance} <= #{radius}") if location.present?
+
+    # 合計件数取得
+    @total = stations.count
+
+    # 取得範囲設定
+    stations = stations.select("*, #{distance} as distance") if location.present?
+    stations = stations.order(sort).offset(offset).limit(limit)
+
+    @stations =stations
   end
 end
