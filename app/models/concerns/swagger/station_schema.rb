@@ -41,6 +41,11 @@ module Swagger::StationSchema
           key :example, 139.76676483469222
         end
       end
+      property :distance do
+        key :type, :integer
+        key :example, 100
+        key :description, '基点からの直線距離(m)。範囲検索時のみ出力。'
+      end
     end
   end
 end
