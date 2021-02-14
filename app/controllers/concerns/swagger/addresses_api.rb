@@ -43,7 +43,7 @@ module Swagger::AddressesApi
         end
         parameter name: :radius do
           key :in, :query
-          key :description, '検索範囲の半径(m)。location 指定時のみ有効。'
+          key :description, "検索範囲の半径(m)。location 指定時のみ有効。最大値は#{Constants::MAX_RADIUS}。"
           key :required, false
           key :type, :integer
           key :default, Constants::DEFAULT_RADIUS
@@ -170,7 +170,7 @@ module Swagger::AddressesApi
         end
         parameter name: :radius do
           key :in, :query
-          key :description, '検索範囲の半径(m)。location 指定時のみ有効。'
+          key :description, "検索範囲の半径(m)。location 指定時のみ有効。最大値は#{Constants::MAX_RADIUS}。"
           key :required, false
           key :type, :integer
           key :default, Constants::DEFAULT_RADIUS
