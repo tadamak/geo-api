@@ -34,6 +34,21 @@ module Swagger::AddressesApi
           key :required, false
           key :type, :string
         end
+        parameter name: :location do
+          key :in, :query
+          key :description, '検索基点。カンマ区切りで"緯度,経度"の順で指定。'
+          key :required, false
+          key :type, :string
+          key :example, '35.689568,139.691717'
+        end
+        parameter name: :radius do
+          key :in, :query
+          key :description, '検索範囲の半径(m)。location 指定時のみ有効。'
+          key :required, false
+          key :type, :integer
+          key :default, Constants::DEFAULT_RADIUS
+          key :maximum, Constants::MAX_RADIUS
+        end
         parameter name: :limit do
           key :in, :query
           key :description, "取得件数。最大値は#{Constants::MAX_LIMIT}。"
@@ -51,7 +66,7 @@ module Swagger::AddressesApi
         end
         parameter name: :sort do
           key :in, :query
-          key :description, "並び順。'code', 'level', 'area' が選択可。"
+          key :description, "並び順。'code', 'level', 'area', 'distance' が選択可。'distance' は location 指定時のみ有効。"
           key :required, false
           key :type, :string
           key :default, 'code'
@@ -146,12 +161,20 @@ module Swagger::AddressesApi
           key :required, false
           key :type, :string
         end
-        parameter name: :merged do
+        parameter name: :location do
           key :in, :query
-          key :description, 'ポリゴンをマージするか否か。真: FeatureCollection, 偽: Feature の Array。'
+          key :description, '検索基点。カンマ区切りで"緯度,経度"の順で指定。'
           key :required, false
-          key :type, :boolean
-          key :default, true
+          key :type, :string
+          key :example, '35.689568,139.691717'
+        end
+        parameter name: :radius do
+          key :in, :query
+          key :description, '検索範囲の半径(m)。location 指定時のみ有効。'
+          key :required, false
+          key :type, :integer
+          key :default, Constants::DEFAULT_RADIUS
+          key :maximum, Constants::MAX_RADIUS
         end
         parameter name: :limit do
           key :in, :query
@@ -170,10 +193,17 @@ module Swagger::AddressesApi
         end
         parameter name: :sort do
           key :in, :query
-          key :description, "並び順。'code', 'level', 'area' が選択可。"
+          key :description, "並び順。'code', 'level', 'area', 'distance' が選択可。'distance' は location 指定時のみ有効。"
           key :required, false
           key :type, :string
           key :default, 'code'
+        end
+        parameter name: :merged do
+          key :in, :query
+          key :description, 'ポリゴンをマージするか否か。真: FeatureCollection, 偽: Feature の Array。'
+          key :required, false
+          key :type, :boolean
+          key :default, true
         end
 
         response 200 do
