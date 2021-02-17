@@ -83,6 +83,8 @@ class V1::SchoolDistrictsController < ApplicationController
     address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
     school_districts = SchoolDistrict.where.not(code: code).order(sort)
+    # MEMO: クエリの実行が極端に遅くなる学区があるため市区町村を指定している (ex. sd-1-xn77jtjku)
+    school_districts = school_districts.where('address_code LIKE ?', "#{address_code}%")
     school_districts = school_districts.where(school_type: school_type) if school_type.present?
     if filter == SchoolDistrict::FILTER[:CONTAIN]
       school_districts = school_districts.where("ST_Contains((#{subquery}), polygon)")
