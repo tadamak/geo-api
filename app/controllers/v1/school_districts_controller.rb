@@ -83,6 +83,7 @@ class V1::SchoolDistrictsController < ApplicationController
     address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
     school_districts = SchoolDistrict.where.not(code: code).order(sort)
+    school_districts = school_districts.where(school_type: school_type) if school_type.present?
     if filter == SchoolDistrict::FILTER[:CONTAIN]
       school_districts = school_districts.where("ST_Contains((#{subquery}), polygon)")
     elsif filter == SchoolDistrict::FILTER[:PARTIAL]
@@ -95,7 +96,6 @@ class V1::SchoolDistrictsController < ApplicationController
       school_districts = school_districts.where("ST_Intersects((#{subquery}), polygon)")
                                          .where.not("ST_Touches((#{subquery}), polygon)")
     end
-    school_districts = school_districts.where(school_type: school_type) unless school_type.nil?
 
     total = school_districts.count
     school_districts = school_districts.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).offset(offset).limit(limit)
