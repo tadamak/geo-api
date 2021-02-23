@@ -43,7 +43,7 @@ class V1::AddressesController < ApplicationController
   private
 
   def validate_index_params
-    enable_sort_keys = ['code', 'level', 'area']
+    enable_sort_keys = ['code', 'kana', 'level', 'area']
     enable_sort_keys << 'distance' if params[:location].present?
     sort = params[:sort]
     level = params[:level]

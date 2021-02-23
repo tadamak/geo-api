@@ -41,6 +41,7 @@ class Address < ApplicationRecord
       details << {
         code: code_by_level(l),
         name: name_by_level(l),
+        kana: kana_by_level(l),
         level: l
       }
     end
@@ -81,6 +82,18 @@ class Address < ApplicationRecord
       n = city_name
     when LEVEL[:TOWN] then
       n = town_name
+    end
+    n
+  end
+
+  def kana_by_level(level)
+    case level
+    when LEVEL[:PREF] then
+      n = pref_kana
+    when LEVEL[:CITY] then
+      n = city_kana
+    when LEVEL[:TOWN] then
+      n = nil
     end
     n
   end
