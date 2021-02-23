@@ -15,10 +15,6 @@ class Address < ApplicationRecord
     TOWN: 11
   }
 
-  def name
-    pref_name + city_name.to_s + town_name.to_s
-  end
-
   def location
     {
       lat: latitude,
