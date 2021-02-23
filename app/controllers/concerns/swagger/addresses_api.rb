@@ -66,7 +66,7 @@ module Swagger::AddressesApi
         end
         parameter name: :sort do
           key :in, :query
-          key :description, "並び順。'code', 'level', 'area', 'distance' が選択可。'distance' は location 指定時のみ有効。"
+          key :description, "並び順。'code', 'kana', 'level', 'area', 'distance' が選択可。'distance' は location 指定時のみ有効。"
           key :required, false
           key :type, :string
           key :default, 'code'
@@ -193,7 +193,7 @@ module Swagger::AddressesApi
         end
         parameter name: :sort do
           key :in, :query
-          key :description, "並び順。'code', 'level', 'area', 'distance' が選択可。'distance' は location 指定時のみ有効。"
+          key :description, "並び順。'code', 'kana', 'level', 'area', 'distance' が選択可。'distance' は location 指定時のみ有効。"
           key :required, false
           key :type, :string
           key :default, 'code'

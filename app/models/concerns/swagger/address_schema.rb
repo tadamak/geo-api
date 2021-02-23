@@ -53,8 +53,13 @@ module Swagger::AddressSchema
           end
           property :name do
             key :type, :string
-            key :description, '住所レベルの住所名称'
+            key :description, '住所名称'
             key :example, '千代田区'
+          end
+          property :kana do
+            key :type, :string
+            key :description, '住所読み仮名 (Lv2 まで)'
+            key :example, 'ちよだく'
           end
           property :level do
             key :type, :integer
