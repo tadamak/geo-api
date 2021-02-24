@@ -41,7 +41,7 @@ class V1::SchoolDistrictsController < ApplicationController
 
     address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
-    geo_addresses = GeoAddress.where(level: Address::LEVEL[:TOWN])
+    geo_addresses = GeoAddress.where(level: Address::LEVEL[:CHOME])
                               .where('address_code LIKE ?', "#{address_code}%")
                               .where("ST_Intersects((#{subquery}), polygon)")
                               .where.not("ST_Touches((#{subquery}), polygon)")

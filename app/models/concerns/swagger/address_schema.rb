@@ -58,7 +58,7 @@ module Swagger::AddressSchema
           end
           property :kana do
             key :type, :string
-            key :description, '住所読み仮名 (Lv2 まで)'
+            key :description, '住所読み仮名'
             key :example, 'ちよだく'
           end
           property :level do
