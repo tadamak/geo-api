@@ -37,9 +37,8 @@ module Swagger::AddressSchema
         end
       end
       property :area do
-        key :type, :number
-        key :format, :float
-        key :example, 379201.719
+        key :type, :integer
+        key :example, 379202
         key :description, '面積(㎡)'
       end
       property :details do
