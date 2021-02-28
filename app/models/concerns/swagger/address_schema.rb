@@ -37,9 +37,8 @@ module Swagger::AddressSchema
         end
       end
       property :area do
-        key :type, :number
-        key :format, :float
-        key :example, 379201.719
+        key :type, :integer
+        key :example, 379202
         key :description, '面積(㎡)'
       end
       property :details do
@@ -58,7 +57,7 @@ module Swagger::AddressSchema
           end
           property :kana do
             key :type, :string
-            key :description, '住所読み仮名 (Lv2 まで)'
+            key :description, '住所読み仮名'
             key :example, 'ちよだく'
           end
           property :level do

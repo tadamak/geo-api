@@ -48,8 +48,8 @@ class GeoAddress < ApplicationRecord
       sql = ''
       locations.each do |l|
         sql += "UNION ALL\n" unless sql.empty?
-        # NOTE: 都道府県のST_Containsが遅いため、最も下のレベル3(町丁・字等)で解析をする
-        sql += "SELECT address_code FROM geo_addresses WHERE (ST_Contains(polygon, ST_GEOMFROMTEXT('POINT(#{l[:lng]} #{l[:lat]})', 4326))) AND level = #{Address::LEVEL[:TOWN]}\n"
+        # NOTE: 都道府県のST_Containsが遅いため、最も下のレベル4(丁目等)で解析をする
+        sql += "SELECT address_code FROM geo_addresses WHERE (ST_Contains(polygon, ST_GEOMFROMTEXT('POINT(#{l[:lng]} #{l[:lat]})', 4326))) AND level = #{Address::LEVEL[:CHOME]}\n"
       end
       self.find_by_sql("SELECT t.address_code FROM (#{sql}) as t").pluck(:address_code)
     end

@@ -5,14 +5,16 @@ class Address < ApplicationRecord
   LEVEL = {
     PREF:  1,
     CITY:  2,
-    TOWN:  3
+    TOWN:  3,
+    CHOME: 4
   }
 
   # 住所コード桁数
   CODE_DIGIT = {
-    PREF: 2,
-    CITY: 5,
-    TOWN: 11
+    PREF:  2,
+    CITY:  5,
+    TOWN:  9,
+    CHOME: 11
   }
 
   def location
@@ -27,6 +29,7 @@ class Address < ApplicationRecord
     codes << code[0, CODE_DIGIT[:PREF]]
     codes << code[0, CODE_DIGIT[:CITY]]  if code.length >= CODE_DIGIT[:CITY]
     codes << code[0, CODE_DIGIT[:TOWN]]  if code.length >= CODE_DIGIT[:TOWN]
+    codes << code[0, CODE_DIGIT[:CHOME]]  if code.length >= CODE_DIGIT[:CHOME]
     codes
   end
 
@@ -52,6 +55,8 @@ class Address < ApplicationRecord
       code = code[0, CODE_DIGIT[:CITY]]
     when LEVEL[:TOWN] then
       code = code[0, CODE_DIGIT[:TOWN]]
+    when LEVEL[:CHOME] then
+      code = code[0, CODE_DIGIT[:CHOME]]
     end
     code
   end
@@ -66,6 +71,8 @@ class Address < ApplicationRecord
       c = code[0, CODE_DIGIT[:CITY]]
     when LEVEL[:TOWN] then
       c = code[0, CODE_DIGIT[:TOWN]]
+    when LEVEL[:CHOME] then
+      c = code[0, CODE_DIGIT[:CHOME]]
     end
     c
   end
@@ -78,6 +85,8 @@ class Address < ApplicationRecord
       n = city_name
     when LEVEL[:TOWN] then
       n = town_name
+    when LEVEL[:CHOME] then
+      n = chome_name
     end
     n
   end
@@ -89,7 +98,9 @@ class Address < ApplicationRecord
     when LEVEL[:CITY] then
       n = city_kana
     when LEVEL[:TOWN] then
-      n = nil
+      n = town_kana
+    when LEVEL[:CHOME] then
+      n = chome_kana
     end
     n
   end
