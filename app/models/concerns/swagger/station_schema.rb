@@ -4,7 +4,7 @@ module Swagger::StationSchema
 
   included do
     swagger_schema :Station do
-      key :required, [:code, :name, :address_code, :address_name, :location]
+      key :required, [:code, :name, :location, :address]
       property :code do
         key :type, :string
         key :description, '駅コード'
@@ -14,16 +14,6 @@ module Swagger::StationSchema
         key :type, :string
         key :description, '駅名称'
         key :example, '東京'
-      end
-      property :address_code do
-        key :type, :string
-        key :description, '住所コード'
-        key :example, '13101001001'
-      end
-      property :address_name do
-        key :type, :string
-        key :description, '住所名称'
-        key :example, '東京都千代田区丸の内１丁目'
       end
       property :location do
         key :type, :object
@@ -45,6 +35,9 @@ module Swagger::StationSchema
         key :type, :integer
         key :example, 100
         key :description, '基点からの直線距離(m)。範囲検索時のみ出力。'
+      end
+      property :address do
+        key :'$ref', :Address
       end
     end
   end

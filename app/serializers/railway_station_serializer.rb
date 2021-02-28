@@ -1,6 +1,7 @@
 class RailwayStationSerializer < ActiveModel::Serializer
-  attributes :code, :name, :address_code, :address_name, :location
+  attributes :code, :name, :location
   attribute :distance, if: :has_distance?
+  belongs_to :address, class_name: 'Address', primary_key: 'code', foreign_key: 'address_code'
 
   def has_distance?
     object.has_attribute?(:distance)

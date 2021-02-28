@@ -47,7 +47,7 @@ class V1::Railways::StationsController < ApplicationController
     offset = get_offset
 
     # 検索条件設定
-    stations = RailwayStation
+    stations = RailwayStation.includes(:address)
     stations = stations.where("MATCH (name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
     stations = stations.where('address_code LIKE ?', "#{address_code}%") if address_code.present?
     stations = stations.where("#{distance} <= #{radius}") if location.present?
