@@ -69,7 +69,7 @@ module Swagger::SchoolsApi
           key :description, "並び順。'code', 'name', 'address_code', 'distance' が選択可。'distance' は location 指定時のみ有効。"
           key :required, false
           key :type, :string
-          key :default, 'address_code'
+          key :default, 'code'
         end
 
         response 200 do

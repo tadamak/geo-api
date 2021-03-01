@@ -57,7 +57,13 @@ module Swagger::RailwaysApi
           key :description, "並び順。'code', 'name', 'address_code', 'distance' が選択可。'distance' は location 指定時のみ有効。"
           key :required, false
           key :type, :string
-          key :default, 'address_code'
+          key :default, 'code'
+        end
+        parameter name: :embed do
+          key :in, :query
+          key :description, "追加情報。'address' が選択可。"
+          key :required, false
+          key :type, :string
         end
 
         response 200 do
@@ -97,6 +103,12 @@ module Swagger::RailwaysApi
           key :in, :path
           key :description, '駅コード'
           key :required, true
+          key :type, :string
+        end
+        parameter name: :embed do
+          key :in, :query
+          key :description, "追加情報。'address' が選択可。"
+          key :required, false
           key :type, :string
         end
 

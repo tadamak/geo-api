@@ -63,7 +63,7 @@ module Swagger::SchoolDistrictsApi
           key :description, "並び順。'code', 'school_name', 'address_code', 'distance' が選択可。'distance' は location 指定時のみ有効。"
           key :required, false
           key :type, :string
-          key :default, 'address_code'
+          key :default, 'code'
         end
 
         response 200 do
@@ -179,7 +179,7 @@ module Swagger::SchoolDistrictsApi
           key :description, "並び順。'code', 'school_name', 'address_code', 'distance' が選択可。'distance' は location 指定時のみ有効。"
           key :required, false
           key :type, :string
-          key :default, 'address_code'
+          key :default, 'code'
         end
         parameter name: :merged do
           key :in, :query
@@ -350,7 +350,7 @@ module Swagger::SchoolDistrictsApi
           key :description, "並び順。'code', 'school_name', 'address_code' が選択可。"
           key :required, false
           key :type, :string
-          key :default, 'address_code'
+          key :default, 'code'
         end
 
         response 200 do

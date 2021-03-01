@@ -3,6 +3,7 @@ class V1::Railways::StationsController < ApplicationController
 
   before_action :validate_page_params, only: [:index]
   before_action :validate_distance_params, only: [:index]
+  before_action :validate_embed_params, only: [:index, :show]
   before_action :validate_index_params, only: [:index]
   before_action :validate_show_params, only: [:show]
   before_action :get_stations, only: [:index]
@@ -13,13 +14,23 @@ class V1::Railways::StationsController < ApplicationController
   end
 
   def show
+    embed = params[:embed]&.split(',') || []
+    @station.is_embed_address = true if embed.include?('address')
     render json: @station
   end
 
   private
 
+  def validate_embed_params
+    embed = params[:embed]&.split(',') || []
+    enable_keys = ['address']
+    embed.each do |e|
+      return render_400(ErrorCode::INVALID_PARAM, 'embed の指定が誤っています。') unless enable_keys.include?(e)
+    end
+  end
+
   def validate_index_params
-    enable_sort_keys = ['code', 'name', 'address_code' ]
+    enable_sort_keys = ['code', 'name', 'address_code']
     enable_sort_keys << 'distance' if params[:location].present?
     sort = params[:sort]
     if sort.present? && !is_enable_sort_key?(enable_sort_keys)
@@ -45,9 +56,10 @@ class V1::Railways::StationsController < ApplicationController
     sort = get_sort || [code: :asc]
     limit = get_limit
     offset = get_offset
+    embed = params[:embed]&.split(',') || []
 
     # 検索条件設定
-    stations = RailwayStation.includes(:address)
+    stations = RailwayStation
     stations = stations.where("MATCH (name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
     stations = stations.where('address_code LIKE ?', "#{address_code}%") if address_code.present?
     stations = stations.where("#{distance} <= #{radius}") if location.present?
@@ -59,6 +71,11 @@ class V1::Railways::StationsController < ApplicationController
     stations = stations.select("*, #{distance} as distance") if location.present?
     stations = stations.order(sort).offset(offset).limit(limit)
 
+    # 追加情報
+    stations = stations.includes(:address) if embed.include?('address')
+    stations.each do |s|
+      s.is_embed_address = true if embed.include?('address')
+    end
     @stations =stations
   end
 end
