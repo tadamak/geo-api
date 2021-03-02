@@ -3,6 +3,7 @@ class V1::SchoolDistrictsController < ApplicationController
 
   before_action :validate_page_params, only: [:index, :index_shape, :show_address, :show_school_district]
   before_action :validate_distance_params, only: [:index, :index_shape]
+  before_action :validate_embed_params, only: [:index, :show, :show_school_district]
   before_action :validate_index_params, only: [:index, :index_shape]
   before_action :validate_show_params, only: [:show, :show_shape, :show_address, :show_school_district]
   before_action :validate_show_address_params, only: [:show_address]
@@ -25,6 +26,9 @@ class V1::SchoolDistrictsController < ApplicationController
   end
 
   def show
+    embed = params[:embed]&.split(',') || []
+    @school_district.is_embed_address = true if embed.include?('address')
+    @school_district.is_embed_school = true if embed.include?('school')
     render json: @school_district
   end
 
@@ -79,6 +83,7 @@ class V1::SchoolDistrictsController < ApplicationController
     sort = get_sort || [code: :asc]
     limit = get_limit
     offset = get_offset
+    embed = params[:embed]&.split(',') || []
 
     address_code = @school_district.address_code.slice(0, Address::CODE_DIGIT[:CITY])
     subquery = "SELECT polygon FROM school_districts WHERE code = '#{code}'"
@@ -103,10 +108,25 @@ class V1::SchoolDistrictsController < ApplicationController
     school_districts = school_districts.select(:code, :address_code, :school_code, :school_name, :school_type, :school_address, :latitude, :longitude, :year).offset(offset).limit(limit)
     response.headers['X-Total-Count'] = total
 
+    # 追加情報
+    school_districts = school_districts.includes(:address) if embed.include?('address')
+    school_districts = school_districts.includes(:school) if embed.include?('school')
+    school_districts.each do |s|
+      s.is_embed_address = true if embed.include?('address')
+      s.is_embed_school = true if embed.include?('school')
+    end
     render json: school_districts
   end
 
   private
+
+  def validate_embed_params
+    embed = params[:embed]&.split(',') || []
+    enable_keys = ['address', 'school']
+    embed.each do |e|
+      return render_400(ErrorCode::INVALID_PARAM, 'embed の指定が誤っています。') unless enable_keys.include?(e)
+    end
+  end
 
   def validate_index_params
     enable_sort_keys = ['code', 'school_name', 'address_code']
@@ -160,6 +180,7 @@ class V1::SchoolDistrictsController < ApplicationController
     sort = get_sort || [code: :asc]
     limit = get_limit
     offset = get_offset
+    embed = params[:embed]&.split(',') || []
 
     # 検索条件設定
     school_districts = SchoolDistrict
@@ -176,6 +197,13 @@ class V1::SchoolDistrictsController < ApplicationController
     school_districts = school_districts.select("*, #{distance} as distance") if location.present?
     school_districts = school_districts.order(sort).offset(offset).limit(limit)
 
+    # 追加情報
+    school_districts = school_districts.includes(:address) if embed.include?('address')
+    school_districts = school_districts.includes(:school) if embed.include?('school')
+    school_districts.each do |s|
+      s.is_embed_address = true if embed.include?('address')
+      s.is_embed_school = true if embed.include?('school')
+    end
     @school_districts =school_districts
   end
 end

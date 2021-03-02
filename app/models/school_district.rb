@@ -1,6 +1,8 @@
 class SchoolDistrict < ApplicationRecord
   include Swagger::SchoolDistrictSchema
 
+  attr_accessor :is_embed_address, :is_embed_school
+
   enum school_type: { elementary_school: 1, junior_high_school: 2 }
 
   # 絞り込み条件

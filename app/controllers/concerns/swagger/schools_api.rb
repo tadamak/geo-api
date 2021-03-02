@@ -71,6 +71,12 @@ module Swagger::SchoolsApi
           key :type, :string
           key :default, 'code'
         end
+        parameter name: :embed do
+          key :in, :query
+          key :description, "追加情報。'address', 'school_district' が選択可。"
+          key :required, false
+          key :type, :string
+        end
 
         response 200 do
           key :description, '学校情報'
@@ -104,6 +110,12 @@ module Swagger::SchoolsApi
           key :in, :path
           key :description, '学校コード'
           key :required, true
+          key :type, :string
+        end
+        parameter name: :embed do
+          key :in, :query
+          key :description, "追加情報。'address', 'school_district' が選択可。"
+          key :required, false
           key :type, :string
         end
 

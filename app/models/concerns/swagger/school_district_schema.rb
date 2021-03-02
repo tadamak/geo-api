@@ -4,21 +4,11 @@ module Swagger::SchoolDistrictSchema
 
   included do
     swagger_schema :SchoolDistrict do
-      key :required, [:code, :address_code, :school_code, :school_type, :school_name, :school_address, :location, :year]
+      key :required, [:code, :school_type, :school_name, :school_address, :location, :year]
       property :code do
         key :type, :string
         key :example, 'sd-1-xn77h66rv'
         key :description, '学区コード'
-      end
-      property :address_code do
-        key :type, :string
-        key :example, '13101024001'
-        key :description, '学区が含まれる住所コード'
-      end
-      property :school_code do
-        key :type, :string
-        key :example, 'sc-13-xn77h6d2n'
-        key :description, '学校コード'
       end
       property :school_type do
         key :type, :integer
@@ -59,6 +49,12 @@ module Swagger::SchoolDistrictSchema
         key :type, :integer
         key :example, 100
         key :description, '基点からの直線距離(m)。範囲検索時のみ出力。'
+      end
+      property :address do
+        key :'$ref', :Address
+      end
+      property :school do
+        key :'$ref', :School
       end
     end
   end
