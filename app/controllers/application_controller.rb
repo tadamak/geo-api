@@ -51,7 +51,9 @@ class ApplicationController < ActionController::API
     }
   end
 
-  def render_500
+  def render_500(e)
+    logger.error "[Error] #{e.message}"
+    logger.error e.backtrace.join("\n").indent(2)
     error_code = ErrorCode::INTERNAL_SERVER_ERROR
     message = 'システム内部で予期せぬエラーが発生しました。'
     render status: :internal_server_error, json: {
