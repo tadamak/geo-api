@@ -24,16 +24,16 @@ class V1::ApidocsController < ApplicationController
       end
     end
     tag do
-      key :name, 'Railway'
-      key :description, '鉄道API'
-    end
-    tag do
       key :name, 'Analytics'
       key :description, '解析API'
     end
     tag do
       key :name, 'Statistics'
       key :description, '統計API'
+    end
+    tag do
+      key :name, 'Railway'
+      key :description, '鉄道API'
     end
     tag do
       key :name, 'School'
@@ -59,6 +59,7 @@ class V1::ApidocsController < ApplicationController
     Address,
     AddressPopulation,
     RailwayStation,
+    RailwayLine,
     School,
     SchoolDistrict,
     GeoJson,

@@ -61,7 +61,7 @@ module Swagger::RailwaysApi
         end
         parameter name: :embed do
           key :in, :query
-          key :description, "追加情報。'address' が選択可。"
+          key :description, "追加情報。'address', 'lines' が選択可。"
           key :required, false
           key :type, :string
         end
@@ -107,7 +107,7 @@ module Swagger::RailwaysApi
         end
         parameter name: :embed do
           key :in, :query
-          key :description, "追加情報。'address' が選択可。"
+          key :description, "追加情報。'address', 'lines' が選択可。"
           key :required, false
           key :type, :string
         end
@@ -165,13 +165,19 @@ module Swagger::RailwaysApi
           key :type, :integer
           key :default, 0
         end
+        parameter name: :embed do
+          key :in, :query
+          key :description, "追加情報。'stations' が選択可。"
+          key :required, false
+          key :type, :string
+        end
 
         response 200 do
           key :description, '路線情報'
           schema do
             key :type, :array
             items do
-              key :'$ref', :Station
+              key :'$ref', :Line
             end
           end
           header 'X-Total-Count' do
@@ -206,11 +212,18 @@ module Swagger::RailwaysApi
           key :required, true
           key :type, :string
         end
+        parameter name: :embed do
+          key :in, :query
+          key :description, "追加情報。'stations' が選択可。"
+          key :required, false
+          key :type, :string
+        end
+
 
         response 200 do
           key :description, '路線情報'
           schema do
-            key :'$ref', :Station
+            key :'$ref', :Line
           end
         end
 

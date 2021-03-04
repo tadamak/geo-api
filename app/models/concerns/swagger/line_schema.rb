@@ -1,19 +1,24 @@
-module Swagger::StationSchema
+module Swagger::LineSchema
   extend ActiveSupport::Concern
   include Swagger::Blocks
 
   included do
-    swagger_schema :Station do
-      key :required, [:code, :name, :location]
+    swagger_schema :Line do
+      key :required, [:code, :name, :company_name, :location]
       property :code do
         key :type, :string
-        key :description, '駅コード'
+        key :description, '路線コード'
         key :example, 'st-xn76urx01'
       end
       property :name do
         key :type, :string
-        key :description, '駅名称'
-        key :example, '東京'
+        key :description, '路線名称'
+        key :example, '千代田線'
+      end
+      property :company_name do
+        key :type, :string
+        key :description, '会社名称'
+        key :example, '東京メトロ'
       end
       property :location do
         key :type, :object
@@ -31,18 +36,10 @@ module Swagger::StationSchema
           key :example, 139.76676483469222
         end
       end
-      property :distance do
-        key :type, :integer
-        key :example, 100
-        key :description, '基点からの直線距離(m)。範囲検索時のみ出力。'
-      end
-      property :address do
-        key :'$ref', :Address
-      end
-      property :lines do
+      property :stations do
         key :type, :array
         items do
-          key :'$ref', :Line
+          key :'$ref', :Station
         end
       end
     end
