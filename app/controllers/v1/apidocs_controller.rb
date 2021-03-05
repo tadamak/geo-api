@@ -9,7 +9,7 @@ class V1::ApidocsController < ApplicationController
     info do
       key :version, '1.2.0'
       key :title, 'Geo API'
-      key :description, 'Geo API (地理空間情報)のドキュメントです。<br>住所や鉄道情報を元にした GIS 分析をおこなうための API を提供しています。'
+      key :description, 'Geo API (地理情報)のドキュメントです。<br>住所や統計情報を元にした GIS 分析をおこなうための API を提供しています。'
     end
     externalDocs do
       key :description, "Geo API の共通仕様について"
