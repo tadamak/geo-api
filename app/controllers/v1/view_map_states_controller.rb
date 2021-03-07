@@ -8,7 +8,7 @@ class V1::ViewMapStatesController < ApplicationController
     @view_map_state.save!
     render json: @view_map_state
   end
-  
+
   def show
     render json: @view_map_state
   end
@@ -16,7 +16,7 @@ class V1::ViewMapStatesController < ApplicationController
   private
 
   def view_map_state_params
-    params.require(:view_map_state).permit(:title, :zoom, :latitude, :longitude, :analysis_type, :analysis_level, :map_theme, :polygon_color, locations: [:lat, :lng])
+    params.require(:view_map_state).permit(:title, :description, :zoom, :latitude, :longitude, :analysis_type, :analysis_level, :map_theme, :polygon_color, :count_range_from, :count_range_to, locations: [:lat, :lng])
   end
 
   def validate_create_params

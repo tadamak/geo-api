@@ -1,5 +1,5 @@
 class ViewMapStateSerializer < ActiveModel::Serializer
-  attributes :id, :code, :title, :zoom, :location, :analysis_type, :analysis_level, :map_theme, :polygon_color, :locations, :created_at, :updated_at
+  attributes :id, :code, :title, :description, :zoom, :location, :analysis_type, :analysis_level, :map_theme, :polygon_color, :count_range_from, :count_range_to, :locations, :created_at, :updated_at
 
   def analysis_type
     object.analysis_type_before_type_cast
