@@ -1,7 +1,5 @@
 class GeoAddress < ApplicationRecord
 
-  FORMAT = 'geojson'
-
   def self.reverse_geocoding(lat, lng)
     self.where("ST_Contains(polygon, ST_GeomFromText('POINT(#{lng} #{lat})', 4326))").order(level: :desc).limit(1).first
   end
@@ -48,7 +46,7 @@ class GeoAddress < ApplicationRecord
       sql = ''
       locations.each do |l|
         sql += "UNION ALL\n" unless sql.empty?
-        # NOTE: 都道府県のST_Containsが遅いため、最も下のレベル4(丁目等)で解析をする
+        # NOTE: 都道府県のST_Containsが遅いため、最も下のレベル4(字・丁目)で解析をする
         sql += "SELECT address_code FROM geo_addresses WHERE (ST_Contains(polygon, ST_GEOMFROMTEXT('POINT(#{l[:lng]} #{l[:lat]})', 4326))) AND level = #{Address::LEVEL[:CHOME]}\n"
       end
       self.find_by_sql("SELECT t.address_code FROM (#{sql}) as t").pluck(:address_code)
