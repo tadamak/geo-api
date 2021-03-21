@@ -1,5 +1,5 @@
 class AddressPopulationSerializer < ActiveModel::Serializer
-  attributes :male, :female
+  attributes :address_code, :total, :male, :female
 
   def male
     {

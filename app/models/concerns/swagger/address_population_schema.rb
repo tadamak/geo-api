@@ -11,16 +11,10 @@ module Swagger::AddressPopulationSchema
         key :example, '13'
       end
 
-      property :address_level do
-        key :type, :integer
-        key :example, 1
-        key :description, '住所レベル'
-      end
-
       property :total do
         key :type, :integer
         key :example, 3200
-        key :description, '総人口'
+        key :description, '人口総数'
       end
 
       property :male do

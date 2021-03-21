@@ -24,7 +24,7 @@ Rails.application.routes.draw do
     # Statistics API
     namespace :statistics do
       resource :addresses, only: [] do
-        get :population, on: :collection
+        get :populations, on: :collection
       end
     end
 
