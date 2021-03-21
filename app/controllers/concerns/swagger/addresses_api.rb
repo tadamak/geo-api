@@ -83,7 +83,6 @@ module Swagger::AddressesApi
           header 'X-Total-Count' do
             key :description, 'リクエストに対する総件数'
             key :type, :integer
-            key :format, :int64
           end
         end
 
@@ -214,7 +213,6 @@ module Swagger::AddressesApi
           header 'X-Total-Count' do
             key :description, 'リクエストに対する総件数'
             key :type, :integer
-            key :format, :int64
           end
         end
 

@@ -37,8 +37,8 @@ module Swagger::AnalyticsApi
             items do
               key :required, [:address_code, :address_name, :count]
               property :address_code do
-                key :type, :integer
-                key :example, 13
+                key :type, :string
+                key :example, '13'
               end
               property :address_name do
                 key :type, :string

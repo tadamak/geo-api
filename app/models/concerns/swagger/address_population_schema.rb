@@ -4,7 +4,25 @@ module Swagger::AddressPopulationSchema
 
   included do
     swagger_schema :AddressPopulation do
-      key :required, [:male, :female]
+      key :required, [:address_code, :address_level, :total, :male, :female]
+      property :address_code do
+        key :type, :string
+        key :description, '住所コード'
+        key :example, '13'
+      end
+
+      property :address_level do
+        key :type, :integer
+        key :example, 1
+        key :description, '住所レベル'
+      end
+
+      property :total do
+        key :type, :integer
+        key :example, 3200
+        key :description, '総人口'
+      end
+
       property :male do
         property :age_0_4 do
           key :type, :integer
