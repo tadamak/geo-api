@@ -8,7 +8,7 @@ gem 'rails', '~> 6.1', '>= 6.1.3.1'
 # Use mysql as the database for Active Record
 gem 'mysql2', '~> 0.5.3'
 # Use Puma as the app server
-gem 'puma', '~> 5.2', '>= 5.2.2'
+gem 'puma', '~> 4.3', '>= 4.3.7'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 # gem 'jbuilder', '~> 2.5'
 # Use Redis adapter to run Action Cable in production
