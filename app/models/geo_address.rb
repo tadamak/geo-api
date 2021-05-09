@@ -42,7 +42,7 @@ class GeoAddress < ApplicationRecord
   def self.counts_by_address_code(all_locations, level)
     each_slice_num = 100
     slice_locations = all_locations.each_slice(each_slice_num).to_a
-    results = Parallel.map(slice_locations) do |locations|
+    results = Parallel.map(slice_locations, in_threads: 4) do |locations|
       points = locations.map { |l| "#{l[:lng]} #{l[:lat]}" }.join(',')
       ewkt = "SRID=4326;MULTIPOINT(#{points})"
       # NOTE: 都道府県のST_Containsが遅いため、最も下のレベル4(字・丁目)で解析をする
