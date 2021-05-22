@@ -184,7 +184,7 @@ class V1::SchoolDistrictsController < ApplicationController
 
     # 検索条件設定
     school_districts = SchoolDistrict
-    school_districts = school_districts.where("MATCH (school_name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
+    school_districts = school_districts.where('school_name LIKE ?', "%#{name}%") if name.present?
     school_districts = school_districts.where('address_code LIKE ?', "#{address_code}%") if address_code.present?
     school_districts = school_districts.where(school_type: school_type) if school_type.present?
     school_districts = school_districts.order(sort)

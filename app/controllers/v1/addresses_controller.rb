@@ -85,7 +85,7 @@ class V1::AddressesController < ApplicationController
 
     # 検索条件設定
     addresses = Address
-    addresses = addresses.where("MATCH (name, kana) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
+    addresses = addresses.where("name LIKE '%#{name}%' OR kana LIKE '%#{name}%'") if name.present?
     addresses = addresses.where(level: level) if level.present?
     addresses = addresses.where(code: codes.split(',')) if codes.present?
     addresses = addresses.where('code LIKE ?', "#{parent_code}%") if parent_code.present?
