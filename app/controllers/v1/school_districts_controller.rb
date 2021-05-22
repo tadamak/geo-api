@@ -176,7 +176,7 @@ class V1::SchoolDistrictsController < ApplicationController
     school_type = params[:school_type]
     location = get_location
     radius = get_radius
-    distance = "St_distance_sphere(ST_GeomFromText('POINT(#{location[:lng]} #{location[:lat]})', 4326), ST_GeomFromText(CONCAT('POINT(', longitude, ' ', latitude, ')'), 4326))" if location.present?
+    distance = "ST_DistanceSphere(ST_GeomFromText('POINT(#{location[:lng]} #{location[:lat]})', 4326), ST_GeomFromText(CONCAT('POINT(', longitude, ' ', latitude, ')'), 4326))" if location.present?
     sort = get_sort || [code: :asc]
     limit = get_limit
     offset = get_offset
