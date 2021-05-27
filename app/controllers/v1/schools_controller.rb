@@ -67,7 +67,7 @@ class V1::SchoolsController < ApplicationController
     school_admin = params[:school_admin]
     location = get_location
     radius = get_radius
-    distance = "St_distance_sphere(ST_GeomFromText('POINT(#{location[:lng]} #{location[:lat]})', 4326), ST_GeomFromText(CONCAT('POINT(', longitude, ' ', latitude, ')'), 4326))" if location.present?
+    distance = "ST_DistanceSphere(ST_GeomFromText('POINT(#{location[:lng]} #{location[:lat]})', 4326), ST_GeomFromText(CONCAT('POINT(', longitude, ' ', latitude, ')'), 4326))" if location.present?
     sort = get_sort || [code: :asc]
     limit = get_limit
     offset = get_offset
@@ -75,7 +75,7 @@ class V1::SchoolsController < ApplicationController
 
     # 検索条件設定
     schools = School.includes(:school_district)
-    schools = schools.where("MATCH (name) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
+    schools = schools.where('name LIKE ?', "%#{name}%") if name.present?
     schools = schools.where('address_code LIKE ?', "#{address_code}%") if address_code.present?
     schools = schools.where(school_type: school_type) if school_type.present?
     schools = schools.where(school_admin: school_admin) if school_admin.present?

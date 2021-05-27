@@ -78,14 +78,14 @@ class V1::AddressesController < ApplicationController
     parent_code = params[:parent_code]
     location = get_location
     radius = get_radius
-    distance = "St_distance_sphere(ST_GeomFromText('POINT(#{location[:lng]} #{location[:lat]})', 4326), ST_GeomFromText(CONCAT('POINT(', longitude, ' ', latitude, ')'), 4326))" if location.present?
+    distance = "ST_DistanceSphere(ST_GeomFromText('POINT(#{location[:lng]} #{location[:lat]})', 4326), ST_GeomFromText(CONCAT('POINT(', longitude, ' ', latitude, ')'), 4326))" if location.present?
     sort = get_sort || [code: :asc]
     limit = get_limit
     offset = get_offset
 
     # 検索条件設定
     addresses = Address
-    addresses = addresses.where("MATCH (name, kana) AGAINST ('+#{name}' IN BOOLEAN MODE)") if name.present?
+    addresses = addresses.where("name LIKE '%#{name}%' OR kana LIKE '%#{name}%'") if name.present?
     addresses = addresses.where(level: level) if level.present?
     addresses = addresses.where(code: codes.split(',')) if codes.present?
     addresses = addresses.where('code LIKE ?', "#{parent_code}%") if parent_code.present?
