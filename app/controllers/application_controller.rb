@@ -9,8 +9,17 @@ class ApplicationController < ActionController::API
     end
 
     @access_token = AccessToken.find_by(code: params[:access_token])
+
     if @access_token.nil?
       return render_401(ErrorCode::INVALID_PARAM, "誤った access_token を指定しています。")
+    end
+
+    unless @access_token.is_available_url?(request.referer)
+      return render_401(ErrorCode::INVALID_PARAM, "許可していないウェブサイト（HTTPリファラ）からのリクエストです。")
+    end
+
+    unless @access_token.is_available_ip?(request.remote_ip)
+      return render_401(ErrorCode::INVALID_PARAM, "許可していないウェブサーバ（IPアドレス）からのリクエストです。")
     end
 
     set_rate_limit

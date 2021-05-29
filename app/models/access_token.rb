@@ -17,6 +17,23 @@ class AccessToken < ApplicationRecord
     is_between_period?(self.requested_at) && self.count_per_hour >= self.limit_per_hour
   end
 
+  def is_available_url?(referer)
+    return true if self.http_referrer.nil?
+    return false if referer.blank?
+
+    uri = URI.parse(referer)
+    host_path = uri.host + uri.path
+
+    allow_url = self.http_referrer.gsub('*', '.*')
+    return /#{allow_url}/.match?(host_path)
+  end
+
+  def is_available_ip?(ip)
+    return true if self.ip_address.nil?
+
+    return IPAddr.new(self.ip_address).include?(ip)
+  end
+
   private
 
   def is_between_period?(time)
