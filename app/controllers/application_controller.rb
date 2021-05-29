@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::API
   before_action :check_access_token
-  after_action :update_access_token_count
   rescue_from Exception, with: :render_500
 
   def check_access_token
@@ -8,29 +7,26 @@ class ApplicationController < ActionController::API
       return render_401(ErrorCode::REQUIRED_PARAM, 'access_token の指定が必要です。')
     end
 
-    @access_token = AccessToken.find_by(code: params[:access_token])
+    access_token = AccessToken.find_by(code: params[:access_token])
 
-    if @access_token.nil?
+    if access_token.nil?
       return render_401(ErrorCode::INVALID_PARAM, "誤った access_token を指定しています。")
     end
 
-    unless @access_token.is_available_url?(request.referer)
+    unless access_token.is_available_url?(request.referer)
       return render_401(ErrorCode::INVALID_PARAM, "許可していないウェブサイト（HTTPリファラ）からのリクエストです。")
     end
 
-    unless @access_token.is_available_ip?(request.remote_ip)
+    unless access_token.is_available_ip?(request.remote_ip)
       return render_401(ErrorCode::INVALID_PARAM, "許可していないウェブサーバ（IPアドレス）からのリクエストです。")
     end
 
-    set_rate_limit
-
-    if @access_token.is_exceed_request?
-      return render_429(ErrorCode::RATE_LIMIT_EXCEEDED, "期間内のリクエスト上限 (#{@access_token.limit_per_hour}件/時) を超えました。")
+    if access_token.is_exceed_request?
+      set_rate_limit
+      return render_429(ErrorCode::RATE_LIMIT_EXCEEDED, "期間内のリクエスト上限 (#{access_token.limit_per_hour}件/時) を超えました。")
     end
-  end
 
-  def update_access_token_count
-    @access_token.update_count
+    access_token.update_count
     set_rate_limit
   end
 
