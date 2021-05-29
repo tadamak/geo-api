@@ -68,8 +68,8 @@ class ApplicationController < ActionController::API
 
   private
 
-  def set_rate_limit
-    limit, reset, remaining = @access_token.get_rate_limit
+  def set_rate_limit(access_token)
+    limit, reset, remaining = access_token.get_rate_limit
     response.headers['X-Rate-Limit-Limit'] = limit
     response.headers['X-Rate-Limit-Reset'] = reset
     response.headers['X-Rate-Limit-Remaining'] = remaining
