@@ -22,12 +22,12 @@ class ApplicationController < ActionController::API
     end
 
     if access_token.is_exceed_request?
-      set_rate_limit
+      set_rate_limit(access_token)
       return render_429(ErrorCode::RATE_LIMIT_EXCEEDED, "期間内のリクエスト上限 (#{access_token.limit_per_hour}件/時) を超えました。")
     end
 
     access_token.update_count
-    set_rate_limit
+    set_rate_limit(access_token)
   end
 
   def render_400(error_code, message)
