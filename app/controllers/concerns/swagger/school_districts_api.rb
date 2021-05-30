@@ -8,7 +8,7 @@ module Swagger::SchoolDistrictsApi
         key :description, '指定した住所コードの学区情報を取得します。'
         key :tags, ['School District']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :name do
           key :in, :query
@@ -98,7 +98,7 @@ module Swagger::SchoolDistrictsApi
         key :description, '指定したコードの学区情報を取得します。'
         key :tags, ['School District']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :code do
           key :in, :path
@@ -136,7 +136,7 @@ module Swagger::SchoolDistrictsApi
         key :description, '指定した住所コードの学区ポリゴンを取得します。'
         key :tags, ['School District']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :name do
           key :in, :query
@@ -227,7 +227,7 @@ module Swagger::SchoolDistrictsApi
         key :description, '指定したコードの学区ポリゴンを取得します。'
         key :tags, ['School District']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :code do
           key :in, :path
@@ -259,7 +259,7 @@ module Swagger::SchoolDistrictsApi
         key :description, '指定したコードの学区に含まれる住所(町丁・字等)を取得します。'
         key :tags, ['School District']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :code do
           key :in, :path
@@ -322,7 +322,7 @@ module Swagger::SchoolDistrictsApi
         key :description, '指定したコードの学区に含まれる学区情報を取得します。'
         key :tags, ['School District']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :code do
           key :in, :path

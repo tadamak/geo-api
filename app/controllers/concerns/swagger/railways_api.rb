@@ -8,7 +8,7 @@ module Swagger::RailwaysApi
         key :description, '駅情報を取得します。'
         key :tags, ['Railway']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :name do
           key :in, :query
@@ -96,7 +96,7 @@ module Swagger::RailwaysApi
         key :description, '指定したコードの駅情報を取得します。'
         key :tags, ['Railway']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :code do
           key :in, :path
@@ -135,7 +135,7 @@ module Swagger::RailwaysApi
         key :description, '路線情報を取得します。'
         key :tags, ['Railway']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :name do
           key :in, :query
@@ -202,7 +202,7 @@ module Swagger::RailwaysApi
         key :description, '指定したコードの路線情報を取得します。'
         key :tags, ['Railway']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :code do
           key :in, :path
@@ -242,7 +242,7 @@ module Swagger::RailwaysApi
         key :description, '路線ポリゴンを取得します。'
         key :tags, ['Railway']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :name do
           key :in, :query
@@ -303,7 +303,7 @@ module Swagger::RailwaysApi
         key :description, '指定したコードの路線ポリゴンを取得します。'
         key :tags, ['Railway']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :code do
           key :in, :path

@@ -8,7 +8,7 @@ module Swagger::StatisticsApi
         key :description, '指定した住所コードの性別・年齢毎の人口を取得します。'
         key :tags, ['Statistics']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :address_level do
           key :in, :query
@@ -82,7 +82,7 @@ module Swagger::StatisticsApi
         key :description, '指定したメッシュコードの性別・年齢毎の人口を取得します。'
         key :tags, ['Statistics']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :address_code do
           key :in, :query

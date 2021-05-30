@@ -8,7 +8,7 @@ module Swagger::SchoolsApi
         key :description, '指定した住所コードの学校情報を取得します。'
         key :tags, ['School']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :name do
           key :in, :query
@@ -104,7 +104,7 @@ module Swagger::SchoolsApi
         key :description, '指定したコードの学校情報を取得します。'
         key :tags, ['School']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :code do
           key :in, :path

@@ -1,33 +1,33 @@
 class ApplicationController < ActionController::API
-  before_action :check_access_token
+  before_action :check_api_key
   rescue_from Exception, with: :render_500
 
-  def check_access_token
-    if params[:access_token].blank?
-      return render_401(ErrorCode::REQUIRED_PARAM, 'access_token の指定が必要です。')
+  def check_api_key
+    if params[:api_key].blank?
+      return render_401(ErrorCode::REQUIRED_PARAM, 'api_key の指定が必要です。')
     end
 
-    access_token = AccessToken.find_by(code: params[:access_token])
+    api_key = ApiKey.find_by(code: params[:api_key])
 
-    if access_token.nil?
-      return render_401(ErrorCode::INVALID_PARAM, "誤った access_token を指定しています。")
+    if api_key.nil?
+      return render_401(ErrorCode::INVALID_PARAM, "誤った api_key を指定しています。")
     end
 
-    unless access_token.is_available_url?(request.referer)
+    unless api_key.is_available_url?(request.referer)
       return render_401(ErrorCode::INVALID_PARAM, "許可していないウェブサイト（HTTPリファラ）からのリクエストです。")
     end
 
-    unless access_token.is_available_ip?(request.remote_ip)
+    unless api_key.is_available_ip?(request.remote_ip)
       return render_401(ErrorCode::INVALID_PARAM, "許可していないウェブサーバ（IPアドレス）からのリクエストです。")
     end
 
-    if access_token.is_exceed_request?
-      set_rate_limit(access_token)
-      return render_429(ErrorCode::RATE_LIMIT_EXCEEDED, "期間内のリクエスト上限 (#{access_token.limit_per_hour}件/時) を超えました。")
+    if api_key.is_exceed_request?
+      set_rate_limit(api_key)
+      return render_429(ErrorCode::RATE_LIMIT_EXCEEDED, "期間内のリクエスト上限 (#{api_key.limit_per_hour}件/時) を超えました。")
     end
 
-    access_token.update_count
-    set_rate_limit(access_token)
+    api_key.update_count
+    set_rate_limit(api_key)
   end
 
   def render_400(error_code, message)
@@ -68,8 +68,8 @@ class ApplicationController < ActionController::API
 
   private
 
-  def set_rate_limit(access_token)
-    limit, reset, remaining = access_token.get_rate_limit
+  def set_rate_limit(api_key)
+    limit, reset, remaining = api_key.get_rate_limit
     response.headers['X-Rate-Limit-Limit'] = limit
     response.headers['X-Rate-Limit-Reset'] = reset
     response.headers['X-Rate-Limit-Remaining'] = remaining

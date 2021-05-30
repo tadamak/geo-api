@@ -8,7 +8,7 @@ module Swagger::AnalyticsApi
         key :description, '指定した緯度経度がどのポリゴン内に含まれているかを解析し、住所毎の件数を取得します。'
         key :tags, ['Analytics']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :body do
           key :in, :body

@@ -1,5 +1,5 @@
 class V1::ApidocsController < ApplicationController
-  skip_before_action :check_access_token
+  skip_before_action :check_api_key
 
   include Swagger::Blocks
 
@@ -47,9 +47,9 @@ class V1::ApidocsController < ApplicationController
     key :basePath, '/v1'
     key :consumes, ['application/json']
     key :produces, ['application/json']
-    security_definition :access_token do
+    security_definition :api_key do
       key :type, :apiKey
-      key :name, :access_token
+      key :name, :api_key
       key :in, :query
     end
   end

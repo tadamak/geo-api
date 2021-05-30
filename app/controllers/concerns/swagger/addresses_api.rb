@@ -8,7 +8,7 @@ module Swagger::AddressesApi
         key :description, '住所情報を取得します。'
         key :tags, ['Address']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :name do
           key :in, :query
@@ -102,7 +102,7 @@ module Swagger::AddressesApi
         key :description, '指定したコードの住所情報を取得します。'
         key :tags, ['Address']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :code do
           key :in, :path
@@ -134,7 +134,7 @@ module Swagger::AddressesApi
         key :description, '住所ポリゴンを取得します。'
         key :tags, ['Address']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :name do
           key :in, :query
@@ -232,7 +232,7 @@ module Swagger::AddressesApi
         key :description, '指定したコードの住所ポリゴンを取得します。'
         key :tags, ['Address']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :code do
           key :in, :path
@@ -264,7 +264,7 @@ module Swagger::AddressesApi
         key :description, '指定した緯度経度を元に逆ジオコーディングした結果の住所情報を取得します。'
         key :tags, ['Address']
         security do
-          key :access_token, []
+          key :api_key, []
         end
         parameter name: :location do
           key :in, :query

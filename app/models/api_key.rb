@@ -1,4 +1,4 @@
-class AccessToken < ApplicationRecord
+class ApiKey < ApplicationRecord
 
   def update_count
     count = is_between_period?(self.requested_at) ? self.count_per_hour + 1 : 1
