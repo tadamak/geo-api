@@ -12,7 +12,7 @@ class V1::ApidocsController < ApplicationController
     end
     externalDocs do
       key :description, "Geo API の共通仕様について"
-      key :url, "/about"
+      key :url, "https://docs.geo.qazsato.com/about"
     end
     tag do
       key :name, 'Address'
