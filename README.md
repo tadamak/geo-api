@@ -1,24 +1,20 @@
-# README
+# Geo API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+住所や統計情報を元にした GIS 分析をおこなうための API
+## ローカル環境
 
-Things you may want to cover:
+### セットアップ
 
-* Ruby version
+```bash
+$ docker-compose build --no-cache
+$ docker-compose run web rails db:create
+$ docker-compose up -d
+```
 
-* System dependencies
+http://localhost:3000 でアクセスして画面が表示されればok
 
-* Configuration
+### DB接続
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```bash
+$ docker-compose exec db /bin/bash -c 'psql "user=postgres password=password dbname=geo"'
+```
