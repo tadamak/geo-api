@@ -49,3 +49,5 @@ gem 'swagger-blocks', '~> 3.0'
 gem 'active_model_serializers', '~> 0.10.12'
 
 gem 'parallel', '~> 1.20', '>= 1.20.1'
+
+gem 'activerecord-postgis-adapter', '~> 7.1'
