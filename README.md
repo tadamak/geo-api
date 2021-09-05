@@ -1,24 +1,27 @@
-# README
+# Geo API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+<img src="https://user-images.githubusercontent.com/5030713/132123897-7c30de11-c7dc-42a5-9aa2-10ab69ef326e.png" alt="Geo API" width="200px">
 
-Things you may want to cover:
+住所や統計情報を元にした GIS 分析をおこなうための API。
 
-* Ruby version
+Rails で構築されている REST API。
 
-* System dependencies
+## API 仕様書
 
-* Configuration
+https://docs.geo.qazsato.com/
 
-* Database creation
+## セットアップ
 
-* Database initialization
+```bash
+$ docker-compose build --no-cache
+$ docker-compose up -d
+```
 
-* How to run the test suite
+```bash
+$ docker-compose exec api rails db:drop
+$ docker-compose exec api rails db:create
+$ docker-compose exec api rails db:migrate
+$ docker-compose exec api rails db:seed
+```
 
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+http://localhost:3000 でアクセスして画面が表示されればok
