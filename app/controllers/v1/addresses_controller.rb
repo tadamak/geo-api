@@ -10,24 +10,25 @@ class V1::AddressesController < ApplicationController
 
   def index
     finder = AddressFinder.new(search_params)
-    addrs = finder.execute
+    matches = finder.execute
+    addrs = matches
       .select("*, #{finder.distance} as distance")
       .order(get_sort || [code: :asc])
       .limit([params[:limit].to_i, Constants::MAX_LIMIT].max)
       .offset([0, params[:offset].to_i].max)
-    response.headers['X-Total-Count'] = finder.execute.count
+    response.headers['X-Total-Count'] = matches.count
 
     render json: addrs
   end
 
   def index_shape
-    finder = AddressFinder.new(search_params)
-    codes = finder.execute
+    matches = AddressFinder.new(search_params).execute
+    codes = matches
       .order(get_sort || [code: :asc])
       .limit([params[:limit].to_i, Constants::MAX_LIMIT].max)
       .offset([0, params[:offset].to_i].max)
       .pluck(:code)
-    response.headers['X-Total-Count'] = finder.execute.count
+    response.headers['X-Total-Count'] = matches.count
 
     render json: GeoAddress.call(params[:merged] == "false" ? :geojsons : :geojson, codes)
   end
