@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::API
   before_action :check_api_key
   rescue_from Exception, with: :render_500
+  rescue_from ArgumentError, with: :render_400
 
   def check_api_key
     if params[:api_key].blank?

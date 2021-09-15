@@ -34,5 +34,12 @@ module GeoApi
 
     config.time_zone = 'Tokyo'
     config.active_record.default_timezone = :local
+
+    load_paths = Dir["#{config.root}/app/models/finders"]
+    if Rails.env.production?
+      config.eager_load_paths += load_paths
+    else
+      config.autoload_paths += load_paths
+    end
   end
 end
